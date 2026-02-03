@@ -1,8 +1,8 @@
 {
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/backend/server.js"
-    }
+    { "source": "/resolver", "destination": "/api/resolver" },
+    { "source": "/apps", "destination": "/api/apps" },
+    { "source": "/config", "destination": "/api/config" },
+    { "source": "/health", "destination": "/api/health" }
   ]
 }
