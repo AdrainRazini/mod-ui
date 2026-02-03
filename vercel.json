@@ -1,8 +1,5 @@
 {
   "rewrites": [
-    { "source": "/resolver", "destination": "/api/resolver" },
-    { "source": "/apps", "destination": "/api/apps" },
-    { "source": "/config", "destination": "/api/config" },
-    { "source": "/health", "destination": "/api/health" }
+    { "source": "/(.*)", "destination": "/api/$1" }
   ]
 }
