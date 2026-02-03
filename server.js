@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 
 
 // Rotas Caseiras 
-import configRoutes from "./routes/config.js";
-import appsRoutes from "./routes/apps.js";
-import apiRoutes from "./routes/api.js";
-import resolverRoutes from "./routes/resolver.js";
+import configRoutes from "./backend/routes/config.js";
+import appsRoutes from "./backend/routes/apps.js";
+import apiRoutes from "./backend/routes/api.js";
+import resolverRoutes from "./backend/routes/resolver.js";
 
 // Services
 import {
@@ -17,9 +17,9 @@ import {
   addDocument,
   updateDocument,
   findDocumentByField
-} from "./services/firestoreService.js";
+} from "./backend/services/firestoreService.js";
 
-import { db } from "./services/firebase.js";
+import { db } from "./backend/services/firebase.js";
 
 //import { dbAdmin } from "./services/firebaseAdmin.js";
 
@@ -97,7 +97,7 @@ app.get("/health", (req, res) => {
 
 app.use("/config", configRoutes);
 app.use("/apps", appsRoutes);
-//app.use("/api", apiRoutes);
+app.use("/api", apiRoutes);
 app.use("/resolver", resolverRoutes);
 // app.use("/features", featureRoutes);
 

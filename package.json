@@ -2,10 +2,10 @@
   "name": "mod_ui",
   "version": "1.0.0",
   "description": "Framework Mod_UI focado em UI modular com Lua + HTTP + Infra Web",
-  "main": "backend/server.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node backend/server.js"
+    "start": "node server.js"
   },
   "keywords": [
     "roblox",
