@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 
 
 // Rotas Caseiras 
-import configRoutes from "./backend/routes/config.js";
-import appsRoutes from "./backend/routes/apps.js";
-import apiRoutes from "./backend/routes/api.js";
-import resolverRoutes from "./backend/routes/resolver.js";
+import configRoutes from "./routes/config.js";
+import appsRoutes from "./routes/apps.js";
+import apiRoutes from "./routes/api.js";
+import resolverRoutes from "./routes/resolver.js";
 
 // Services
 import {
@@ -17,9 +17,9 @@ import {
   addDocument,
   updateDocument,
   findDocumentByField
-} from "./backend/services/firestoreService.js";
+} from "./services/firestoreService.js";
 
-import { db } from "./backend/services/firebase.js";
+import { db } from "./services/firebase.js";
 
 //import { dbAdmin } from "./services/firebaseAdmin.js";
 
