@@ -6,10 +6,10 @@ import dotenv from "dotenv";
 
 
 // Rotas Caseiras 
-import configRoutes from "./routes/config.js";
-import appsRoutes from "./routes/apps.js";
-import apiRoutes from "./routes/api.js";
-import resolverRoutes from "./routes/resolver.js";
+import configRoutes from "../backend/routes/config.js";
+import appsRoutes from "../backend/routes/apps.js";
+import apiRoutes from "../backend/routes/api.js";
+import resolverRoutes from "../backend/routes/resolver.js";
 
 // Services
 import {
@@ -69,15 +69,6 @@ app.use(
 // Permite JSON no body
 app.use(express.json());
 
-// Log simples (depois pode virar Logger real)
-app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.url}`);
-  next();
-});
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
-});
 
 // ============================
 // ROTAS
@@ -97,9 +88,22 @@ app.get("/health", (req, res) => {
 
 app.use("/config", configRoutes);
 app.use("/apps", appsRoutes);
-app.use("/api/script", apiRoutes);
+app.use("/api", apiRoutes);
 app.use("/resolver", resolverRoutes);
 // app.use("/features", featureRoutes);
+
+
+
+// Log simples (depois pode virar Logger real)
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url}`);
+  next();
+});
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Internal Server Error" });
+});
+
 
 // ============================
 // SERVER
