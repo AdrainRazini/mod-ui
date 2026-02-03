@@ -88,7 +88,7 @@ app.get("/health", (req, res) => {
 
 app.use("/config", configRoutes);
 app.use("/apps", appsRoutes);
-app.use("/api", apiRoutes);
+//app.use("/api", apiRoutes);
 app.use("/resolver", resolverRoutes);
 // app.use("/features", featureRoutes);
 
