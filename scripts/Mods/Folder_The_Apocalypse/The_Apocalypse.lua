@@ -10,9 +10,18 @@ local ModInfo = {
 	Notes = "Mode Menu"
 }
 
--- AutoExec: só roda no jogo ID  
-if game.PlaceId ~= ModInfo.GameId then
-	return -- sai se não for o jogo certo
+-- AutoExec: valida Universe (todos os sub-places)
+
+-- Debug: mostra IDs detectados
+print("[Mod Loader][Debug] Detectado:")
+print("  ▶ GameId (Universe):", game.GameId)
+print("  ▶ PlaceId:", game.PlaceId)
+print("  ▶ Esperado (ModInfo.GameId):", ModInfo.GameId)
+
+-- Verificação principal
+if game.GameId ~= ModInfo.GameId then
+	warn("[Mod Loader] Universe incorreto, abortando execução.")
+	return
 end
 
 -- ==========================================
