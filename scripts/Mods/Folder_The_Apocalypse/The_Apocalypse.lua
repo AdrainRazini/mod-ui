@@ -514,13 +514,3 @@ Regui.CreateButton(FarmTab, {
     EquipTool("Rock")
 	
 end)
-
---[[
-local args = {
-    [1] = "click",
-    [2] = workspace.Enemies:FindFirstChild("Mutant Zombie")
-}
-
-game:GetService("ReplicatedStorage").Network.Items.ToolAction:FireServer(unpack(args))
-
-]]
