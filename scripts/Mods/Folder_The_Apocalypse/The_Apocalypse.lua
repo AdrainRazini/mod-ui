@@ -330,19 +330,16 @@ game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(a
 --================================================
 -- Notification Helper
 --================================================
-
+-- Para Uma Ação só
 local AutoFarm = {
     Enabled = false,
 	Timer = 0.5,
     TargetType = "Tree",
-	TargetCurrent = nil,
-	ToolRequired = {"Rock"}
 }
 
 local function GetToolbar()
 	return player:FindFirstChild("Toolbar")
 end
-
 
 local function GetIndex(toolName)
 	local toolbar = GetToolbar()
@@ -428,7 +425,7 @@ local Slider_Auto_Option = Regui.CreateSliderOption(FarmTab, {
 	Color = "White",
 	Background = "Blue",
 	Value = 1,
-	Table = {"Tree", "Palm"}
+	Table = {"Tree", "Palm","CopperOre","IronOre","Coal","Stone"}
 }, function(state)
 	AutoFarm.TargetType = state
 end)
@@ -447,7 +444,6 @@ if state then
 task.spawn(function()
 	while true do
 		if AutoFarm.Enabled then
-		 --PrepareAction(AutoFarm.TargetType)
          doAction()
 		end
 		task.wait(AutoFarm.Timer)
@@ -458,6 +454,7 @@ end
 
 end)
 
+
 Regui.CreateSliderInt(FarmTab, {
 	Text = "Speed Auto: " .. AutoFarm.TargetType,
 	Minimum = 1,
@@ -467,4 +464,6 @@ Regui.CreateSliderInt(FarmTab, {
 	print("Slider value:", value)
 end)
 
+
+-- === Ore 
 
