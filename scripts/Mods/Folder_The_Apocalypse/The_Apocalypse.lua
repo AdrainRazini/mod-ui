@@ -376,25 +376,21 @@ end
 
 
 local function getTarget(nameTarget)
-	if AutoFarm.TargetType == "Tree" then
-		return workspace.Spawned:FindFirstChild("Tree1")
+	local targetType = nameTarget or AutoFarm.TargetType
+	if not targetType then return nil end
 
-	elseif AutoFarm.TargetType == "Palm" then
-		return workspace.Spawned:FindFirstChild("Palm1")
+	local spawned = workspace:FindFirstChild("Spawned")
+	if not spawned then return nil end
 
-	elseif AutoFarm.TargetType == "CopperOre" then
-		return workspace.Spawned:FindFirstChild("CopperOre")
-
-	elseif AutoFarm.TargetType == "IronOre" then
-		return workspace.Spawned:FindFirstChild("IronOre")
-
-	elseif AutoFarm.TargetType == "Coal" then
-		return workspace.Spawned:FindFirstChild("Coal")
-
-	elseif AutoFarm.TargetType == "Stone" then
-		return workspace.Spawned:FindFirstChild("Stone")
+	for _, obj in ipairs(spawned:GetChildren()) do
+		if string.find(obj.Name, targetType) then
+			return obj
+		end
 	end
+
+	return nil
 end
+
 
 local function doAction(nameTarget)
 	local target = getTarget(nameTarget)
@@ -419,13 +415,15 @@ Regui.CreateLabel(FarmTab, {
 	Alignment = "Center"
 })
 
+local Options = {"Tree", "Palm","CopperOre","IronOre","Coal","Stone"}
+
 -- SliderOption para escolher o tamanho da janela
 local Slider_Auto_Option = Regui.CreateSliderOption(FarmTab, {
 	Text = "Automatic farm",
 	Color = "White",
 	Background = "Blue",
 	Value = 1,
-	Table = {"Tree", "Palm","CopperOre","IronOre","Coal","Stone"}
+	Table = Options
 }, function(state)
 	AutoFarm.TargetType = state
 end)
