@@ -515,3 +515,89 @@ Regui.CreateButton(FarmTab, {
     EquipTool("Rock")
 	
 end)
+
+--[[
+local args = {
+    [1] = "click",
+    [2] = workspace.Enemies:FindFirstChild("Mutant Zombie")
+}
+
+game:GetService("ReplicatedStorage").Network.Items.ToolAction:FireServer(unpack(args))
+
+]]
+
+-- GameTab
+local Aura = false
+local AuraRange = 25 -- distância da aura
+local AuraDelay = 0.2
+
+local function getNearestEnemy()
+	local char = player.Character
+	if not char then return nil end
+
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local enemiesFolder = workspace:FindFirstChild("Enemies")
+	if not enemiesFolder then return nil end
+
+	local nearest, nearestDist
+
+	for _, enemy in ipairs(enemiesFolder:GetChildren()) do
+		local part = enemy:FindFirstChild("HumanoidRootPart") 
+			or enemy.PrimaryPart 
+			or enemy:FindFirstChildWhichIsA("BasePart")
+
+		if part then
+			local dist = (part.Position - hrp.Position).Magnitude
+			if dist <= AuraRange and (not nearestDist or dist < nearestDist) then
+				nearest = enemy
+				nearestDist = dist
+			end
+		end
+	end
+
+	return nearest
+end
+
+
+local function attackEnemy(enemy)
+	if not enemy then return end
+
+	ReplicatedStorage.Network.Items.ToolAction:FireServer(
+		"click",
+		enemy,
+		false
+	)
+end
+
+task.spawn(function()
+	while true do
+		if Aura then
+			local enemy = getNearestEnemy()
+			if enemy then
+				attackEnemy(enemy)
+			end
+		end
+		task.wait(AuraDelay)
+	end
+end)
+
+
+Regui.CreateCheckboxe(GameTab, {
+	Text = "Kill Aura",
+	Color = "Yellow"
+}, function(state)
+	Aura = state
+end)
+
+-- Add a button
+Regui.CreateButton(GameTab, {
+	Text = "Equip: Wooden Spear",
+	Color = "White",
+	BGColor = "Blue"
+}, function()
+	print("Button EquipTool!")
+    EquipTool("Wooden Spear")
+	
+end)
