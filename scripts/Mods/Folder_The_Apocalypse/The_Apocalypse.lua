@@ -601,9 +601,9 @@ end)
 
 Regui.CreateSliderInt(GameTab, {
 	Text = "Speed Aura",
-	Minimum = 1,
-	Maximum = 10,
-	Value = 5
+	Minimum = 0,
+	Maximum = 2,
+	Value = 1
 }, function(value)
-	GameFarme.AuraDelay = math.clamp(1 / value, 0.1, 1)
+	GameFarme.AuraDelay = value
 end)
