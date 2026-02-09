@@ -1,14 +1,23 @@
 -- ==========================================
 -- The Apocalypse: Verific Game 
 -- ==========================================
+
 -- Meta dados
 local ModInfo = {
 	Name = "The Apocalypse",
-	Version = "1.0.0", -- versão atual
+	Version = "1.0.0",
 	Date = "2026-02-08",
-    GameId = 75519253084635,
+
+	-- IDs corretos
+	UniverseId = 7009714292,          -- game.GameId
+	MainPlaceId = 75519253084635,     -- place principal
+	SubPlaces = {                     -- sub-places permitidos
+		122160128185618,
+	},
+
 	Notes = "Mode Menu"
 }
+
 
 -- AutoExec: valida Universe (todos os sub-places)
 
@@ -19,7 +28,7 @@ print("  ▶ PlaceId:", game.PlaceId)
 print("  ▶ Esperado (ModInfo.GameId):", ModInfo.GameId)
 
 -- Verificação principal
-if game.GameId ~= ModInfo.GameId then
+if game.GameId ~= ModInfo.UniverseId then
 	warn("[Mod Loader] Universe incorreto, abortando execução.")
 	return
 end
