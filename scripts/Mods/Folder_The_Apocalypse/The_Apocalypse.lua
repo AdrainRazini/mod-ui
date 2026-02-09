@@ -430,8 +430,6 @@ Regui.CreateSliderOption(FarmTab, {
 	AutoFarm.TargetType = state
 end)
 
-
-
 -- Add a checkbox
 Regui.CreateCheckboxe(FarmTab, {
 	Text = "Auto: Selected",
@@ -449,7 +447,6 @@ Regui.CreateCheckboxe(FarmTab, {
 	AutoFarm.Mode = "All"
 end)
 
-
 task.spawn(function()
 	while task.wait(AutoFarm.Timer) do
 		if not AutoFarm.Enabled then
@@ -463,12 +460,11 @@ task.spawn(function()
 			for _, target in ipairs(Options) do
 				if not AutoFarm.Enabled then break end
 				doAction(target)
-				task.wait(0.15) -- delay humano
+				task.wait(AutoFarm.Timer or 0.15) -- delay humano
 			end
 		end
 	end
 end)
-
 
 Regui.CreateSliderInt(FarmTab, {
 	Text = "Speed Auto",
