@@ -476,9 +476,6 @@ Regui.CreateSliderInt(FarmTab, {
 end)
 
 
-
---
-
 -- Add a button
 Regui.CreateButton(FarmTab, {
 	Text = "Equip: Rock",
