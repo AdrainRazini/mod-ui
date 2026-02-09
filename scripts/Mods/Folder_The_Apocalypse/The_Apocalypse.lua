@@ -518,9 +518,12 @@ end)
 
 -- PVP 
 
-local Aura = false
-local AuraRange = 25 -- distância da aura
-local AuraDelay = 0.2
+local GameFarme = {
+	Aura = false,
+	AuraRange = 25,
+	AuraDelay = 0.2
+}
+
 
 local function getNearestEnemy()
 	local char = player.Character
@@ -532,24 +535,26 @@ local function getNearestEnemy()
 	local enemiesFolder = workspace:FindFirstChild("Enemies")
 	if not enemiesFolder then return nil end
 
-	local nearest, nearestDist
+	local nearestEnemy
+	local nearestDist = math.huge
 
 	for _, enemy in ipairs(enemiesFolder:GetChildren()) do
-		local part = enemy:FindFirstChild("HumanoidRootPart") 
-			or enemy.PrimaryPart 
+		local part = enemy:FindFirstChild("HumanoidRootPart")
+			or enemy.PrimaryPart
 			or enemy:FindFirstChildWhichIsA("BasePart")
 
 		if part then
 			local dist = (part.Position - hrp.Position).Magnitude
-			if dist <= AuraRange and (not nearestDist or dist < nearestDist) then
-				nearest = enemy
+			if dist <= GameFarme.AuraRange and dist < nearestDist then
+				nearestEnemy = enemy
 				nearestDist = dist
 			end
 		end
 	end
 
-	return nearest
+	return nearestEnemy
 end
+
 
 local function attackEnemy(enemy)
 	if not enemy then return end
@@ -561,21 +566,43 @@ local function attackEnemy(enemy)
 	)
 end
 
+
 task.spawn(function()
-	while true do
-		if Aura then
-			local enemy = getNearestEnemy()
-			if enemy then
-				attackEnemy(enemy)
-			end
+	while task.wait(GameFarme.AuraDelay) do
+		if not GameFarme.Aura then
+			continue
 		end
-		task.wait(AuraDelay)
+
+		local enemy = getNearestEnemy()
+		if enemy then
+			attackEnemy(enemy)
+		end
 	end
 end)
+
+
+Regui.CreateSliderInt(GameTab, {
+	Text = "Range Aura",
+	Minimum = 5,
+	Maximum = 50,
+	Value = 25
+}, function(value)
+	GameFarme.AuraRange = value
+end)
+
 
 Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura",
 	Color = "Yellow"
 }, function(state)
 	Aura = state
+end)
+
+Regui.CreateSliderInt(GameTab, {
+	Text = "Speed Aura",
+	Minimum = 1,
+	Maximum = 10,
+	Value = 5
+}, function(value)
+	GameFarme.AuraDelay = math.clamp(1 / value, 0.1, 1)
 end)
