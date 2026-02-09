@@ -464,7 +464,7 @@ if state then
 task.spawn(function()
 	while true do
 		if AutoFarm.Enabled then
-		 PrepareAction(AutoFarm.TargetType)
+		 --PrepareAction(AutoFarm.TargetType)
          doAction()
 		end
 		task.wait(AutoFarm.Timer)
