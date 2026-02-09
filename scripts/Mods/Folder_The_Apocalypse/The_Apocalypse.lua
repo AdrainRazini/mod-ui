@@ -299,3 +299,114 @@ Regui.CreateSliderInt(StandardTab, {
 }, function(value)
 	print("Slider value:", value)
 end)
+
+--[[
+-- Player Gui 
+-- pelo que vi o sistema é feito em Folders
+
+-- Toolbar/ Folder(Vista como Tool) / Index(IntValue de onde esse Tool camuflado de folder esta) ao todo são 9 slots
+-- Jogador começa com (Rock,Torch,Wooden Spear) -- e é usado um event para equipar e desequipar 
+
+
+
+local args = {
+    [1] = 0 -- Tirar
+}
+
+game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(args))
+
+local args = {
+    [1] = 1 -- Equipar
+}
+game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(args))
+
+]]
+
+-- Simples Teste de coleta 
+
+-- Network.Items.EquipItem
+
+
+--================================================
+-- Notification Helper
+--================================================
+
+
+local AutoFarm = {
+    Enabled = false,
+	Timer = 0.5,
+    TargetType = "Tree",
+}
+
+local function getTarget()
+	if AutoFarm.TargetType == "Tree" then
+		return workspace.Spawned:FindFirstChild("Tree1")
+	elseif AutoFarm.TargetType == "Palm" then
+		return workspace.Spawned:FindFirstChild("Palm1")
+	end
+end
+
+local function doAction()
+	local target = getTarget()
+	if not target then return end
+
+	local args = {
+		[1] = "click",
+		[2] = target,
+		[3] = false
+	}
+
+	game:GetService("ReplicatedStorage")
+		.Network.Items.ToolAction
+		:FireServer(unpack(args))
+end
+
+
+-- Add a label
+Regui.CreateLabel(FarmTab, {
+	Text = "Farmes Game!",
+	Color = "White",
+	Alignment = "Center"
+})
+
+-- SliderOption para escolher o tamanho da janela
+local Slider_Auto_Option = Regui.CreateSliderOption(FarmTab, {
+	Text = "Automatic farm",
+	Color = "White",
+	Background = "Blue",
+	Value = 1,
+	Table = {"Tree", "Palm"}
+}, function(state)
+	AutoFarm.TargetType = state
+end)
+
+
+
+-- Add a checkbox
+Regui.CreateCheckboxe(FarmTab, {
+	Text = "Auto: " .. AutoFarm.TargetType,
+	Color = "Yellow"
+}, function(state)
+	print("Checkbox state:", state)
+AutoFarm.Enabled = state
+
+if state then
+task.spawn(function()
+	while true do
+		if AutoFarm.Enabled then
+			doAction()
+		end
+		task.wait(AutoFarm.Timer)
+	end
+end)
+end)
+
+Regui.CreateSliderInt(FarmTab, {
+	Text = "Speed Auto: " .. AutoFarm.TargetType,
+	Minimum = 1,
+	Maximum = 10,
+	Value = 5
+}, function(value)
+	print("Slider value:", value)
+end)
+
