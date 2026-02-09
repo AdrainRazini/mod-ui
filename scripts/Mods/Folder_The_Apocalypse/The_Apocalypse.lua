@@ -178,16 +178,36 @@ local PVP_Timer = {}
 -- Using -- Dynamic Creation -- Current Version of the Memory Library
 --================================================
 
+-- 
+--================================================
+-- Notification Helper
+--================================================
+function Notification(Title, Text, Tempo, Icon)
+	Title = Title or "Null"
+	Text  = Text  or "Null"
+	Tempo = Tempo or 1
+	Icon  = Icon  or "fa_envelope"
+
+	local OldGui = (Window and Window.Frame and Window.Frame.Parent) or PlayerGui
+
+	Regui.NotificationPerson(OldGui, {
+		Title = Title,
+		Text  = Text,
+		Tempo = Tempo,
+		Icon  = Icon
+	})
+end
+
 
 -- Add a label
-Regui.CreateLabel(mainTab, {
-	Text = "Welcome to GuiForge!",
+Regui.CreateLabel(StandardTab, {
+	Text = "Welcome to Regui!",
 	Color = "White",
 	Alignment = "Center"
 })
 
 
-local OptionsStrings = Regui.CreateSelectorOpitions(mainTab, {
+local OptionsStrings = Regui.CreateSelectorOpitions(StandardTab, {
 	Name = "Selector",
 	Alignment = "Center",
 	Size_Frame = UDim2.new(1,-10,0,50),
@@ -204,7 +224,7 @@ local OptionsStrings = Regui.CreateSelectorOpitions(mainTab, {
 	print("Você escolheu:", val)
 end)
 
-local OptionsInstance = Regui.CreateSelectorOpitions(mainTab, {
+local OptionsInstance = Regui.CreateSelectorOpitions(StandardTab, {
 	Name = "Selector",
 	Alignment = "Center",
 	Size_Frame = UDim2.new(1,-10,0,50),
@@ -221,22 +241,23 @@ local OptionsInstance = Regui.CreateSelectorOpitions(mainTab, {
 end)
 
 -- Add a button
-Regui.CreateButton(mainTab, {
+Regui.CreateButton(StandardTab, {
 	Text = "Click Me",
 	Color = "White",
 	BGColor = "Blue"
 }, function()
 	print("Button clicked!")
-	Regui.NotificationPerson(window.Frame.Parent, {
-		Title = "Hello!",
-		Text = "You clicked the button!",
-		Tempo = 3,
-		Icon = "fa_envelope"
-	})
+
+	Notification(
+		"Hello!",
+		"You clicked the button!",
+		3,
+		"fa_envelope"
+	)
 end)
 
 -- Add a toggle
-Regui.CreateToggleboxe(mainTab, {
+Regui.CreateToggleboxe(StandardTab, {
 	Text = "Enable Feature",
 	Color = "Green"
 }, function(state)
@@ -244,7 +265,7 @@ Regui.CreateToggleboxe(mainTab, {
 end)
 
 -- Add a checkbox
-Regui.CreateCheckboxe(mainTab, {
+Regui.CreateCheckboxe(StandardTab, {
 	Text = "Extra Option",
 	Color = "Yellow"
 }, function(state)
@@ -252,7 +273,7 @@ Regui.CreateCheckboxe(mainTab, {
 end)
 
 -- Add a slider
-Regui.CreateSliderInt(mainTab, {
+Regui.CreateSliderInt(StandardTab, {
 	Text = "Speed",
 	Minimum = 1,
 	Maximum = 10,
