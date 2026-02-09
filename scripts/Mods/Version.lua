@@ -38,3 +38,23 @@ local Version = {
 }
 
 return Version
+
+--[[
+
+local version = require(script.Parent.Mods.Version)
+
+if not version.Enabled then
+	return
+end
+
+if version.GameId ~= game.PlaceId then
+	return
+end
+
+-- carregar entrypoint
+local entry = script.Parent.Mods:FindFirstChild(version.Entry)
+if entry then
+	loadfile(entry)()
+end
+
+]]

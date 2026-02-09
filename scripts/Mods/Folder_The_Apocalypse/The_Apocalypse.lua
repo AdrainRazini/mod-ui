@@ -16,6 +16,26 @@ if game.PlaceId ~= ModInfo.GameId then
 end
 
 -- ==========================================
+-- Global Mod Registry (Executor Memory)
+-- ==========================================
+local genv = getgenv()
+
+genv.__MODS__ = genv.__MODS__ or {}
+genv.__MODS__.TheApocalypse = genv.__MODS__.TheApocalypse or {
+	Loaded = false,
+	Version = ModInfo.Version,
+	Cache = {}
+}
+
+local MOD = genv.__MODS__.TheApocalypse
+
+-- evita double inject
+if MOD.Loaded then
+	warn("[⚠️ Mod Loader] The Apocalypse já está carregado")
+	return
+end
+
+-- ==========================================
 -- The Apocalypse: Global Services
 -- ==========================================
 
@@ -105,10 +125,20 @@ else
 end
 
 -- ==========================================
--- Falha crítica
+-- Critical failure -- Load -- Blocked -- or -- Out of tune
 -- ==========================================
 if not Regui then
 	warn("[❌ Mod Loader] Falha crítica: Regui não carregado")
+	return
+end
+
+
+-- ==========================================
+-- Avoid interface clones.
+-- ==========================================
+
+if PlayerGui:FindFirstChild(GuiName) then
+	Regui.Notifications(PlayerGui, {Title="Alert", Text="Neutralized Code", Icon="fa_rr_information", Tempo=10})
 	return
 end
 
@@ -121,6 +151,7 @@ end
 Window = Regui.TabsWindow({Title=GuiName, Text="Animal Simulator", Size=UDim2.new(0, 350, 0, 250), Icon_btn = true})
 
 -- Tabs
+StandardTab = Regui.CreateTab(Window,{Name="Standard"})
 FarmTab = Regui.CreateTab(Window,{Name="Farm"})
 GameTab = Regui.CreateTab(Window,{Name="Game"})
 AfkTab = Regui.CreateTab(Window,{Name="Afk Mod"})
@@ -130,3 +161,102 @@ ReadmeTab = Regui.CreateTab(Window,{Name="Readme"})
 -- Especial Tab
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
 --===================--
+
+--================================================
+-- Locals -- Memory
+--================================================
+local Cache = {}
+
+--[[
+local AF = {}
+local AF_Timer = {}
+local PVP = {}
+local PVP_Timer = {}
+]]
+
+--================================================
+-- Using -- Dynamic Creation -- Current Version of the Memory Library
+--================================================
+
+
+-- Add a label
+Regui.CreateLabel(mainTab, {
+	Text = "Welcome to GuiForge!",
+	Color = "White",
+	Alignment = "Center"
+})
+
+
+local OptionsStrings = Regui.CreateSelectorOpitions(mainTab, {
+	Name = "Selector",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,50),
+	Frame_Max = 50,
+	Options = {
+
+		"On",
+		"Off"
+
+	},
+
+	Type = "String"
+}, function(val)
+	print("Você escolheu:", val)
+end)
+
+local OptionsInstance = Regui.CreateSelectorOpitions(mainTab, {
+	Name = "Selector",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,50),
+	Frame_Max = 50,
+	Options = {
+
+		{name = "Name", Obj = "Parent"},
+		
+	},
+
+	Type = "Instance"
+}, function(val)
+	print("Você escolheu:", val)
+end)
+
+-- Add a button
+Regui.CreateButton(mainTab, {
+	Text = "Click Me",
+	Color = "White",
+	BGColor = "Blue"
+}, function()
+	print("Button clicked!")
+	Regui.NotificationPerson(window.Frame.Parent, {
+		Title = "Hello!",
+		Text = "You clicked the button!",
+		Tempo = 3,
+		Icon = "fa_envelope"
+	})
+end)
+
+-- Add a toggle
+Regui.CreateToggleboxe(mainTab, {
+	Text = "Enable Feature",
+	Color = "Green"
+}, function(state)
+	print("Toggle state:", state)
+end)
+
+-- Add a checkbox
+Regui.CreateCheckboxe(mainTab, {
+	Text = "Extra Option",
+	Color = "Yellow"
+}, function(state)
+	print("Checkbox state:", state)
+end)
+
+-- Add a slider
+Regui.CreateSliderInt(mainTab, {
+	Text = "Speed",
+	Minimum = 1,
+	Maximum = 10,
+	Value = 5
+}, function(value)
+	print("Slider value:", value)
+end)
