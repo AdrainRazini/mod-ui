@@ -36,7 +36,7 @@ end
 -- ==========================================
 -- Global Mod Registry (Executor Memory)
 -- ==========================================
-local genv = getgenv()
+--[[local genv = getgenv()
 
 genv.__MODS__ = genv.__MODS__ or {}
 genv.__MODS__.TheApocalypse = genv.__MODS__.TheApocalypse or {
@@ -52,7 +52,7 @@ if MOD.Loaded then
 	warn("[⚠️ Mod Loader] The Apocalypse já está carregado")
 	return
 end
-
+]]
 -- ==========================================
 -- The Apocalypse: Global Services
 -- ==========================================
@@ -331,7 +331,6 @@ game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(a
 -- Notification Helper
 --================================================
 
-
 local AutoFarm = {
     Enabled = false,
 	Timer = 0.5,
@@ -379,7 +378,6 @@ local Slider_Auto_Option = Regui.CreateSliderOption(FarmTab, {
 }, function(state)
 	AutoFarm.TargetType = state
 end)
-
 
 
 -- Add a checkbox
