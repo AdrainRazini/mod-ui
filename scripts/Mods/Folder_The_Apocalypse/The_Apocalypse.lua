@@ -148,7 +148,7 @@ end
 -- ⬇ ⬇ ⬇ ⬇ ⬇ ⬇ ⬇ ⬇
 --===================--
 -- GUI
-Window = Regui.TabsWindow({Title=GuiName, Text="Animal Simulator", Size=UDim2.new(0, 350, 0, 250), Icon_btn = true})
+Window = Regui.TabsWindow({Title=GuiName, Text= ModInfo.Name, Size=UDim2.new(0, 350, 0, 250), Icon_btn = true})
 
 -- Tabs
 StandardTab = Regui.CreateTab(Window,{Name="Standard"})
