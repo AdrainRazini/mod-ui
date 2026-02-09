@@ -337,6 +337,7 @@ AutoFarm = {
 	Enabled = false,
 	Mode = "Single", -- "Single" | "All"
 	TargetType = Options[1],
+	RangeTarget = 50,
 	Timer = 0.5
 }
 
@@ -386,11 +387,28 @@ local function getTarget(nameTarget)
 	local spawned = workspace:FindFirstChild("Spawned")
 	if not spawned then return nil end
 
+	local playerChar = player.Character
+    local hrp = playerChar and playerChar:FindFirstChild("HumanoidRootPart")
+    if not hrp then return nil end
+
 	for _, obj in ipairs(spawned:GetChildren()) do
+	if string.find(obj.Name, targetType) then
+		local part = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart")
+		if part then
+			local distance = (part.Position - hrp.Position).Magnitude
+			if distance <= AutoFarm.RangeTarget then
+				return obj
+			end
+		end
+	end
+end
+
+
+	--[[for _, obj in ipairs(spawned:GetChildren()) do
 		if string.find(obj.Name, targetType) then
 			return obj
 		end
-	end
+	end]]
 
 	return nil
 end
@@ -429,6 +447,17 @@ Regui.CreateSliderOption(FarmTab, {
 }, function(state)
 	AutoFarm.TargetType = state
 end)
+
+
+Regui.CreateSliderInt(FarmTab, {
+	Text = "Range Target",
+	Minimum = 50,
+	Maximum = 1000,
+	Value = 50
+}, function(value)
+	AutoFarm.RangeTarget = value
+end)
+
 
 -- Add a checkbox
 Regui.CreateCheckboxe(FarmTab, {
@@ -474,7 +503,6 @@ Regui.CreateSliderInt(FarmTab, {
 }, function(value)
 	AutoFarm.Timer = math.clamp(1 / value, 0.1, 2)
 end)
-
 
 -- Add a button
 Regui.CreateButton(FarmTab, {
