@@ -477,3 +477,15 @@ end)
 
 
 
+--
+
+-- Add a button
+Regui.CreateButton(FarmTab, {
+	Text = "Equip: Rock",
+	Color = "White",
+	BGColor = "Blue"
+}, function()
+	print("Button EquipTool!")
+    EquipTool("Rock")
+	
+end)
