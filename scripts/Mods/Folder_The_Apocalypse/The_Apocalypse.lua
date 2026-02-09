@@ -498,7 +498,6 @@ end)
 Regui.CreateSliderInt(FarmTab, {
 	Text = "Speed Auto",
 	Minimum = 1
-
 	Maximum = 10,
 	Value = 5
 }, function(value)
