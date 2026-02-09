@@ -595,8 +595,9 @@ Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura",
 	Color = "Yellow"
 }, function(state)
-	Aura = state
+	GameFarme.Aura = state
 end)
+
 
 Regui.CreateSliderInt(GameTab, {
 	Text = "Speed Aura",
