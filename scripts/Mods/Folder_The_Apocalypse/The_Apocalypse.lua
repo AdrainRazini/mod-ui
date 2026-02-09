@@ -460,7 +460,7 @@ task.spawn(function()
 			for _, target in ipairs(Options) do
 				if not AutoFarm.Enabled then break end
 				doAction(target)
-				task.wait(AutoFarm.Timer or 0.15) -- delay humano
+				task.wait(0.15) -- delay humano
 			end
 		end
 	end
