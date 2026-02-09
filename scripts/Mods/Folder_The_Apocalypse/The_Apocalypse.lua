@@ -413,3 +413,20 @@ Regui.CreateSliderInt(FarmTab, {
 	print("Slider value:", value)
 end)
 
+
+
+local OptionsInstance2 = Regui.CreateSelectorOpitions(FarmTab, {
+	Name = "Selector",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,50),
+	Frame_Max = 50,
+	Options = {
+
+		{name = "Name", Obj = "Parent"},
+		
+	},
+
+	Type = "Instance"
+}, function(val)
+	print("Você escolheu:", val)
+end)
