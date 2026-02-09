@@ -334,32 +334,8 @@ game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(a
 local AutoFarm = {
     Enabled = false,
 	Timer = 0.5,
-    TargetType = "Tree",
+    TargetType = "Tree"
 }
-
-local function getTarget()
-	if AutoFarm.TargetType == "Tree" then
-		return workspace.Spawned:FindFirstChild("Tree1")
-	elseif AutoFarm.TargetType == "Palm" then
-		return workspace.Spawned:FindFirstChild("Palm1")
-	end
-end
-
-local function doAction()
-	local target = getTarget()
-	if not target then return end
-
-	local args = {
-		[1] = "click",
-		[2] = target,
-		[3] = false
-	}
-
-	game:GetService("ReplicatedStorage")
-		.Network.Items.ToolAction
-		:FireServer(unpack(args))
-end
-
 
 -- Add a label
 Regui.CreateLabel(FarmTab, {
@@ -389,14 +365,9 @@ Regui.CreateCheckboxe(FarmTab, {
 AutoFarm.Enabled = state
 
 if state then
-task.spawn(function()
-	while true do
-		if AutoFarm.Enabled then
-			doAction()
-		end
-		task.wait(AutoFarm.Timer)
-	end
-end)
+
+end
+
 end)
 
 Regui.CreateSliderInt(FarmTab, {
