@@ -331,11 +331,15 @@ game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(a
 -- Notification Helper
 --================================================
 -- Para Uma Ação só
-local AutoFarm = {
-    Enabled = false,
-	Timer = 0.5,
-    TargetType = "Tree",
+local Options = {"Tree", "Palm", "CopperOre", "IronOre", "Coal", "Stone"}
+
+AutoFarm = {
+	Enabled = false,
+	Mode = "Single", -- "Single" | "All"
+	TargetType = Options[1],
+	Timer = 0.5
 }
+
 
 local function GetToolbar()
 	return player:FindFirstChild("Toolbar")
@@ -415,10 +419,8 @@ Regui.CreateLabel(FarmTab, {
 	Alignment = "Center"
 })
 
-local Options = {"Tree", "Palm","CopperOre","IronOre","Coal","Stone"}
-
 -- SliderOption para escolher o tamanho da janela
-local Slider_Auto_Option = Regui.CreateSliderOption(FarmTab, {
+Regui.CreateSliderOption(FarmTab, {
 	Text = "Automatic farm",
 	Color = "White",
 	Background = "Blue",
@@ -429,39 +431,53 @@ local Slider_Auto_Option = Regui.CreateSliderOption(FarmTab, {
 end)
 
 
+
 -- Add a checkbox
 Regui.CreateCheckboxe(FarmTab, {
-	Text = "Auto: " .. AutoFarm.TargetType,
+	Text = "Auto: Selected",
 	Color = "Yellow"
 }, function(state)
-	print("Checkbox state:", state)
-AutoFarm.Enabled = state
-
-if state then
-
-task.spawn(function()
-	while true do
-		if AutoFarm.Enabled then
-         doAction()
-		end
-		task.wait(AutoFarm.Timer)
-	end
+	AutoFarm.Enabled = state
+	AutoFarm.Mode = "Single"
 end)
 
-end
+Regui.CreateCheckboxe(FarmTab, {
+	Text = "Auto: All",
+	Color = "Yellow"
+}, function(state)
+	AutoFarm.Enabled = state
+	AutoFarm.Mode = "All"
+end)
 
+
+task.spawn(function()
+	while task.wait(AutoFarm.Timer) do
+		if not AutoFarm.Enabled then
+			continue
+		end
+
+		if AutoFarm.Mode == "Single" then
+			doAction(AutoFarm.TargetType)
+
+		elseif AutoFarm.Mode == "All" then
+			for _, target in ipairs(Options) do
+				if not AutoFarm.Enabled then break end
+				doAction(target)
+				task.wait(0.15) -- delay humano
+			end
+		end
+	end
 end)
 
 
 Regui.CreateSliderInt(FarmTab, {
-	Text = "Speed Auto: " .. AutoFarm.TargetType,
+	Text = "Speed Auto",
 	Minimum = 1,
 	Maximum = 10,
 	Value = 5
 }, function(value)
-	print("Slider value:", value)
+	AutoFarm.Timer = math.clamp(1 / value, 0.1, 2)
 end)
 
 
--- === Ore 
 
