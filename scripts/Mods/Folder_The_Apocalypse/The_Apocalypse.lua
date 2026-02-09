@@ -339,23 +339,6 @@ local AutoFarm = {
 	ToolRequired = {"Rock"}
 }
 
-
-local Purpose = {
-	Tree = "Rock",
-	Palm = "Rock",
-	Stone = "Pickaxe",
-	CopperOre = "Pickaxe",
-	IronOre = "Pickaxe"
-}
-
-local function PrepareAction(targetType)
-	local tool = Purpose[targetType]
-	if tool then
-		EquipTool(tool)
-	end
-end
-
-
 local function GetToolbar()
 	return player:FindFirstChild("Toolbar")
 end
