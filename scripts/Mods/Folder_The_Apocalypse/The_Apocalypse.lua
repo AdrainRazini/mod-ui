@@ -334,20 +334,90 @@ game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(a
 local AutoFarm = {
     Enabled = false,
 	Timer = 0.5,
-    TargetType = "Tree"
+    TargetType = "Tree",
+	TargetCurrent = nil,
+	ToolRequired = {"Rock"}
 }
 
 
-local function getTarget()
-	if AutoFarm.TargetType == "Tree" then
-		return workspace.Spawned:FindFirstChild("Tree1")
-	elseif AutoFarm.TargetType == "Palm" then
-		return workspace.Spawned:FindFirstChild("Palm1")
+local Purpose = {
+	Tree = "Rock",
+	Palm = "Rock",
+	Stone = "Pickaxe",
+	CopperOre = "Pickaxe",
+	IronOre = "Pickaxe"
+}
+
+local function PrepareAction(targetType)
+	local tool = Purpose[targetType]
+	if tool then
+		EquipTool(tool)
 	end
 end
 
-local function doAction()
-	local target = getTarget()
+
+local function GetToolbar()
+	return player:FindFirstChild("Toolbar")
+end
+
+
+local function GetIndex(toolName)
+	local toolbar = GetToolbar()
+	if not toolbar then return nil end
+
+	local toolFolder = toolbar:FindFirstChild(toolName)
+	if not toolFolder then return nil end
+
+	local index = toolFolder:FindFirstChild("Index")
+	if not index then return nil end
+
+	return index.Value
+end
+
+-- Equipe
+local function EquipTool(toolName)
+	local index = GetIndex(toolName)
+	if not index then
+		warn("[AutoFarm] Tool não encontrada:", toolName)
+		return
+	end
+
+	game:GetService("ReplicatedStorage")
+		.Network.Items.EquipItem
+		:FireServer(index)
+end
+
+-- Unequipe
+local function UnequipTool()
+	game:GetService("ReplicatedStorage")
+		.Network.Items.EquipItem
+		:FireServer(0)
+end
+
+
+local function getTarget(nameTarget)
+	if AutoFarm.TargetType == "Tree" then
+		return workspace.Spawned:FindFirstChild("Tree1")
+
+	elseif AutoFarm.TargetType == "Palm" then
+		return workspace.Spawned:FindFirstChild("Palm1")
+
+	elseif AutoFarm.TargetType == "CopperOre" then
+		return workspace.Spawned:FindFirstChild("CopperOre")
+
+	elseif AutoFarm.TargetType == "IronOre" then
+		return workspace.Spawned:FindFirstChild("IronOre")
+
+	elseif AutoFarm.TargetType == "Coal" then
+		return workspace.Spawned:FindFirstChild("Coal")
+
+	elseif AutoFarm.TargetType == "Stone" then
+		return workspace.Spawned:FindFirstChild("Stone")
+	end
+end
+
+local function doAction(nameTarget)
+	local target = getTarget(nameTarget)
 	if not target then return end
 
 	local args = {
@@ -394,7 +464,8 @@ if state then
 task.spawn(function()
 	while true do
 		if AutoFarm.Enabled then
-			doAction()
+		 PrepareAction(AutoFarm.TargetType)
+         doAction()
 		end
 		task.wait(AutoFarm.Timer)
 	end
@@ -414,19 +485,3 @@ Regui.CreateSliderInt(FarmTab, {
 end)
 
 
-
-local OptionsInstance2 = Regui.CreateSelectorOpitions(FarmTab, {
-	Name = "Selector",
-	Alignment = "Center",
-	Size_Frame = UDim2.new(1,-10,0,50),
-	Frame_Max = 50,
-	Options = {
-
-		{name = "Name", Obj = "Parent"},
-		
-	},
-
-	Type = "Instance"
-}, function(val)
-	print("Você escolheu:", val)
-end)
