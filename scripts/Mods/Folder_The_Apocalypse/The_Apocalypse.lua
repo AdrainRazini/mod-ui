@@ -217,40 +217,8 @@ function Notification(Title, Text, Tempo, Icon)
 	})
 end
 
-
-
-
-function aimAt(target)
-    local closestDistance = math.huge
-    local closestTarget = nil
-
-    -- Checa se target é Model
-    if target:IsA("Model") then
-        local hum = target:FindFirstChildOfClass("Humanoid")
-        local head = target:FindFirstChild("Head")
-        local hrp = target:FindFirstChild("HumanoidRootPart")
-        
-        if hum and head and hrp and hum.Health > 0 then
-            local distance = (hrp.Position - head.Position).Magnitude
-            if distance < closestDistance then
-                closestDistance = distance
-                closestTarget = target
-            end
-        end
-    end
-
-    -- Mira na cabeça do alvo
-    if closestTarget then
-        local head = closestTarget:FindFirstChild("Head")
-        if head then
-            local cameraLookAt = CFrame.new(camera.CFrame.Position, head.Position)
-            camera.CFrame = camera.CFrame:Lerp(cameraLookAt, 0.1) -- lerpSpeed = 0.1
-        end
-    end
-end
-
 local function LookCameraToPosition(targetPosition, duration)
-	duration = duration or 0.5
+	duration = duration or 0.05
 	
 	local currentCFrame = camera.CFrame
 	local newCFrame = CFrame.new(currentCFrame.Position, targetPosition)
@@ -648,7 +616,7 @@ if nearestPart then
 	elseif GameFarme.Mode == "Fly" then
 
 	elseif GameFarme.Mode == "Aimbot" then
-    aimAt(nearestPart)
+    LookCameraToPosition(nearestPart.Position)
     end
 
 end
