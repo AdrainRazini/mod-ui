@@ -579,16 +579,16 @@ end
 
 
 task.spawn(function()
-	while task.wait(GameFarme.AuraDelay) do
-		if not GameFarme.Aura then
-			continue
-		end
+	 
+	while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
+	if not GameFarme.Aura then continue end
 
-		local enemy = getNearestEnemy()
-		if enemy then
-			attackEnemy(enemy)
-		end
+	local enemy = getNearestEnemy()
+	if enemy then
+		attackEnemy(enemy)
 	end
+    end
+
 end)
 
 
