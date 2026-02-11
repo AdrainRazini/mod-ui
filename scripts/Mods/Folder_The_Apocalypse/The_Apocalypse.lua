@@ -573,10 +573,10 @@ if nearestPart then
 		)
 	else
 		-- No Fly: sobe suavemente (sem snap)
-		hrp.CFrame = hrp.CFrame:Lerp(
+		--[[hrp.CFrame = hrp.CFrame:Lerp(
 			CFrame.new(hrp.Position.X, targetY, hrp.Position.Z),
 			0.3
-		)
+		)]]
 	end
 end
 
