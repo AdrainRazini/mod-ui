@@ -643,3 +643,13 @@ Regui.CreateSliderInt(GameTab, {
 	GameFarme.HeightOffset = value
 end)
 
+
+Regui.CreateSliderInt(GameTab, {
+	Text = "Speed Aura",
+	Minimum = 0.05,
+	Maximum = 2,
+	Value = 1
+}, function(value)
+	GameFarme.AuraDelay = value
+end)
+
