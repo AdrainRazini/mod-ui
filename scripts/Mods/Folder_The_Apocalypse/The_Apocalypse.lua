@@ -217,6 +217,17 @@ function Notification(Title, Text, Tempo, Icon)
 	})
 end
 
+local function aimAt(target)
+	if not aimEnabled or not target or not target.Character then return end
+	local head = target.Character:FindFirstChild("Head")
+	if head then
+		local targetPosition = head.Position
+		local cameraLookAt = CFrame.new(camera.CFrame.Position, targetPosition)
+		camera.CFrame = cameraLookAt:Lerp(camera.CFrame, lerpSpeed)
+	end
+end
+
+
 local function LookCameraToPosition(targetPosition, duration)
 	duration = duration or 0.5
 	
@@ -616,7 +627,7 @@ if nearestPart then
 	elseif GameFarme.Mode == "Fly" then
 
 	elseif GameFarme.Mode == "Aimbot" then
-    LookCameraToPosition(nearestPart.Position, 1)
+    aimAt(nearestPart)
     end
 
 end
