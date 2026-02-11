@@ -220,19 +220,35 @@ end
 local function LookCameraToPosition(targetPosition, duration)
 	duration = duration or 0.5
 	
-	local currentCFrame = camera.CFrame
-	local newCFrame = CFrame.new(currentCFrame.Position, targetPosition)
+	local player = game.Players.LocalPlayer
+	local character = player.Character
+	if not character then return end
+	
+	local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+	
+	camera.CameraType = Enum.CameraType.Scriptable
+	
+	local startCFrame = camera.CFrame
+	local goalCFrame = CFrame.new(startCFrame.Position, targetPosition)
 
 	local tween = TweenService:Create(
 		camera,
 		TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-		{CFrame = newCFrame}
+		{CFrame = goalCFrame}
 	)
 
 	tween:Play()
+
+	-- depois do tween, manter follow manual
+	tween.Completed:Connect(function()
+		RunService:BindToRenderStep("CustomCameraFollow", Enum.RenderPriority.Camera.Value, function()
+			local camPosition = humanoidRootPart.Position + Vector3.new(0, 5, 10)
+			camera.CFrame = CFrame.new(camPosition, targetPosition)
+		end)
+	end)
+
 	return tween
 end
-
 
 local function LookCameraToDirection(direction, duration)
 	duration = duration or 0.5
