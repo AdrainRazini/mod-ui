@@ -627,13 +627,6 @@ Regui.CreateCheckboxe(GameTab, {
 	GameFarme.Aura = state
 end)
 
-Regui.CreateCheckboxe(GameTab, {
-	Text = "Kill Aura Fly",
-	Color = "Yellow"
-}, function(state)
-	GameFarme.AuraFly = state
-end)
-
 Regui.CreateSliderInt(GameTab, {
 	Text = "Speed Aura",
 	Minimum = 0.05,
@@ -643,3 +636,20 @@ Regui.CreateSliderInt(GameTab, {
 	GameFarme.AuraDelay = value
 end)
 
+
+
+Regui.CreateCheckboxe(GameTab, {
+	Text = "Kill Aura Fly",
+	Color = "Yellow"
+}, function(state)
+	GameFarme.AuraFly = state
+end)
+
+Regui.CreateSliderInt(GameTab, {
+	Text = "Lock Y Aura",
+	Minimum = 2,
+	Maximum = 15,
+	Value = 5
+}, function(value)
+	GameFarme.HeightOffset = value
+end)
