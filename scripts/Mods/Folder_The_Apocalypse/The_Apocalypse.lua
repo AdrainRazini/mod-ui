@@ -346,6 +346,10 @@ local function GetToolbar()
 	return player:FindFirstChild("Toolbar")
 end
 
+local function GetInventory()
+	return player:FindFirstChild("Inventory")
+end
+
 local function GetIndex(toolName)
 	local toolbar = GetToolbar()
 	if not toolbar then return nil end
@@ -520,6 +524,8 @@ end)
 
 local GameFarme = {
 	Aura = false,
+	AuraFly = false,
+	LockY = 5,
 	AuraRange = 25,
 	AuraDelay = 0.2
 }
@@ -551,6 +557,11 @@ local function getNearestEnemy()
 			end
 		end
 	end
+
+	if GameFarme.AuraFly then
+    hrp.Velocity = Vector3.new(hrp.Velocity.X, GameFarme.LockY, hrp.Velocity.Z)
+    end
+
 
 	return nearestEnemy
 end
@@ -598,12 +609,19 @@ Regui.CreateCheckboxe(GameTab, {
 	GameFarme.Aura = state
 end)
 
+Regui.CreateCheckboxe(GameTab, {
+	Text = "Kill Aura Fly",
+	Color = "Yellow"
+}, function(state)
+	GameFarme.AuraFly = state
+end)
 
 Regui.CreateSliderInt(GameTab, {
 	Text = "Speed Aura",
-	Minimum = 0,
+	Minimum = 0.05,
 	Maximum = 2,
 	Value = 1
 }, function(value)
 	GameFarme.AuraDelay = value
 end)
+
