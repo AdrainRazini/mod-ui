@@ -560,26 +560,26 @@ local function getNearestEnemy()
 		end
 	end
 
-	-- ===== CONTROLE DE ALTURA =====
-	if nearestPart then
-		if GameFarme.AuraFly then
-			-- Fly: trava o Y
-			hrp.AssemblyLinearVelocity = Vector3.new(
-				hrp.AssemblyLinearVelocity.X,
-				GameFarme.LockY,
-				hrp.AssemblyLinearVelocity.Z
-			)
-		else
-			-- No fly: Y do NPC + 5
-			local targetY = nearestPart.Position.Y + 5
+	-- ===== CONTROLE DE ALTURA (sempre acima do NPC) =====
+if nearestPart then
+	local targetY = nearestPart.Position.Y + GameFarme.HeightOffset
 
-			hrp.CFrame = CFrame.new(
-				hrp.Position.X,
-				targetY,
-				hrp.Position.Z
-			)
-		end
+	if GameFarme.AuraFly then
+		-- Fly: trava exatamente na altura desejada
+		hrp.CFrame = CFrame.new(
+			hrp.Position.X,
+			targetY,
+			hrp.Position.Z
+		)
+	else
+		-- No Fly: sobe suavemente (sem snap)
+		hrp.CFrame = hrp.CFrame:Lerp(
+			CFrame.new(hrp.Position.X, targetY, hrp.Position.Z),
+			0.3
+		)
 	end
+end
+
 
 	return nearestEnemy
 end
