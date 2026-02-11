@@ -525,7 +525,8 @@ local GameFarme = {
 	Aura = false,
 	AuraFly = false,
 	AuraRange = 25,
-	AuraDelay = 0.2
+	AuraDelay = 0.2,
+	CameraDelay = 1
 }
 
 
@@ -623,16 +624,12 @@ if nearestPart then
 		-- Fly: trava exatamente na altura desejada
 		LookCameraToPosition(nearestPart.Position, 1)
 		hrp.CFrame = CFrame.new(
-			hrp.Position.X,
+			hrp.Position.X - 0.2,
 			targetY,
-			hrp.Position.Z
+			hrp.Position.Z - 0.1
 		)
 	else
-		-- No Fly: sobe suavemente (sem snap)
-		--[[hrp.CFrame = hrp.CFrame:Lerp(
-			CFrame.new(hrp.Position.X, targetY, hrp.Position.Z),
-			0.3
-		)]]
+
 	end
 end
 
