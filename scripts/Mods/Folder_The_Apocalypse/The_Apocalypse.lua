@@ -621,6 +621,7 @@ if nearestPart then
 
 	if GameFarme.AuraFly then
 		-- Fly: trava exatamente na altura desejada
+		LookCameraToPosition(nearestPart.Position, 1)
 		hrp.CFrame = CFrame.new(
 			hrp.Position.X,
 			targetY,
