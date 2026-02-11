@@ -417,7 +417,6 @@ end
 	return nil
 end
 
-
 local function doAction(nameTarget)
 	local target = getTarget(nameTarget)
 	if not target then return end
@@ -525,10 +524,66 @@ end)
 local GameFarme = {
 	Aura = false,
 	AuraFly = false,
-	LockY = 5,
 	AuraRange = 25,
 	AuraDelay = 0.2
 }
+
+
+
+local TweenService = game:GetService("TweenService")
+local camera = workspace.CurrentCamera
+
+local function LookCameraToPosition(targetPosition, duration)
+	duration = duration or 0.5
+	
+	local currentCFrame = camera.CFrame
+	local newCFrame = CFrame.new(currentCFrame.Position, targetPosition)
+
+	local tween = TweenService:Create(
+		camera,
+		TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+		{CFrame = newCFrame}
+	)
+
+	tween:Play()
+	return tween
+end
+
+
+local function LookCameraToDirection(direction, duration)
+	duration = duration or 0.5
+	
+	local cameraPos = camera.CFrame.Position
+	local lookAt = cameraPos + direction
+
+	local newCFrame = CFrame.new(cameraPos, lookAt)
+
+	local tween = TweenService:Create(
+		camera,
+		TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+		{CFrame = newCFrame}
+	)
+
+	tween:Play()
+	return tween
+end
+
+local function SmoothLookAt(targetPosition, speed)
+	speed = speed or 5
+
+	local connection
+	connection = RunService.RenderStepped:Connect(function(dt)
+		local current = camera.CFrame
+		local goal = CFrame.new(current.Position, targetPosition)
+
+		camera.CFrame = current:Lerp(goal, math.clamp(speed * dt, 0, 1))
+
+		if (camera.CFrame.LookVector - goal.LookVector).Magnitude < 0.001 then
+			connection:Disconnect()
+		end
+	end)
+end
+
 
 
 local function getNearestEnemy()
