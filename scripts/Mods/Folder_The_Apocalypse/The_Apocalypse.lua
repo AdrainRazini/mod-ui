@@ -337,7 +337,7 @@ AutoFarm = {
 	Enabled = false,
 	Mode = "Single", -- "Single" | "All"
 	TargetType = Options[1],
-	RangeTarget = 50,
+	RangeTarget = 500,
 	Timer = 0.5
 }
 
@@ -457,7 +457,7 @@ Regui.CreateSliderInt(FarmTab, {
 	Text = "Range Target",
 	Minimum = 50,
 	Maximum = 1000,
-	Value = 50
+	Value = 500
 }, function(value)
 	AutoFarm.RangeTarget = value
 end)
