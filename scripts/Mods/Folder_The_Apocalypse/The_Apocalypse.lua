@@ -561,49 +561,25 @@ local function getNearestEnemy()
 		end
 	end
 
-	return nearestEnemy
-end
+	-- ===== CONTROLE DE ALTURA (sempre acima do NPC) =====
+if nearestPart then
+	local targetY = nearestPart.Position.Y + GameFarme.HeightOffset
 
-local currentTargetPart = nil
-
--- Atualiza alvo
-local function updateTarget()
-	local enemy, part = getNearestEnemy()
-	currentTargetPart = part
-	return enemy
-end
-
-
-RunService.Heartbeat:Connect(function()
-	if not GameFarme.Aura then return end
-	if not currentTargetPart then return end
-	
-	local char = player.Character
-	if not char then return end
-	
-	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then return end
-	
-	local targetY = currentTargetPart.Position.Y + GameFarme.HeightOffset
-	
 	if GameFarme.AuraFly then
-		-- trava altura
+		-- Fly: trava exatamente na altura desejada
 		hrp.CFrame = CFrame.new(
 			hrp.Position.X,
 			targetY,
 			hrp.Position.Z
 		)
-	else
-		-- movimento suave
-		local goal = CFrame.new(
-			hrp.Position.X,
-			targetY,
-			hrp.Position.Z
-		)
-		
-		hrp.CFrame = hrp.CFrame:Lerp(goal, 0.25)
 	end
-end)
+
+end
+
+
+	return nearestEnemy
+end
+
 
 local function attackEnemy(enemy)
 	if not enemy then return end
@@ -617,14 +593,16 @@ end
 
 
 task.spawn(function()
+	 
 	while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
-		if not GameFarme.Aura then continue end
-		
-		local enemy = updateTarget()
-		if enemy then
-			attackEnemy(enemy)
-		end
+	if not GameFarme.Aura then continue end
+
+	local enemy = getNearestEnemy()
+	if enemy then
+		attackEnemy(enemy)
 	end
+    end
+
 end)
 
 
