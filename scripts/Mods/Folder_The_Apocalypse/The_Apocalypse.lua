@@ -680,6 +680,15 @@ Regui.CreateCheckboxe(GameTab, {
 	GameFarme.Aura = state
 end)
 
+Regui.CreateSliderInt(GameTab, {
+	Text = "Camera Delay",
+	Minimum = 0.5,
+	Maximum = 2,
+	Value = 1
+}, function(value)
+	GameFarme.CameraDelay = value
+end)
+
 Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura Fly",
 	Color = "Yellow"
