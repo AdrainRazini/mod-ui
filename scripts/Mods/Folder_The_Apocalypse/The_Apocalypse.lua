@@ -542,6 +542,7 @@ local function getNearestEnemy()
 	if not enemiesFolder then return nil end
 
 	local nearestEnemy
+	local nearestPart
 	local nearestDist = math.huge
 
 	for _, enemy in ipairs(enemiesFolder:GetChildren()) do
@@ -553,15 +554,32 @@ local function getNearestEnemy()
 			local dist = (part.Position - hrp.Position).Magnitude
 			if dist <= GameFarme.AuraRange and dist < nearestDist then
 				nearestEnemy = enemy
+				nearestPart = part
 				nearestDist = dist
 			end
 		end
 	end
 
-	if GameFarme.AuraFly then
-    hrp.Velocity = Vector3.new(hrp.Velocity.X, GameFarme.LockY, hrp.Velocity.Z)
-    end
+	-- ===== CONTROLE DE ALTURA =====
+	if nearestPart then
+		if GameFarme.AuraFly then
+			-- Fly: trava o Y
+			hrp.AssemblyLinearVelocity = Vector3.new(
+				hrp.AssemblyLinearVelocity.X,
+				GameFarme.LockY,
+				hrp.AssemblyLinearVelocity.Z
+			)
+		else
+			-- No fly: Y do NPC + 5
+			local targetY = nearestPart.Position.Y + 5
 
+			hrp.CFrame = CFrame.new(
+				hrp.Position.X,
+				targetY,
+				hrp.Position.Z
+			)
+		end
+	end
 
 	return nearestEnemy
 end
