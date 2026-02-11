@@ -662,7 +662,7 @@ task.spawn(function()
 end)
 
 
-Regui.CreateSliderInt(GameTab, {
+AuraRangeSlider = Regui.CreateSliderInt(GameTab, {
 	Text = "Range Aura",
 	Minimum = 5,
 	Maximum = 50,
@@ -672,21 +672,21 @@ Regui.CreateSliderInt(GameTab, {
 end)
 
 
-Regui.CreateCheckboxe(GameTab, {
+AuraCheck = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura",
 	Color = "Yellow"
 }, function(state)
 	GameFarme.Aura = state
 end)
 
-Regui.CreateCheckboxe(GameTab, {
+AuraCheckFly = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura Fly",
 	Color = "Yellow"
 }, function(state)
 	GameFarme.AuraFly = state
 end)
 
-Regui.CreateSliderInt(GameTab, {
+AuraLockSlider = Regui.CreateSliderInt(GameTab, {
 	Text = "Lock Y Aura",
 	Minimum = 2,
 	Maximum = 15,
@@ -696,7 +696,7 @@ Regui.CreateSliderInt(GameTab, {
 end)
 
 
-Regui.CreateSliderInt(GameTab, {
+AuraSpeedSlider = Regui.CreateSliderInt(GameTab, {
 	Text = "Speed Aura",
 	Minimum = 0.05,
 	Maximum = 2,
@@ -705,3 +705,14 @@ Regui.CreateSliderInt(GameTab, {
 	GameFarme.AuraDelay = value
 end)
 
+
+-- Add a button
+Tool_Wooden = Regui.CreateButton(FarmTab, {
+	Text = "Equip: Wooden Spear",
+	Color = "White",
+	BGColor = "Blue"
+}, function()
+	print("Button EquipTool!")
+    EquipTool("Wooden Spear")
+	
+end)
