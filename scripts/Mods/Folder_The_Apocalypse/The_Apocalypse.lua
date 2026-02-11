@@ -610,14 +610,18 @@ local function getNearestEnemy()
 			end
 		end
 	end
-
+if nearestPart then
 	if GameFarme.Mode == "Terrain" then
 
-	elseif AutoFarm.Mode == "Fly" then
+	elseif GameFarme.Mode == "Fly" then
 
-	elseif AutoFarm.Mode == "Aimbot" then
+	elseif GameFarme.Mode == "Aimbot" then
     LookCameraToPosition(nearestPart.Position, 1)
     end
+	
+end
+
+
 
 	return nearestEnemy
 end
