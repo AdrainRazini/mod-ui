@@ -531,7 +531,6 @@ local GameFarme = {
 }
 
 
-
 local function getNearestEnemy()
 	local char = player.Character
 	if not char then return nil end
@@ -573,7 +572,6 @@ if nearestPart then
 			hrp.Position.Z
 		)
 	end
-
 end
 
 
@@ -622,7 +620,6 @@ Regui.CreateCheckboxe(GameTab, {
 }, function(state)
 	GameFarme.Aura = state
 end)
-
 Regui.CreateSliderInt(GameTab, {
 	Text = "Speed Aura",
 	Minimum = 0.05,
@@ -631,7 +628,6 @@ Regui.CreateSliderInt(GameTab, {
 }, function(value)
 	GameFarme.AuraDelay = value
 end)
-
 
 
 Regui.CreateCheckboxe(GameTab, {
@@ -649,3 +645,4 @@ Regui.CreateSliderInt(GameTab, {
 }, function(value)
 	GameFarme.HeightOffset = value
 end)
+
