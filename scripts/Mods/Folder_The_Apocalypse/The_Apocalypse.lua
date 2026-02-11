@@ -217,16 +217,37 @@ function Notification(Title, Text, Tempo, Icon)
 	})
 end
 
-local function aimAt(target)
-	if not aimEnabled or not target or not target.Character then return end
-	local head = target.Character:FindFirstChild("Head")
-	if head then
-		local targetPosition = head.Position
-		local cameraLookAt = CFrame.new(camera.CFrame.Position, targetPosition)
-		camera.CFrame = cameraLookAt:Lerp(camera.CFrame, lerpSpeed)
-	end
-end
 
+
+
+function aimAt(target)
+    local closestDistance = math.huge
+    local closestTarget = nil
+
+    -- Checa se target é Model
+    if target:IsA("Model") then
+        local hum = target:FindFirstChildOfClass("Humanoid")
+        local head = target:FindFirstChild("Head")
+        local hrp = target:FindFirstChild("HumanoidRootPart")
+        
+        if hum and head and hrp and hum.Health > 0 then
+            local distance = (hrp.Position - head.Position).Magnitude
+            if distance < closestDistance then
+                closestDistance = distance
+                closestTarget = target
+            end
+        end
+    end
+
+    -- Mira na cabeça do alvo
+    if closestTarget then
+        local head = closestTarget:FindFirstChild("Head")
+        if head then
+            local cameraLookAt = CFrame.new(camera.CFrame.Position, head.Position)
+            camera.CFrame = camera.CFrame:Lerp(cameraLookAt, 0.1) -- lerpSpeed = 0.1
+        end
+    end
+end
 
 local function LookCameraToPosition(targetPosition, duration)
 	duration = duration or 0.5
