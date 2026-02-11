@@ -571,6 +571,12 @@ if nearestPart then
 			targetY,
 			hrp.Position.Z
 		)
+	else
+		-- No Fly: sobe suavemente (sem snap)
+		hrp.CFrame = hrp.CFrame:Lerp(
+			CFrame.new(hrp.Position.X, targetY, hrp.Position.Z),
+			0.3
+		)
 	end
 end
 
@@ -620,15 +626,6 @@ Regui.CreateCheckboxe(GameTab, {
 }, function(state)
 	GameFarme.Aura = state
 end)
-Regui.CreateSliderInt(GameTab, {
-	Text = "Speed Aura",
-	Minimum = 0.05,
-	Maximum = 2,
-	Value = 1
-}, function(value)
-	GameFarme.AuraDelay = value
-end)
-
 
 Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura Fly",
