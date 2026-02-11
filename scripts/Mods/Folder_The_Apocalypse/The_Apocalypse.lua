@@ -573,10 +573,9 @@ end)
 
 
 -- PVP 
-
 local GameFarme = {
     Enabled = false,
-	Mode = "Terrain", -- Terrain / Fly / Aimbot
+	Mode = "Terrain", -- Terrain / Fly / Aimbot/ Null
 	AuraRange = 25,
 	AuraDelay = 0.2
 }
@@ -611,17 +610,16 @@ local function getNearestEnemy()
 		end
 	end
 if nearestPart then
+
 	if GameFarme.Mode == "Terrain" then
 
 	elseif GameFarme.Mode == "Fly" then
 
 	elseif GameFarme.Mode == "Aimbot" then
-    LookCameraToPosition(nearestPart.Position)
+    LookCameraToPosition(nearestPart.Position,0.5)
     end
 
 end
-
-
 
 	return nearestEnemy
 end
@@ -698,7 +696,7 @@ end)
 
 
 -- Add a button
-Tool_Wooden = Regui.CreateButton(FarmTab, {
+Tool_Wooden = Regui.CreateButton(GameTab, {
 	Text = "Equip: Wooden Spear",
 	Color = "White",
 	BGColor = "Blue"
