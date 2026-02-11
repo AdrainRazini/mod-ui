@@ -618,7 +618,7 @@ if nearestPart then
 	elseif GameFarme.Mode == "Aimbot" then
     LookCameraToPosition(nearestPart.Position, 1)
     end
-	
+
 end
 
 
@@ -637,22 +637,6 @@ local function attackEnemy(enemy)
 	)
 end
 
-
-task.spawn(function()
-	 
-	while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
-		if not GameFarme.Enabled then
-			continue
-		end
-	local enemy = getNearestEnemy()
-	if enemy then
-		attackEnemy(enemy)
-	end
-    end
-
-end)
-
-
 AuraRangeSlider = Regui.CreateSliderInt(GameTab, {
 	Text = "Range Aura",
 	Minimum = 5,
@@ -662,13 +646,19 @@ AuraRangeSlider = Regui.CreateSliderInt(GameTab, {
 	GameFarme.AuraRange = value
 end)
 
+-- Add a label
+AuraLabel = Regui.CreateLabel(GameTab, {
+	Text = "PvP Game!",
+	Color = "White",
+	Alignment = "Center"
+})
 
 AuraCheck = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura",
 	Color = "Yellow"
 }, function(state)
 	GameFarme.Enabled = state
-	GameFarme.Mode = ""
+	GameFarme.Mode = "Terrain"
 end)
 
 AuraCheckFly = Regui.CreateCheckboxe(GameTab, {
@@ -716,4 +706,24 @@ Tool_Wooden = Regui.CreateButton(FarmTab, {
 	print("Button EquipTool!")
     EquipTool("Wooden Spear")
 	
+end)
+
+
+task.spawn(function()
+	 
+while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
+ if not GameFarme.Enabled then
+	continue
+ end
+
+local enemy = getNearestEnemy()
+ if enemy then
+		attackEnemy(enemy)
+ end
+
+ AuraLabel.Text ="Mode: " .. GameFarme.Mode
+
+end
+	
+
 end)
