@@ -63,7 +63,7 @@ local Workspace = game:GetService("Workspace")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
-
+local TweenService = game:GetService("TweenService")
 -- ==========================================
 -- The Apocalypse: External Services
 -- ==========================================
@@ -77,6 +77,7 @@ local UserInputService = game:GetService("UserInputService")
 local Regui
 local player = Players.LocalPlayer
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local camera = workspace.CurrentCamera
 local GuiName = "Mod_The_Apocalypse_" .. game.Players.LocalPlayer.Name
 
 -- ==========================================
@@ -215,12 +216,6 @@ function Notification(Title, Text, Tempo, Icon)
 		Icon  = Icon
 	})
 end
-
-
-
-
-local TweenService = game:GetService("TweenService")
-local camera = workspace.CurrentCamera
 
 local function LookCameraToPosition(targetPosition, duration)
 	duration = duration or 0.5
