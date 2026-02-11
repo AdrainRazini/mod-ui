@@ -555,7 +555,7 @@ Regui.CreateSliderInt(FarmTab, {
 	Text = "Speed Auto",
 	Minimum = 1,
 	Maximum = 10,
-	Value = 5
+	Value = 1
 }, function(value)
 	AutoFarm.Timer = math.clamp(1 / value, 0.1, 2)
 end)
@@ -575,8 +575,8 @@ end)
 -- PVP 
 
 local GameFarme = {
-	Aura = false,
-	AuraFly = false,
+    Enabled = false,
+	Mode = "Terrain", -- Terrain / Fly / Aimbot
 	AuraRange = 25,
 	AuraDelay = 0.2
 }
@@ -611,27 +611,13 @@ local function getNearestEnemy()
 		end
 	end
 
-	-- ===== CONTROLE DE ALTURA (sempre acima do NPC) =====
-if nearestPart then
-	local targetY = nearestPart.Position.Y + GameFarme.HeightOffset
+	if GameFarme.Mode == "Terrain" then
 
-	if GameFarme.AuraFly then
-		-- Fly: trava exatamente na altura desejada
-		LookCameraToPosition(nearestPart.Position, 1)
-		hrp.CFrame = CFrame.new(
-			hrp.Position.X,
-			targetY,
-			hrp.Position.Z
-		)
-	else
-		-- No Fly: sobe suavemente (sem snap)
-		--[[hrp.CFrame = hrp.CFrame:Lerp(
-			CFrame.new(hrp.Position.X, targetY, hrp.Position.Z),
-			0.3
-		)]]
-	end
-end
+	elseif AutoFarm.Mode == "Fly" then
 
+	elseif AutoFarm.Mode == "Aimbot" then
+    LookCameraToPosition(nearestPart.Position, 1)
+    end
 
 	return nearestEnemy
 end
@@ -651,8 +637,9 @@ end
 task.spawn(function()
 	 
 	while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
-	if not GameFarme.Aura then continue end
-
+		if not GameFarme.Enabled then
+			continue
+		end
 	local enemy = getNearestEnemy()
 	if enemy then
 		attackEnemy(enemy)
@@ -676,14 +663,24 @@ AuraCheck = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura",
 	Color = "Yellow"
 }, function(state)
-	GameFarme.Aura = state
+	GameFarme.Enabled = state
+	GameFarme.Mode = ""
 end)
 
 AuraCheckFly = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura Fly",
 	Color = "Yellow"
 }, function(state)
-	GameFarme.AuraFly = state
+	GameFarme.Enabled = state
+	GameFarme.Mode = "Fly"
+end)
+
+AuraCheckAimbot = Regui.CreateCheckboxe(GameTab, {
+	Text = "Kill Aura Aimbot",
+	Color = "Yellow"
+}, function(state)
+	GameFarme.Enabled = state
+	GameFarme.Mode = "Aimbot"
 end)
 
 AuraLockSlider = Regui.CreateSliderInt(GameTab, {
