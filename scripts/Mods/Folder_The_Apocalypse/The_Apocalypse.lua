@@ -525,8 +525,7 @@ local GameFarme = {
 	Aura = false,
 	AuraFly = false,
 	AuraRange = 25,
-	AuraDelay = 0.2,
-	CameraDelay = 1
+	AuraDelay = 0.2
 }
 
 
@@ -624,12 +623,16 @@ if nearestPart then
 		-- Fly: trava exatamente na altura desejada
 		LookCameraToPosition(nearestPart.Position, 1)
 		hrp.CFrame = CFrame.new(
-			hrp.Position.X - 0.2,
+			hrp.Position.X,
 			targetY,
-			hrp.Position.Z - 0.1
+			hrp.Position.Z
 		)
 	else
-
+		-- No Fly: sobe suavemente (sem snap)
+		--[[hrp.CFrame = hrp.CFrame:Lerp(
+			CFrame.new(hrp.Position.X, targetY, hrp.Position.Z),
+			0.3
+		)]]
 	end
 end
 
@@ -678,15 +681,6 @@ Regui.CreateCheckboxe(GameTab, {
 	Color = "Yellow"
 }, function(state)
 	GameFarme.Aura = state
-end)
-
-Regui.CreateSliderInt(GameTab, {
-	Text = "Camera Delay",
-	Minimum = 0.5,
-	Maximum = 2,
-	Value = 1
-}, function(value)
-	GameFarme.CameraDelay = value
 end)
 
 Regui.CreateCheckboxe(GameTab, {
