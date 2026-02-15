@@ -603,6 +603,30 @@ Tool_Wooden = Regui.CreateButton(GameTab, {
 end)
 
 
+Stamina = Regui.CreateCheckboxe(GameTab, {
+	Text = "Stamina Infinit",
+	Color = "Yellow"
+}, function(state)
+
+	GameFarme.Stamina = state
+	
+	if state then
+		task.spawn(function()
+			while GameFarme.Stamina do
+				
+				game:GetService("ReplicatedStorage")
+					.Network.Character.TakeStamina
+					:FireServer(2)
+
+				task.wait(0.1) -- controle de spam
+			end
+		end)
+	end
+	
+end)
+
+
+
 task.spawn(function()
 	 
 while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
