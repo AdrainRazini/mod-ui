@@ -285,15 +285,16 @@ AutoFarm = {
 	Timer = 0.5
 }
 
-
+-- ToolBar
 local function GetToolbar()
 	return player:FindFirstChild("Toolbar")
 end
-
+-- Inventory
 local function GetInventory()
 	return player:FindFirstChild("Inventory")
 end
 
+-- Index Folder ToolBar
 local function GetIndex(toolName)
 	local toolbar = GetToolbar()
 	if not toolbar then return nil end
