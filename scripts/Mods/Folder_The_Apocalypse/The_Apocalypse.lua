@@ -187,12 +187,32 @@ local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Tex
 --================================================
 local Cache = {}
 
---[[
-local AF = {}
-local AF_Timer = {}
-local PVP = {}
-local PVP_Timer = {}
-]]
+-- Para Uma Ação só
+local Options_Farm = {"Tree", "Palm", "CopperOre", "IronOre", "Coal", "Stone"}
+
+-- Farme
+AutoFarm = {
+	Enabled = false,
+	Mode = "Single", -- "Single" | "SingleFocus" | "All" | "AllFocus"
+	TargetType = Options_Farm[1], -- Tree
+	RangeTarget = 500,
+	Timer = 0.5
+}
+
+-- Game 
+local GameFarm = {
+    Enabled = false,
+	Mode = "Terrain", -- Terrain / Fly / Aimbot/ Null
+	AuraRange = 25,
+	AuraDelay = 0.2
+}
+
+-- Global Mode
+local function SetMode(ttl,state,mode)
+	ttl.Enabled = state
+	ttl.Mode = mode
+end
+
 
 --================================================
 -- Using -- Dynamic Creation -- Current Version of the Memory Library
@@ -274,17 +294,6 @@ end
 --================================================
 -- Notification Helper
 --================================================
--- Para Uma Ação só
-local Options = {"Tree", "Palm", "CopperOre", "IronOre", "Coal", "Stone"}
-
-AutoFarm = {
-	Enabled = false,
-	Mode = "Single", -- "Single" | "All"
-	TargetType = Options[1],
-	RangeTarget = 500,
-	Timer = 0.5
-}
-
 -- ToolBar
 local function GetToolbar()
 	return player:FindFirstChild("Toolbar")
@@ -328,8 +337,8 @@ local function UnequipTool()
 		:FireServer(0)
 end
 
-
-local function getTarget(nameTarget, d)
+-- Obter Target -- Material 
+local function getTarget(nameTarget, range)
 	local targetType = nameTarget or AutoFarm.TargetType
 	if not targetType then return nil end
 
@@ -340,7 +349,7 @@ local function getTarget(nameTarget, d)
 	local hrp = playerChar and playerChar:FindFirstChild("HumanoidRootPart")
 	if not hrp then return nil end
 
-	local maxDistance = d or AutoFarm.RangeTarget
+	local maxDistance = range or 500
 
 	for _, obj in ipairs(spawned:GetChildren()) do
 		if string.find(obj.Name, targetType) then
@@ -353,17 +362,78 @@ local function getTarget(nameTarget, d)
 			end
 		end
 	end
+
 	
 	return nil
 end
 
+-- Obter Target -- Material + Obeservar o Config(Modulo) do Obj Configuration(Onde é guardado Atributos) ex: Id,Health
+-- Configuration Reflete o estado atual como vida ou id 
+-- Config(Modulo) Retorna {displayName,handlerModule,extractable,maxHealth,progress ={}}
+local function getTargetConect(nameTarget, range)
+	
+	local targetType = nameTarget or AutoFarm.TargetType
+	if not targetType then return nil end
+
+	local spawned = workspace:FindFirstChild("Spawned")
+	if not spawned then return nil end
+
+	local playerChar = player.Character
+	local hrp = playerChar and playerChar:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local maxDistance = range or 500
+	local closestTarget = nil
+	local closestDistance = math.huge
+
+	for _, obj in ipairs(spawned:GetChildren()) do
+		
+		if string.find(obj.Name, targetType) then
+			
+			local part = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart")
+			if not part then continue end
+			
+			local distance = (part.Position - hrp.Position).Magnitude
+			if distance > maxDistance then continue end
+			
+			-- 🔎 Verifica Configuration
+			local configuration = obj:FindFirstChild("Configuration")
+			if not configuration then continue end
+			
+			local health = configuration:GetAttribute("Health")
+			if health and health <= 0 then
+				continue -- já destruído
+			end
+			
+			-- 🔎 Verifica módulo Config
+			local configModule = obj:FindFirstChild("Config")
+			if configModule and configModule:IsA("ModuleScript") then
+				local data = require(configModule)
+				
+				if data.extractable == false then
+					continue
+				end
+			end
+			
+			-- 🔥 Prioriza o mais próximo
+			if distance < closestDistance then
+				closestDistance = distance
+				closestTarget = obj
+			end
+		end
+	end
+
+	return closestTarget
+end
+
 
 -- Click Tool
-local function doAction(nameTarget)
-	local target = getTarget(nameTarget)
+local function doAction(nameTarget, range)
+	local target = getTarget(nameTarget, range)
+
 	if not target then return end
 
-	local args = {
+local args = {
 		[1] = "click",
 		[2] = target,
 		[3] = false
@@ -374,23 +444,6 @@ local function doAction(nameTarget)
 		:FireServer(unpack(args))
 end
 
-local function doTakeAll(nameTarget,d)
-	d = d or 9999
-	local target = getTarget(nameTarget, d)
-	if not target then return end
-	
-	local inventory = target:FindFirstChild("Inventory")
-	if not inventory then return end
-	
-	local args = {
-		[1] = target,
-		[2] = inventory
-	}
-
-	game:GetService("ReplicatedStorage")
-		.Network.Items.TakeAll
-		:FireServer(unpack(args))
-end
 
 --=================================
 -- FarmTab
@@ -403,7 +456,7 @@ Regui.CreateLabel(FarmTab, {
 	Alignment = "Center"
 })
 
--- SliderOption para escolher o tamanho da janela
+-- SliderOption 
 Regui.CreateSliderOption(FarmTab, {
 	Text = "Automatic farm",
 	Color = "White",
@@ -430,34 +483,36 @@ Regui.CreateCheckboxe(FarmTab, {
 	Text = "Auto: Selected",
 	Color = "Yellow"
 }, function(state)
-	AutoFarm.Enabled = state
-	AutoFarm.Mode = "Single"
+	SetMode(AutoFarm,state,"Single")
+	--[[AutoFarm.Enabled = state
+	AutoFarm.Mode = "Single"]]
 end)
 
 Regui.CreateCheckboxe(FarmTab, {
 	Text = "Auto: All",
 	Color = "Yellow"
 }, function(state)
-	AutoFarm.Enabled = state
-	AutoFarm.Mode = "All"
+SetMode(AutoFarm,state,"All")
+	--[[AutoFarm.Enabled = state
+	AutoFarm.Mode = "All"]]
 end)
 
+
 task.spawn(function()
-	while true do
-		task.wait(AutoFarm.Timer)
+	while task.wait(AutoFarm.Timer) do
 		if not AutoFarm.Enabled then
 			continue
 		end
-
 		if AutoFarm.Mode == "Single" then
-			doAction(AutoFarm.TargetType)
+			doAction(AutoFarm.TargetType, AutoFarm.RangeTarget)
 
 		elseif AutoFarm.Mode == "All" then
-			for _, target in ipairs(Options) do
+			for _, target in ipairs(Options_Farm) do
 				if not AutoFarm.Enabled then break end
-				doAction(target)
+				doAction(target, AutoFarm.RangeTarget)
 				task.wait(0.15) -- delay humano
 			end
+
 		end
 	end
 end)
@@ -488,15 +543,6 @@ end)
 -- Game Tab
 --=================================
 
--- PVP 
-local GameFarme = {
-    Enabled = false,
-	Mode = "Terrain", -- Terrain / Fly / Aimbot/ Null
-	AuraRange = 25,
-	AuraDelay = 0.2
-}
-
-
 local function getNearestEnemy()
 	local char = player.Character
 	if not char then return nil end
@@ -518,7 +564,7 @@ local function getNearestEnemy()
 
 		if part then
 			local dist = (part.Position - hrp.Position).Magnitude
-			if dist <= GameFarme.AuraRange and dist < nearestDist then
+			if dist <= GameFarm.AuraRange and dist < nearestDist then
 				nearestEnemy = enemy
 				nearestPart = part
 				nearestDist = dist
@@ -527,11 +573,11 @@ local function getNearestEnemy()
 	end
 if nearestPart then
 
-	if GameFarme.Mode == "Terrain" then
+	if GameFarm.Mode == "Terrain" then
 
-	elseif GameFarme.Mode == "Fly" then
+	elseif GameFarm.Mode == "Fly" then
 
-	elseif GameFarme.Mode == "Aimbot" then
+	elseif GameFarm.Mode == "Aimbot" then
     LookCameraToPosition(nearestPart.Position,0.5)
     end
 
@@ -557,7 +603,7 @@ AuraRangeSlider = Regui.CreateSliderInt(GameTab, {
 	Maximum = 50,
 	Value = 25
 }, function(value)
-	GameFarme.AuraRange = value
+	GameFarm.AuraRange = value
 end)
 
 -- Add a label
@@ -571,24 +617,27 @@ AuraCheck = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura",
 	Color = "Yellow"
 }, function(state)
-	GameFarme.Enabled = state
-	GameFarme.Mode = "Terrain"
+	SetMode(GameFarm,state,"Terrain")
+	--[[GameFarme.Enabled = state
+	GameFarme.Mode = "Terrain"]]
 end)
 
 AuraCheckFly = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura Fly",
 	Color = "Yellow"
 }, function(state)
-	GameFarme.Enabled = state
-	GameFarme.Mode = "Fly"
+	SetMode(GameFarm,state,"Fly")
+	--[[GameFarm.Enabled = state
+	GameFarm.Mode = "Fly"]]
 end)
 
 AuraCheckAimbot = Regui.CreateCheckboxe(GameTab, {
 	Text = "Kill Aura Aimbot",
 	Color = "Yellow"
 }, function(state)
-	GameFarme.Enabled = state
-	GameFarme.Mode = "Aimbot"
+	SetMode(GameFarm,state,"Aimbot")
+	--[[GameFarm.Enabled = state
+	GameFarm.Mode = "Aimbot"]]
 end)
 
 AuraLockSlider = Regui.CreateSliderInt(GameTab, {
@@ -597,7 +646,7 @@ AuraLockSlider = Regui.CreateSliderInt(GameTab, {
 	Maximum = 15,
 	Value = 5
 }, function(value)
-	GameFarme.HeightOffset = value
+	GameFarm.HeightOffset = value
 end)
 
 
@@ -607,7 +656,7 @@ AuraSpeedSlider = Regui.CreateSliderInt(GameTab, {
 	Maximum = 2,
 	Value = 1
 }, function(value)
-	GameFarme.AuraDelay = value
+	GameFarm.AuraDelay = value
 end)
 
 
