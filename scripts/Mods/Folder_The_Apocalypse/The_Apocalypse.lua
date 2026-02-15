@@ -199,7 +199,7 @@ AutoFarm = {
 	Timer = 0.5
 }
 
--- Game 
+-- GameFarme 
 local GameFarm = {
     Enabled = false,
 	Mode = "Terrain", -- Terrain / Fly / Aimbot/ Null
@@ -462,7 +462,7 @@ Regui.CreateSliderOption(FarmTab, {
 	Color = "White",
 	Background = "Blue",
 	Value = 1,
-	Table = Options
+	Table = Options_Farm
 }, function(state)
 	AutoFarm.TargetType = state
 end)
@@ -618,8 +618,8 @@ AuraCheck = Regui.CreateCheckboxe(GameTab, {
 	Color = "Yellow"
 }, function(state)
 	SetMode(GameFarm,state,"Terrain")
-	--[[GameFarme.Enabled = state
-	GameFarme.Mode = "Terrain"]]
+	--[[GameFarm.Enabled = state
+	GameFarm.Mode = "Terrain"]]
 end)
 
 AuraCheckFly = Regui.CreateCheckboxe(GameTab, {
@@ -689,11 +689,11 @@ TakeAll = Regui.CreateCheckboxe(GameTab, {
 	Color = "Yellow"
 }, function(state)
 
-	GameFarme.TakeAll = state
+	GameFarm.TakeAll = state
 	
 	if state then
 		task.spawn(function()
-			while GameFarme.TakeAll do
+			while GameFarm.TakeAll do
 				doTakeAll("RareLoot",100)
 				task.wait(1) -- controle de spam
 			end
@@ -709,11 +709,11 @@ Stamina = Regui.CreateCheckboxe(GameTab, {
 	Color = "Yellow"
 }, function(state)
 
-	GameFarme.Stamina = state
+	GameFarm.Stamina = state
 	
 	if state then
 		task.spawn(function()
-			while GameFarme.Stamina do
+			while GameFarm.Stamina do
 				local num = "-1.1"
 				game:GetService("ReplicatedStorage")
 					.Network.Character.TakeStamina
@@ -730,8 +730,8 @@ end)
 
 task.spawn(function()
 	 
-while task.wait(math.max(GameFarme.AuraDelay, 0.05)) do
- if not GameFarme.Enabled then
+while task.wait(math.max(GameFarm.AuraDelay, 0.05)) do
+ if not GameFarm.Enabled then
 	continue
  end
 
@@ -740,7 +740,7 @@ local enemy = getNearestEnemy()
 		attackEnemy(enemy)
  end
 
- AuraLabel.Text ="Mode: " .. GameFarme.Mode
+ AuraLabel.Text ="Mode: " .. GameFarm.Mode
 
 end
 	
