@@ -169,13 +169,14 @@ end
 -- GUI
 Window = Regui.TabsWindow({Title=GuiName, Text= ModInfo.Name, Size=UDim2.new(0, 350, 0, 250), Icon_btn = true})
 
--- Tabs
-StandardTab = Regui.CreateTab(Window,{Name="Standard"})
 FarmTab = Regui.CreateTab(Window,{Name="Farm"})
 GameTab = Regui.CreateTab(Window,{Name="Game"})
 AfkTab = Regui.CreateTab(Window,{Name="Afk Mod"})
 ConfigsTab = Regui.CreateTab(Window,{Name="Configs"})
 ReadmeTab = Regui.CreateTab(Window,{Name="Readme"})
+-- Tabs
+StandardTab = Regui.CreateTab(Window,{Name="Standard"})
+
 
 -- Especial Tab
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
@@ -268,117 +269,7 @@ local function SmoothLookAt(targetPosition, speed)
 	end)
 end
 
-
-
--- Add a label
-Regui.CreateLabel(StandardTab, {
-	Text = "Welcome to Regui!",
-	Color = "White",
-	Alignment = "Center"
-})
-
-
-local OptionsStrings = Regui.CreateSelectorOpitions(StandardTab, {
-	Name = "Selector",
-	Alignment = "Center",
-	Size_Frame = UDim2.new(1,-10,0,50),
-	Frame_Max = 50,
-	Options = {
-
-		"On",
-		"Off"
-
-	},
-
-	Type = "String"
-}, function(val)
-	print("Você escolheu:", val)
-end)
-
-local OptionsInstance = Regui.CreateSelectorOpitions(StandardTab, {
-	Name = "Selector",
-	Alignment = "Center",
-	Size_Frame = UDim2.new(1,-10,0,50),
-	Frame_Max = 50,
-	Options = {
-
-		{name = "Name", Obj = "Parent"},
-		
-	},
-
-	Type = "Instance"
-}, function(val)
-	print("Você escolheu:", val)
-end)
-
--- Add a button
-Regui.CreateButton(StandardTab, {
-	Text = "Click Me",
-	Color = "White",
-	BGColor = "Blue"
-}, function()
-	print("Button clicked!")
-
-	Notification(
-		"Hello!",
-		"You clicked the button!",
-		3,
-		"fa_envelope"
-	)
-end)
-
--- Add a toggle
-Regui.CreateToggleboxe(StandardTab, {
-	Text = "Enable Feature",
-	Color = "Green"
-}, function(state)
-	print("Toggle state:", state)
-end)
-
--- Add a checkbox
-Regui.CreateCheckboxe(StandardTab, {
-	Text = "Extra Option",
-	Color = "Yellow"
-}, function(state)
-	print("Checkbox state:", state)
-end)
-
--- Add a slider
-Regui.CreateSliderInt(StandardTab, {
-	Text = "Speed",
-	Minimum = 1,
-	Maximum = 10,
-	Value = 5
-}, function(value)
-	print("Slider value:", value)
-end)
-
---[[
--- Player Gui 
--- pelo que vi o sistema é feito em Folders
-
--- Toolbar/ Folder(Vista como Tool) / Index(IntValue de onde esse Tool camuflado de folder esta) ao todo são 9 slots
--- Jogador começa com (Rock,Torch,Wooden Spear) -- e é usado um event para equipar e desequipar 
-
-
-
-local args = {
-    [1] = 0 -- Tirar
-}
-
-game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(args))
-
-local args = {
-    [1] = 1 -- Equipar
-}
-game:GetService("ReplicatedStorage").Network.Items.EquipItem:FireServer(unpack(args))
-
-]]
-
 -- Simples Teste de coleta 
-
--- Network.Items.EquipItem
-
 
 --================================================
 -- Notification Helper
@@ -724,4 +615,94 @@ local enemy = getNearestEnemy()
 end
 	
 
+end)
+
+
+
+
+
+
+
+
+-- Add a label
+Regui.CreateLabel(StandardTab, {
+	Text = "Welcome to Regui!",
+	Color = "White",
+	Alignment = "Center"
+})
+
+
+local OptionsStrings = Regui.CreateSelectorOpitions(StandardTab, {
+	Name = "Selector",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,50),
+	Frame_Max = 50,
+	Options = {
+
+		"On",
+		"Off"
+
+	},
+
+	Type = "String"
+}, function(val)
+	print("Você escolheu:", val)
+end)
+
+local OptionsInstance = Regui.CreateSelectorOpitions(StandardTab, {
+	Name = "Selector",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,50),
+	Frame_Max = 50,
+	Options = {
+
+		{name = "Name", Obj = "Parent"},
+		
+	},
+
+	Type = "Instance"
+}, function(val)
+	print("Você escolheu:", val)
+end)
+
+-- Add a button
+Regui.CreateButton(StandardTab, {
+	Text = "Click Me",
+	Color = "White",
+	BGColor = "Blue"
+}, function()
+	print("Button clicked!")
+
+	Notification(
+		"Hello!",
+		"You clicked the button!",
+		3,
+		"fa_envelope"
+	)
+end)
+
+-- Add a toggle
+Regui.CreateToggleboxe(StandardTab, {
+	Text = "Enable Feature",
+	Color = "Green"
+}, function(state)
+	print("Toggle state:", state)
+end)
+
+-- Add a checkbox
+Regui.CreateCheckboxe(StandardTab, {
+	Text = "Extra Option",
+	Color = "Yellow"
+}, function(state)
+	print("Checkbox state:", state)
+end)
+
+-- Add a slider
+Regui.CreateSliderInt(StandardTab, {
+	Text = "Speed",
+	Minimum = 1,
+	Maximum = 10,
+	Value = 5
+}, function(value)
+	print("Slider value:", value)
 end)
