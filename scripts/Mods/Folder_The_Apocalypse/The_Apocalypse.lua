@@ -617,7 +617,7 @@ Stamina = Regui.CreateCheckboxe(GameTab, {
 				
 				game:GetService("ReplicatedStorage")
 					.Network.Character.TakeStamina
-					:FireServer(+10)
+					:FireServer(0)
 
 				task.wait(0.05) -- controle de spam
 			end
