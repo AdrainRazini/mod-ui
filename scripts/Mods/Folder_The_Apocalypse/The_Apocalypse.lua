@@ -646,7 +646,7 @@ TakeAll = Regui.CreateCheckboxe(GameTab, {
 		task.spawn(function()
 			while GameFarme.TakeAll do
 				doTakeAll("RareLoot")
-				task.wait(0.05) -- controle de spam
+				task.wait(1) -- controle de spam
 			end
 		end)
 	end
