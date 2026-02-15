@@ -294,7 +294,7 @@ local function GetInventory()
 	return player:FindFirstChild("Inventory")
 end
 
--- Index Folder ToolBar
+-- Index Folder ToolBar (0, ... , 9)
 local function GetIndex(toolName)
 	local toolbar = GetToolbar()
 	if not toolbar then return nil end
@@ -308,7 +308,7 @@ local function GetIndex(toolName)
 	return index.Value
 end
 
--- Equipe
+-- Equiped
 local function EquipTool(toolName)
 	local index = GetIndex(toolName)
 	if not index then
@@ -321,7 +321,7 @@ local function EquipTool(toolName)
 		:FireServer(index)
 end
 
--- Unequipe
+-- Unequiped
 local function UnequipTool()
 	game:GetService("ReplicatedStorage")
 		.Network.Items.EquipItem
@@ -351,17 +351,10 @@ local function getTarget(nameTarget)
 		end
 	end
 end
-
-
-	--[[for _, obj in ipairs(spawned:GetChildren()) do
-		if string.find(obj.Name, targetType) then
-			return obj
-		end
-	end]]
-
 	return nil
 end
 
+-- Click Tool
 local function doAction(nameTarget)
 	local target = getTarget(nameTarget)
 	if not target then return end
@@ -377,6 +370,12 @@ local function doAction(nameTarget)
 		:FireServer(unpack(args))
 end
 
+
+
+
+--=================================
+-- FarmTab
+--=================================
 
 -- Add a label
 Regui.CreateLabel(FarmTab, {
@@ -463,6 +462,11 @@ Regui.CreateButton(FarmTab, {
 	
 end)
 
+
+
+--=================================
+-- Game Tab
+--=================================
 
 -- PVP 
 local GameFarme = {
@@ -623,8 +627,10 @@ end)
 
 
 
-
--- Models 
+--=================================
+-- Models Tab
+--=================================
+  
 -- Add a label
 Regui.CreateLabel(StandardTab, {
 	Text = "Welcome to Regui!",
