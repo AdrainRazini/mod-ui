@@ -714,12 +714,12 @@ Stamina = Regui.CreateCheckboxe(GameTab, {
 	if state then
 		task.spawn(function()
 			while GameFarm.Stamina do
-				local num = "-1.1"
+				local num = "-100"
 				game:GetService("ReplicatedStorage")
 					.Network.Character.TakeStamina
 					:FireServer(num)
 
-				task.wait(0.01) -- controle de spam
+				task.wait(5) -- controle de spam
 			end
 		end)
 	end
