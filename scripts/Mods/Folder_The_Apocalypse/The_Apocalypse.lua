@@ -329,7 +329,7 @@ local function UnequipTool()
 end
 
 
-local function getTarget(nameTarget)
+local function getTarget(nameTarget, d)
 	local targetType = nameTarget or AutoFarm.TargetType
 	if not targetType then return nil end
 
@@ -337,22 +337,26 @@ local function getTarget(nameTarget)
 	if not spawned then return nil end
 
 	local playerChar = player.Character
-    local hrp = playerChar and playerChar:FindFirstChild("HumanoidRootPart")
-    if not hrp then return nil end
+	local hrp = playerChar and playerChar:FindFirstChild("HumanoidRootPart")
+	if not hrp then return nil end
+
+	local maxDistance = d or AutoFarm.RangeTarget
 
 	for _, obj in ipairs(spawned:GetChildren()) do
-	if string.find(obj.Name, targetType) then
-		local part = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart")
-		if part then
-			local distance = (part.Position - hrp.Position).Magnitude
-			if distance <= AutoFarm.RangeTarget then
-				return obj
+		if string.find(obj.Name, targetType) then
+			local part = obj.PrimaryPart or obj:FindFirstChildWhichIsA("BasePart")
+			if part then
+				local distance = (part.Position - hrp.Position).Magnitude
+				if distance <= maxDistance then
+					return obj
+				end
 			end
 		end
 	end
-end
+	
 	return nil
 end
+
 
 -- Click Tool
 local function doAction(nameTarget)
@@ -370,8 +374,23 @@ local function doAction(nameTarget)
 		:FireServer(unpack(args))
 end
 
+local function doTakeAll(nameTarget,d)
+	d = d or 9999
+	local target = getTarget(nameTarget, d)
+	if not target then return end
+	
+	local inventory = target:FindFirstChild("Inventory")
+	if not inventory then return end
+	
+	local args = {
+		[1] = target,
+		[2] = inventory
+	}
 
-
+	game:GetService("ReplicatedStorage")
+		.Network.Items.TakeAll
+		:FireServer(unpack(args))
+end
 
 --=================================
 -- FarmTab
@@ -604,6 +623,38 @@ Tool_Wooden = Regui.CreateButton(GameTab, {
 end)
 
 
+--[[
+
+local args = {
+    [1] = workspace.Spawned.RareLoot,
+    [2] = workspace.Spawned.RareLoot.Inventory
+}
+
+game:GetService("ReplicatedStorage").Network.Items.TakeAll:FireServer(unpack(args))
+
+]]
+
+
+TakeAll = Regui.CreateCheckboxe(GameTab, {
+	Text = "Take All",
+	Color = "Yellow"
+}, function(state)
+
+	GameFarme.TakeAll = state
+	
+	if state then
+		task.spawn(function()
+			while GameFarme.TakeAll do
+				doTakeAll("RareLoot")
+				task.wait(0.05) -- controle de spam
+			end
+		end)
+	end
+	
+end)
+
+
+
 Stamina = Regui.CreateCheckboxe(GameTab, {
 	Text = "Stamina Infinit",
 	Color = "Yellow"
@@ -646,7 +697,6 @@ end
 	
 
 end)
-
 
 
 
