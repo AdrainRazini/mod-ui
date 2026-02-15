@@ -424,7 +424,8 @@ Regui.CreateCheckboxe(FarmTab, {
 end)
 
 task.spawn(function()
-	while task.wait(AutoFarm.Timer) do
+	while true do
+		task.wait(AutoFarm.Timer)
 		if not AutoFarm.Enabled then
 			continue
 		end
