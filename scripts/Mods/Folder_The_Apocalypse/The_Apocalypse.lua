@@ -619,7 +619,7 @@ Stamina = Regui.CreateCheckboxe(GameTab, {
 					.Network.Character.TakeStamina
 					:FireServer(0)
 
-				task.wait(0.05) -- controle de spam
+				task.wait(0.01) -- controle de spam
 			end
 		end)
 	end
