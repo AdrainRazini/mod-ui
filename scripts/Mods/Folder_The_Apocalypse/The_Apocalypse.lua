@@ -190,7 +190,7 @@ local Cache = {}
 -- Para Uma Ação só
 local Options_Farm = {"Tree", "Palm", "CopperOre", "IronOre", "Coal", "Stone"}
 
--- Farme
+-- AutoFarme
 AutoFarm = {
 	Enabled = false,
 	Mode = "Single", -- "Single" | "SingleFocus" | "All" | "AllFocus"
