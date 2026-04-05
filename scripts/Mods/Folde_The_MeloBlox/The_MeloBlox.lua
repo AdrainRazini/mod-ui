@@ -824,13 +824,13 @@ Window = Regui.TabsWindow({Title=GuiName, Text= ModInfo.Name, Size=UDim2.new(0, 
 -- =========================
 
 local FarmTab = Regui.CreateTab(Window, {Name = "Farm"}) -- 1
-local ExampleTab = Regui.CreateTab(Window, {Name = "Example"}) -- 2
-ExampleTab.Visible = false -- invisivel
 local PlayerTab = Regui.CreateTab(Window, {Name = "Player"}) -- 3
 local GameTab = Regui.CreateTab(Window, {Name = "Game"}) -- 4
 local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"}) -- 5
 local HelpTab = Regui.CreateTab(Window, {Name = "Help"}) -- 6
 
+local ExampleTab = Regui.CreateTab(Window, {Name = "Example"}) -- 2
+ExampleTab.Visible = false -- invisivel
 
 -- =========================
 -- SEÇÃO: CONTROLE
