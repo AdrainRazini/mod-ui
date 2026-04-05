@@ -11,6 +11,10 @@ local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 
+local plr = game.Players.LocalPlayer
+local mouse = plr:GetMouse()
+local cam = workspace.CurrentCamera
+
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
@@ -101,10 +105,7 @@ local AutoSystem = {
 	Delay = 0.2
 }
 
-local plr = game.Players.LocalPlayer
-local mouse = plr:GetMouse()
 
-local cam = workspace.CurrentCamera
 
 local rayParams = RaycastParams.new()
 rayParams.FilterDescendantsInstances = {plr.Character}
@@ -660,6 +661,56 @@ local function updateGroup()
 	Selection.CurrentGroup = group
 end
 
+-- Aim Lock
+
+local function LockRootToPosition(targetPosition)
+	local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	local pos = root.Position
+	local target = Vector3.new(targetPosition.X, pos.Y, targetPosition.Z)
+
+	root.CFrame = CFrame.new(pos, target)
+end
+
+local function SmoothLook(root, targetPos, alpha)
+	alpha = alpha or 0.15
+
+	local pos = root.Position
+	local target = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
+
+	local targetCF = CFrame.new(pos, target)
+	root.CFrame = root.CFrame:Lerp(targetCF, alpha)
+end
+
+--[[local function LockRootToPosition(targetPosition, duration)
+	if not plr.Character then return end
+
+	local root = plr.Character:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	duration = duration or 0
+
+	-- mantém posição atual
+	local currentPos = root.Position
+
+	-- cria CFrame olhando pro alvo (sem mudar posição)
+	local lookCFrame = CFrame.new(currentPos, targetPosition)
+
+	if duration > 0 then
+		local tween = TweenService:Create(
+			root,
+			TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+			{CFrame = lookCFrame}
+		)
+		tween:Play()
+		return tween
+	else
+		root.CFrame = lookCFrame
+	end
+end]]
+
+-- Look Camera
 local function LookCameraToPosition(targetPosition, duration)
 	duration = duration or 0
 
@@ -725,6 +776,7 @@ RunService.Heartbeat:Connect(function()
 	if AutoSystem.LockCamera then
 		local hrp = Selection.CurrentNPC and Selection.CurrentNPC:FindFirstChild("HumanoidRootPart")
 		if hrp then
+			LockRootToPosition(hrp.Position, 0.1)
 			LookCameraToPosition(hrp.Position, 0.1)
 		end
 	end
