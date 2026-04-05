@@ -835,60 +835,9 @@ local GameTab    = Regui.CreateTab(Window, {Name = "Game"})
 local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"})
 
 local HelpTab    = Regui.CreateTab(Window, {Name = "Help"})
-Regui.CreateLabel(HelpTab, {
-	Text = [[
-📘 MELOBLOX HELP GUIDE
------------------------------
 
-🖱️ SELECTION
-• Enable "Click Select" to choose an NPC
-• Click on any NPC to select its group
-• All NPCs in the same folder will be highlighted
-
-🎯 TARGET SYSTEM
-• Target Mode defines how NPCs are selected:
-  - Closest: nearest enemy
-  - Lowest: lowest HP
-  - Highest: highest HP
-  - Smart: balanced (distance + HP)
-  - Random: random target
-
-⚙️ MOVEMENT MODES
-• Move → uses Humanoid:MoveTo (safe)
-• Fly → smooth directional velocity
-• Force → advanced BodyVelocity system
-• Auto → switches mode based on distance
-
-📏 MOVEMENT SETTINGS
-• Distance → how far from NPC you stay
-• Height Offset → vertical positioning
-• Angle → position around the NPC (circle)
-
-🤖 AUTOMATION
-• Auto Mode → automatically selects targets
-• Auto Update → refresh NPC list dynamically
-• Camera Lock → locks camera to target
-
-📊 LOGS
-• Shows real-time system info:
-  - Current target
-  - HP %
-  - Mode & settings
-  - Group size
-
-💡 TIPS
-• Use "Force" for smoother orbit movement
-• Use "Auto" for smart farming
-• Increase Range to detect more NPCs
-• Combine Smart + Auto for best efficiency
-
-⚠️ NOTES
-• Script adapts to different NPC systems
-• Works with custom health detection (UI / Humanoid)
-
------------------------------
-🔥 MeloBlox - Modular & Adaptive System
-]],
+local HelpLabel = Regui.CreateLabel(HelpTab, {
+	Text = "Help...",
 	Color = "White",
 	Alignment = "Left"
 })
@@ -1208,10 +1157,66 @@ local Readme_Lb = Regui.CreateLabel(ReadmeTab, {
 
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
 
+
+local Hepl_Txt = [[
+📘 MELOBLOX HELP GUIDE
+-----------------------------
+
+🖱️ SELECTION
+• Enable "Click Select" to choose an NPC
+• Click on any NPC to select its group
+• All NPCs in the same folder will be highlighted
+
+🎯 TARGET SYSTEM
+• Target Mode defines how NPCs are selected:
+  - Closest: nearest enemy
+  - Lowest: lowest HP
+  - Highest: highest HP
+  - Smart: balanced (distance + HP)
+  - Random: random target
+
+⚙️ MOVEMENT MODES
+• Move → uses Humanoid:MoveTo (safe)
+• Fly → smooth directional velocity
+• Force → advanced BodyVelocity system
+• Auto → switches mode based on distance
+
+📏 MOVEMENT SETTINGS
+• Distance → how far from NPC you stay
+• Height Offset → vertical positioning
+• Angle → position around the NPC (circle)
+
+🤖 AUTOMATION
+• Auto Mode → automatically selects targets
+• Auto Update → refresh NPC list dynamically
+• Camera Lock → locks camera to target
+
+📊 LOGS
+• Shows real-time system info:
+  - Current target
+  - HP %
+  - Mode & settings
+  - Group size
+
+💡 TIPS
+• Use "Force" for smoother orbit movement
+• Use "Auto" for smart farming
+• Increase Range to detect more NPCs
+• Combine Smart + Auto for best efficiency
+
+⚠️ NOTES
+• Script adapts to different NPC systems
+• Works with custom health detection (UI / Humanoid)
+
+-----------------------------
+🔥 MeloBlox - Modular & Adaptive System
+]]
+
 RunService.Heartbeat:Connect(function()
 	if not LogsLabel then return end
-
+    HelpLabel.Text = Hepl_Txt
 	LogsLabel.Text = BuildLogs()
+	
 end)
 
 -- :) by: @Adrian75556435
