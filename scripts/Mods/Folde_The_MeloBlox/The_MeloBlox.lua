@@ -816,24 +816,28 @@ end
 -- 🪟 WINDOW
 -- =========================
 
-Window = Regui.TabsWindow({Title=GuiName, Text= ModInfo.Name, Size=UDim2.new(0, 350, 0, 250), Icon_btn = true})
-
-
--- =========================
--- 🪟 Tabs
--- =========================
-
-local FarmTab = Regui.CreateTab(Window, {Name = "Farm"}) -- 1
-local PlayerTab = Regui.CreateTab(Window, {Name = "Player"}) -- 3
-local GameTab = Regui.CreateTab(Window, {Name = "Game"}) -- 4
-local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"}) -- 5
-local HelpTab = Regui.CreateTab(Window, {Name = "Help"}) -- 6
-
-local ExampleTab = Regui.CreateTab(Window, {Name = "Example"}) -- 2
-ExampleTab.Visible = false -- invisivel
+Window = Regui.TabsWindow({
+	Title = GuiName,
+	Text = ModInfo.Name,
+	Size = UDim2.new(0, 350, 0, 250),
+	Icon_btn = true
+})
 
 -- =========================
--- SEÇÃO: CONTROLE
+-- 🪟 TABS
+-- =========================
+
+local FarmTab    = Regui.CreateTab(Window, {Name = "Farm"})
+local PlayerTab  = Regui.CreateTab(Window, {Name = "Player"})
+local GameTab    = Regui.CreateTab(Window, {Name = "Game"})
+local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"})
+local HelpTab    = Regui.CreateTab(Window, {Name = "Help"})
+
+local ExampleTab = Regui.CreateTab(Window, {Name = "Example"})
+ExampleTab.Visible = false
+
+-- =========================
+-- 🎮 CONTROL
 -- =========================
 
 Regui.CreateLabel(FarmTab, {
@@ -858,41 +862,75 @@ Regui.CreateButton(FarmTab, {
 	clearForce()
 end)
 
+local EnableClickSelect = CreateToggle(FarmTab, "Enable Click Select", function(state)
+	AutoSystem.Enabled = state
+end)
+
+EnableClickSelect.Set(true)
 
 -- =========================
--- 🎯 SEÇÃO: MOVIMENTO
+-- 🧭 MOVEMENT (SUB SYSTEM)
 -- =========================
 
-Regui.CreateLabel(FarmTab, {
-	Text = "-- Movement --",
+local MovementTabs = Regui.SubTabsWindow(FarmTab, {
+	Text = "Movement System",
+	Table = {"Automation","Settings", "Logs"},
+	Color = "Blue"
+})
+
+-- 🔹 SETTINGS
+
+Regui.CreateLabel(MovementTabs["Settings"], {
+	Text = "-- Movement Config --",
 	Color = "White",
 	Alignment = "Center"
 })
 
-CreateSelector(FarmTab, "Move Mode", {"Auto", "Move", "Fly", "Force"}, function(val)
+CreateSelector(MovementTabs["Settings"], "Move to Npc", {"Auto", "Move", "Fly", "Force"}, function(val)
 	AutoSystem.TargetMode = val
 	clearForce()
 end)
 
-CreateSlider(FarmTab, "Speed Force", AutoSystem.SpeedForce, 10, 100, function(val)
+CreateSlider(MovementTabs["Settings"], "Speed Force", AutoSystem.SpeedForce, 10, 100, function(val)
 	AutoSystem.SpeedForce = val
 end)
 
-CreateSlider(FarmTab, "Distance From NPC", AutoSystem.Distance, 0, 50, function(val)
+CreateSlider(MovementTabs["Settings"], "Distance", AutoSystem.Distance, 0, 50, function(val)
 	AutoSystem.Distance = val
 end)
 
-CreateSlider(FarmTab, "Height Offset (Y)", AutoSystem.FixY, 0, 25, function(val)
+CreateSlider(MovementTabs["Settings"], "Height Offset (Y)", AutoSystem.FixY, 0, 25, function(val)
 	AutoSystem.FixY = val
 end)
 
-CreateSlider(FarmTab, "Angle", AutoSystem.Angle, 0, 360, function(val)
+CreateSlider(MovementTabs["Settings"], "Angle", AutoSystem.Angle, 0, 360, function(val)
 	AutoSystem.Angle = val
 end)
 
+-- 🔹 AUTOMATION
+
+Regui.CreateLabel(MovementTabs["Automation"], {
+	Text = "-- Automation --",
+	Color = "White",
+	Alignment = "Center"
+})
+
+CreateToggle(MovementTabs["Automation"], "Auto Mode", function(state)
+	AutoSystem.EnableAutoMode = state
+end)
+
+local AutoUpdateNPC = CreateToggle(MovementTabs["Automation"], "Auto Update NPCs", function(state)
+	AutoSystem.AutoUpdate = state
+end)
+
+AutoUpdateNPC.Set(true)
+
+CreateToggle(MovementTabs["Automation"], "Camera Lock", function(state)
+	AutoSystem.LockCamera = state
+end)
 
 -- =========================
--- SEÇÃO: TARGET AI
+-- 🎯 TARGET AI
 -- =========================
 
 Regui.CreateLabel(FarmTab, {
@@ -907,33 +945,6 @@ end)
 
 CreateSlider(FarmTab, "Search Range", AutoSystem.Range, 0, 500, function(val)
 	AutoSystem.Range = val
-end)
-
-
--- =========================
--- SEÇÃO: AUTOMAÇÃO
--- =========================
-
-Regui.CreateLabel(FarmTab, {
-	Text = "-- Automation --",
-	Color = "White",
-	Alignment = "Center"
-})
-
-CreateToggle(FarmTab, "Enable Click Select", function(state)
-	AutoSystem.Enabled = state
-end)
-
-CreateToggle(FarmTab, "Auto Mode", function(state)
-	AutoSystem.EnableAutoMode = state
-end)
-
-CreateToggle(FarmTab, "Auto Update NPCs", function(state)
-	AutoSystem.AutoUpdate = state
-end)
-
-CreateToggle(FarmTab, "Camera Lock", function(state)
-	AutoSystem.LockCamera = state
 end)
 
 -- Model Selector
