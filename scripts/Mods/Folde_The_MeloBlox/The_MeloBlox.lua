@@ -92,6 +92,7 @@ local AutoSystem = {
 
 	SpeedForce = 80, -- Força aplicada ao movimento
 	LockCamera = false, -- Bloqueia a câmera e move
+	LockRoot = false, -- Bloqueia o movimento do player
 
 	-- Distancia de raio de um Circulo
 	Distance = 10, -- Distancia do Player ao alvo CLock
@@ -109,7 +110,7 @@ local AutoSystem = {
 
 local rayParams = RaycastParams.new()
 rayParams.FilterDescendantsInstances = {plr.Character}
-rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+rayParams.FilterType = Enum.RaycastFilterType.Blacklist --> Raycast ignora o personagem do jogador
 
 local function getMouseRay()
 	return cam:ScreenPointToRay(mouse.X, mouse.Y)
@@ -673,8 +674,8 @@ local function LockRootToPosition(targetPosition)
 	root.CFrame = CFrame.new(pos, target)
 end
 
-local function SmoothLook(root, targetPos, alpha)
-	alpha = alpha or 0.15
+local function SmoothLockRoot(root, targetPos, alpha)
+	alpha = alpha or 0.2
 
 	local pos = root.Position
 	local target = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
@@ -683,32 +684,14 @@ local function SmoothLook(root, targetPos, alpha)
 	root.CFrame = root.CFrame:Lerp(targetCF, alpha)
 end
 
---[[local function LockRootToPosition(targetPosition, duration)
-	if not plr.Character then return end
+local function SmoothLookCamera(camera, targetPos, alpha)
+	alpha = alpha or 0.2
 
-	local root = plr.Character:FindFirstChild("HumanoidRootPart")
-	if not root then return end
+	local currentCF = camera.CFrame
+	local targetCF = CFrame.new(currentCF.Position, targetPos)
 
-	duration = duration or 0
-
-	-- mantém posição atual
-	local currentPos = root.Position
-
-	-- cria CFrame olhando pro alvo (sem mudar posição)
-	local lookCFrame = CFrame.new(currentPos, targetPosition)
-
-	if duration > 0 then
-		local tween = TweenService:Create(
-			root,
-			TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-			{CFrame = lookCFrame}
-		)
-		tween:Play()
-		return tween
-	else
-		root.CFrame = lookCFrame
-	end
-end]]
+	camera.CFrame = currentCF:Lerp(targetCF, alpha)
+end
 
 -- Look Camera
 local function LookCameraToPosition(targetPosition, duration)
@@ -773,11 +756,31 @@ local lastUpdate = 0
 RunService.Heartbeat:Connect(function()
 	if not AutoSystem.Enabled then clearForce() return end
 	-- LockCamera Intantanio
-	if AutoSystem.LockCamera then
+	if  Selection.CurrentNPC then
 		local hrp = Selection.CurrentNPC and Selection.CurrentNPC:FindFirstChild("HumanoidRootPart")
 		if hrp then
-			LockRootToPosition(hrp.Position, 0.1)
-			LookCameraToPosition(hrp.Position, 0.1)
+			
+			local char = plr.Character
+			local root = char and char:FindFirstChild("HumanoidRootPart")
+
+			if root and hrp then
+				if AutoSystem.LockRoot then
+					SmoothLockRoot(root, hrp.Position, 0.25)
+				end
+
+				if AutoSystem.LockCamera then
+					SmoothLookCamera(camera, hrp.Position, 0.25)
+				end
+			end
+			
+           --[[
+           if AutoSystem.LockRoot then
+				LockRootToPosition(hrp.Position, 0.1)
+			end
+			if AutoSystem.LockCamera then
+				LookCameraToPosition(hrp.Position, 0.1)
+			end
+			]]
 		end
 	end
 
@@ -1036,6 +1039,11 @@ local AutoUpdateNPC = CreateToggle(MovementTabs["Automation"], "Auto Update NPCs
 end)
 
 AutoUpdateNPC.Set(true)
+
+CreateToggle(MovementTabs["Automation"], "Root Lock", function(state)
+	AutoSystem.LockRoot = state
+end)
+
 
 CreateToggle(MovementTabs["Automation"], "Camera Lock", function(state)
 	AutoSystem.LockCamera = state
