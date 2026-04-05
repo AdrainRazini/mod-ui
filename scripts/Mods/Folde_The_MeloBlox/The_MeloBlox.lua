@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "1.0.0",
+	Version = "2.1.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -410,7 +410,7 @@ local function getBestNPCFromGroup()
 		--  MODES (usando %)
 
 		local hp = healthPercent -- 0 → 1
-		
+
 		local distNorm = dist / AutoSystem.Range
 		local hpNorm = hp
 
@@ -894,9 +894,9 @@ local function CreateSelector(tab, name, options, callback)
 end
 
 --Notify
-local function Notify(text, icon, tempo)
+local function Notify(Title, text, icon, tempo)
 	Regui.NotificationPerson(Window.Frame.Parent, {
-		Title = "Alert",
+		Title = Title or "Alert",
 		Text = text,
 		Icon = icon or "fa_rr_information",
 		Tempo = tempo or 5,
@@ -1399,6 +1399,9 @@ RunService.Heartbeat:Connect(function()
 	SetLabelText(LogsLabel, BuildLogs())
 end)
 
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",5)
+
+
 -- :) by: @Adrian75556435
 
 -- API de Tradução
@@ -1423,6 +1426,7 @@ if count > 1 then
 		Icon = "fa_rr_information",
 		Tempo = 10
 	})
+	
 	return
 end
 
@@ -1436,7 +1440,7 @@ if success and response then
 		Regui.Notifications(PlayerGui, {
 			Title = "Alert",
 			Text = "✅ Auto Translate_Api",
-			Icon = "fa_rr_information",
+			Icon = "fa_ss_marker",
 			Tempo = 5
 		})
 		local gui = PlayerGui:FindFirstChild(GuiName)
