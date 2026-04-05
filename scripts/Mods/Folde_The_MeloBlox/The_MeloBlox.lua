@@ -74,7 +74,7 @@ local Selection = {
 	CurrentGroup = nil,
 	CurrentFolder = nil,
 	Highlights = {},
-	ModeHealth = "Lowest" -- ou "Highest", "ClosestLow", etc
+	ModeHealth = "Closest" -- ou "Highest", "ClosestLow", etc
 }
 
 
