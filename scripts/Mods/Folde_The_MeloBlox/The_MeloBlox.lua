@@ -878,6 +878,46 @@ local MovementTabs = Regui.SubTabsWindow(FarmTab, {
 	Color = "Blue"
 })
 
+-- =========================
+-- 📜 LOGS UI
+-- =========================
+
+local LogsLabel = Regui.CreateLabel(MovementTabs["Logs"], {
+	Text = "Loading...",
+	Color = "White",
+	Alignment = "Left"
+})
+
+-- função de formatar texto
+local function BuildLogs()
+	local npcName = Selection.CurrentNPC and Selection.CurrentNPC.Name or "None"
+	local groupSize = Selection.CurrentGroup and #Selection.CurrentGroup or 0
+
+	local mode = AutoSystem.TargetMode
+	local auto = tostring(AutoSystem.EnableAutoMode)
+	local update = tostring(AutoSystem.AutoUpdate)
+	local hp = Selection.CurrentNPC and GetHealthPercent(Selection.CurrentNPC)
+	hp = hp and math.floor(hp * 100) .. "%" or "N/A"
+
+	local dist = AutoSystem.Distance
+	local speed = AutoSystem.SpeedForce
+
+	return table.concat({
+		"📊 SYSTEM LOGS",
+		"-----------------------",
+		"Target: " .. npcName,
+		"HP: " .. hp,
+		"Group Size: " .. groupSize,
+		"",
+		"Mode: " .. mode,
+		"Auto Mode: " .. auto,
+		"Auto Update: " .. update,
+		"",
+		"Distance: " .. dist,
+		"Speed: " .. speed,
+	}, "\n")
+end
+
 -- 🔹 SETTINGS
 
 Regui.CreateLabel(MovementTabs["Settings"], {
@@ -1107,6 +1147,12 @@ local Readme_Lb = Regui.CreateLabel(ReadmeTab, {
 ]]
 
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
+
+RunService.Heartbeat:Connect(function()
+	if not LogsLabel then return end
+
+	LogsLabel.Text = BuildLogs()
+end)
 
 -- :) by: @Adrian75556435
 
