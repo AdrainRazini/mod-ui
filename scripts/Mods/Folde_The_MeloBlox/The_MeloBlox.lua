@@ -827,18 +827,29 @@ Window = Regui.TabsWindow({
 -- 🪟 TABS
 -- =========================
 
-local FarmTab    = Regui.CreateTab(Window, {Name = "Farm"})
+local FarmTab     = Regui.CreateTab(Window, {Name = "Farm"})
+local ModesTab    = Regui.CreateTab(Window, {Name = "Modes"})
+local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
+
 --[[
 local PlayerTab  = Regui.CreateTab(Window, {Name = "Player"})
 local GameTab    = Regui.CreateTab(Window, {Name = "Game"})
 ]]
+
 local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"})
 
-local HelpTab    = Regui.CreateTab(Window, {Name = "Help"})
+
+local ModesLabel = Regui.CreateLabel(ModesTab, {
+	Text = "Modes...",
+	Color = "White",
+	Size = UDim2.new(1, -10, 0, 25),
+	Alignment = "Left"
+})
 
 local HelpLabel = Regui.CreateLabel(HelpTab, {
 	Text = "Help...",
 	Color = "White",
+	Size = UDim2.new(1, -10, 0, 25),
 	Alignment = "Left"
 })
 
@@ -1212,11 +1223,83 @@ local Hepl_Txt = [[
 🔥 MeloBlox - Modular & Adaptive System
 ]]
 
+local Modes_Txt = [[
+🎯 TARGET MODES
+--------------------------
+
+Closest
+• Targets the nearest NPC
+
+Lowest
+• Targets the lowest HP enemy
+
+LowestPercent
+• Targets the lowest HP (%)
+
+ClosestLow
+• Mix: close + low HP
+
+Smart ⭐
+• Balanced (distance + HP)
+• Best overall mode
+
+Highest
+• Targets highest HP
+
+Tank
+• Focus on strongest enemies
+
+Weakest
+• Focus on easiest targets
+
+Aggressive
+• Targets dangerous + close enemies
+
+Strongest
+• Prioritizes powerful NPCs
+
+Random
+• Random target
+
+Custom
+• Based on NPC direction (threat)
+]]
+
+
+local function AutoResizeLabel(label, padding)
+	padding = padding or 10
+
+	local textSize = label.TextSize
+	local font = label.Font
+	local width = label.AbsoluteSize.X
+
+	-- calcula o tamanho do texto
+	local textBounds = game:GetService("TextService"):GetTextSize(
+		label.Text,
+		textSize,
+		font,
+		Vector2.new(width, math.huge)
+	)
+
+	-- aplica altura dinâmica
+	label.Size = UDim2.new(1, -10, 0, textBounds.Y + padding)
+end
+
+local function SetLabelText(label, text)
+	if label.Text ~= text then
+		label.Text = text
+		task.defer(function()
+			AutoResizeLabel(label, 15)
+		end)
+	end
+end
+
 RunService.Heartbeat:Connect(function()
 	if not LogsLabel then return end
-    HelpLabel.Text = Hepl_Txt
-	LogsLabel.Text = BuildLogs()
-	
+
+	SetLabelText(HelpLabel, Hepl_Txt)
+	SetLabelText(ModesLabel, Modes_Txt)
+	SetLabelText(LogsLabel, BuildLogs())
 end)
 
 -- :) by: @Adrian75556435
