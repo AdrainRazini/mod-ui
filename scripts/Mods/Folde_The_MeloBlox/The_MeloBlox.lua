@@ -1,6 +1,6 @@
 local Regui
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-local GuiName = "Mod_"..game.Players.LocalPlayer.Name
+local GuiName = "Mod_The_MeloBlox_"..game.Players.LocalPlayer.Name
 local camera = workspace.CurrentCamera
 
 local Players = game:GetService("Players")
@@ -843,11 +843,7 @@ end
 -- 🪟 WINDOW
 -- =========================
 
-local Window = Regui.TabsWindow({
-	Title = GuiName,
-	Text = "Mod Menu",
-	Size = UDim2.new(0, 400, 0, 300)
-})
+Window = Regui.TabsWindow({Title=GuiName, Text= ModInfo.Name, Size=UDim2.new(0, 350, 0, 250), Icon_btn = true})
 
 
 -- =========================
