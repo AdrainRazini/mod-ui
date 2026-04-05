@@ -663,6 +663,20 @@ local function updateGroup()
 end
 
 -- Aim Lock
+local function SetAutoRotate(state)
+	local char = plr.Character
+	local hum = char and char:FindFirstChild("Humanoid")
+	if hum then
+		hum.AutoRotate = state
+	end
+end
+
+local function ForceLockRoot(root, targetPos)
+	local pos = root.Position
+	local target = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
+
+	root.CFrame = CFrame.new(pos, target)
+end
 
 local function LockRootToPosition(targetPosition)
 	local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
@@ -755,34 +769,6 @@ local lastUpdate = 0
 
 RunService.Heartbeat:Connect(function()
 	if not AutoSystem.Enabled then clearForce() return end
-	-- LockCamera Intantanio
-	if  Selection.CurrentNPC then
-		local hrp = Selection.CurrentNPC and Selection.CurrentNPC:FindFirstChild("HumanoidRootPart")
-		if hrp then
-			
-			local char = plr.Character
-			local root = char and char:FindFirstChild("HumanoidRootPart")
-
-			if root and hrp then
-				if AutoSystem.LockRoot then
-					SmoothLockRoot(root, hrp.Position, 0.25)
-				end
-
-				if AutoSystem.LockCamera then
-					SmoothLookCamera(camera, hrp.Position, 0.25)
-				end
-			end
-			
-           --[[
-           if AutoSystem.LockRoot then
-				LockRootToPosition(hrp.Position, 0.1)
-			end
-			if AutoSystem.LockCamera then
-				LookCameraToPosition(hrp.Position, 0.1)
-			end
-			]]
-		end
-	end
 
 	if tick() - lastUpdate < AutoSystem.Delay then return end
 	lastUpdate = tick()
@@ -807,6 +793,34 @@ RunService.Heartbeat:Connect(function()
 
 
 	clearForce() -- garante que não fica com velocity travada
+end)
+
+RunService.RenderStepped:Connect(function()
+	if not AutoSystem.Enabled then
+		SetAutoRotate(true)
+	end
+
+	-- ROOT + CAMERA (FORÇA TOTAL)
+	local npc = Selection.CurrentNPC
+	if not npc then return end
+
+	local hrp = npc:FindFirstChild("HumanoidRootPart")
+	local char = plr.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+
+	if not hrp or not root then return end
+
+	-- ROOT LOCK (FORÇA TOTAL)
+	if AutoSystem.LockRoot then
+		SetAutoRotate(false)
+		ForceLockRoot(root, hrp.Position)
+	end
+
+	-- CAMERA LOCK (FORÇA TOTAL)
+	if AutoSystem.LockCamera then
+		local camPos = camera.CFrame.Position
+		camera.CFrame = CFrame.new(camPos, hrp.Position)
+	end
 end)
 
 mouse.Button1Down:Connect(function()
