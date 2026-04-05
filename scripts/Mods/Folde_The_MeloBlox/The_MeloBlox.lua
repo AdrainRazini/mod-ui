@@ -66,7 +66,7 @@ local Test_ = {
 	Float_Value = 0,
 	Type_Name = "Null",
 	Cache = {}
-	
+
 }
 
 local Selection = {
@@ -88,7 +88,7 @@ local AutoSystem = {
 
 	SpeedForce = 80, -- Força aplicada ao movimento
 	LockCamera = false, -- Bloqueia a câmera e move
-	
+
 	-- Distancia de raio de um Circulo
 	Distance = 10, -- Distancia do Player ao alvo CLock
 	FixY = 1, -- Fixa a altura do movimento Altura
@@ -175,7 +175,7 @@ local function selectNPC(npc)
 
 	Selection.CurrentNPC = npc
 	Selection.CurrentGroup = group
-	
+
 	Selection.CurrentFolder = folder
 	AutoSystem.TargetFolder = folder 
 
@@ -212,7 +212,7 @@ local function getNearestEnemy()
 	local char = plr.Character
 	local root = char and char:FindFirstChild("HumanoidRootPart")
 	if not root then return end
-	
+
 
 	local source = Selection.CurrentFolder 
 		and Selection.CurrentFolder:GetChildren() 
@@ -386,7 +386,7 @@ local function getBestNPCFromGroup()
 		local score
 
 		--  MODES (usando %)
-		
+
 		local hp = healthPercent -- 0 → 1
 
 		if mode == "Closest" then
@@ -442,7 +442,7 @@ local function getBestNPCFromGroup()
 		else
 			score = dist
 		end
-		
+
 --[[		if mode == "Closest" then
 			score = dist
 
@@ -503,7 +503,7 @@ local function GetPositionNPC(npc)
 	)
 
 	local targetPosition = center + offset
-	
+
 	return Vector3.new(
 		targetPosition.X,
 		targetPosition.Y + fixY,
@@ -736,7 +736,7 @@ local function moveToNPC_ByMode(npc)
 				flyToNPC(npc)
 			else
 				movePlayerToNPC(npc)
-				
+
 			end
 		end
 	end
@@ -773,10 +773,10 @@ RunService.Heartbeat:Connect(function()
 		else
 			clearForce() -- importante pra não ficar bugado
 		end
-	
+
 		return
 	end
-	
+
 
 	clearForce() -- garante que não fica com velocity travada
 end)
@@ -970,7 +970,7 @@ local Label_Ex_Farme = Regui.CreateLabel(FarmTab, {Text = "Example", Color = "Wh
 local Check_Farme = Regui.CreateCheckboxe(ExampleTab, {Text = "Checkboxe", Color = "Blue"}, function(state)
 	Test_.Button_Box = state
 	--print("Checkbox clicada! Estado:", Test_.Button_Box)
-	
+
 	if Test_.Button_Box  then
 		-- Notificação se for Verdadeiro
 		Regui.NotificationPerson(Window.Frame.Parent, {
@@ -984,18 +984,18 @@ local Check_Farme = Regui.CreateCheckboxe(ExampleTab, {Text = "Checkboxe", Color
 			print("Notificação fechada!")
 		end)
 	end
-	
+
 
 end)
 
 
 local Toggle_Farme = Regui.CreateToggleboxe(ExampleTab, {Text = "Toggle", Color = "Blue"}, function(state)
-	
+
 	Test_.Toggle_Test = state
 	--print("Toggle clicada! Estado:", Test_.Toggle_Test)
-	
+
 	if Test_.Toggle_Test then
-		
+
 	end
 end)
 
@@ -1004,11 +1004,11 @@ end)
 local SliderFloat = Regui.CreateSliderFloat(ExampleTab, {Text = "Timer Flaot", Color = "Blue", Value = 0.1, Minimum = 0, Maximum = 1}, function(state)
 	Test_.Float_Value = state
 	print("Slider Float clicada! Estado:", Test_.Float_Value)
-	
+
 end)
 
 local SliderInt = Regui.CreateSliderInt(ExampleTab, {Text = "Timer Int", Color = "Blue", Value = 1, Minimum = 0, Maximum = 100}, function(state)
-Test_.Int_Value = state
+	Test_.Int_Value = state
 	print("Slider Int clicada! Estado:", Test_.Int_Value)
 
 end)
@@ -1124,3 +1124,52 @@ local Readme_Lb = Regui.CreateLabel(ReadmeTab, {
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
 
 -- :) by: @Adrian75556435
+
+-- API de Tradução
+local success, response = pcall(function()
+	return game:HttpGet("https://animal-simulator-server.vercel.app/lua/TranslateV2.lua")
+end)
+-- Espera de Duplicatas
+local LOAD_DELAY = 0.5
+task.wait(LOAD_DELAY)
+-- Contagem de Janelas
+local count = 0
+for _, child in ipairs(PlayerGui:GetChildren()) do
+	if child.Name == GuiName then
+		count += 1
+	end
+end
+
+if count > 1 then
+	Regui.Notifications(PlayerGui, {
+		Title = "Alert",
+		Text = "Neutralized Code (duplicated GUI detected)",
+		Icon = "fa_rr_information",
+		Tempo = 10
+	})
+	return
+end
+
+if success and response then
+	local ok, Translate_Api = pcall(function()
+		return loadstring(response)()
+	end)
+
+	if ok then
+		print("✅ API de tradução carregada com sucesso!")
+		Regui.Notifications(PlayerGui, {
+			Title = "Alert",
+			Text = "✅ Auto Translate_Api",
+			Icon = "fa_rr_information",
+			Tempo = 5
+		})
+		local gui = PlayerGui:FindFirstChild(GuiName)
+		if gui then
+			Translate_Api.AutoTranslate(gui, "All")
+		end
+	else
+		warn("⚠️ Erro ao executar código retornado:", Translate_Api)
+	end
+else
+	warn("❌ Falha ao baixar API de tradução:", response)
+end
