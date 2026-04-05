@@ -80,7 +80,7 @@ local Selection = {
 
 local AutoSystem = {
 	Enabled = false,
-	TargetMode = "Move",
+	TargetMode = "Force",
 	EnableAutoMode = false,
 
 	AutoUpdate = false, -- boolean (controle)
@@ -420,9 +420,11 @@ local function getBestNPCFromGroup()
 			score = (distanceFactor * 0.4) + (hp * 0.6)
 
 		elseif mode == "LowestPercent" then
+			-- foca no mais fraco
 			score = healthPercent
 
 		elseif mode == "Tank" then
+			-- foca no mais resistente
 			score = -healthPercent
 
 		elseif mode == "Aggressive" then
@@ -442,35 +444,6 @@ local function getBestNPCFromGroup()
 		else
 			score = dist
 		end
-
---[[		if mode == "Closest" then
-			score = dist
-
-		elseif mode == "Lowest" then
-			score = healthPercent
-
-		elseif mode == "ClosestLow" then
-			score = dist + (healthPercent * 50)
-
-		elseif mode == "Smart" then
-			local danger = (1 - healthPercent)
-			local proximity = 1 / math.max(dist, 1)
-
-			score = (danger * 0.7) - (proximity * 0.5)
-
-		elseif mode == "Highest" then
-			score = -healthPercent
-
-		elseif mode == "Custom" then
-			local npcForward = hrp.CFrame.LookVector
-			local dirToPlayer = (root.Position - hrp.Position).Unit
-			local threat = npcForward:Dot(dirToPlayer)
-
-			score = dist - (threat * 50)
-
-		else
-			score = dist
-		end]]
 
 		if score < bestScore then
 			bestScore = score
@@ -852,6 +825,7 @@ Window = Regui.TabsWindow({Title=GuiName, Text= ModInfo.Name, Size=UDim2.new(0, 
 
 local FarmTab = Regui.CreateTab(Window, {Name = "Farm"}) -- 1
 local ExampleTab = Regui.CreateTab(Window, {Name = "Example"}) -- 2
+ExampleTab.Visible = false -- invisivel
 local PlayerTab = Regui.CreateTab(Window, {Name = "Player"}) -- 3
 local GameTab = Regui.CreateTab(Window, {Name = "Game"}) -- 4
 local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"}) -- 5
