@@ -886,7 +886,7 @@ Regui.CreateLabel(MovementTabs["Settings"], {
 	Alignment = "Center"
 })
 
-CreateSelector(MovementTabs["Settings"], "Move to Npc", {"Auto", "Move", "Fly", "Force"}, function(val)
+CreateSelector(MovementTabs["Settings"], "Move Mode", {"Auto", "Move", "Fly", "Force"}, function(val)
 	AutoSystem.TargetMode = val
 	clearForce()
 end)
@@ -915,7 +915,7 @@ Regui.CreateLabel(MovementTabs["Automation"], {
 	Alignment = "Center"
 })
 
-CreateToggle(MovementTabs["Automation"], "Auto Mode", function(state)
+CreateToggle(MovementTabs["Automation"], "Auto Move to NPC", function(state)
 	AutoSystem.EnableAutoMode = state
 end)
 
