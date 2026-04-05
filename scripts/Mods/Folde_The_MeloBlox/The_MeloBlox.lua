@@ -326,8 +326,28 @@ local function CustomLifeSelect(npc)
 end
 
 
-local function GetHealthPercent(npc)
+local HealthCache = {}
+
+local function GetCachedHealth(npc)
+	local cache = HealthCache[npc]
+
+	if cache and tick() - cache.time < 0.5 then
+		return cache.current, cache.max
+	end
+
 	local current, max = CustomLifeSelect(npc)
+
+	HealthCache[npc] = {
+		current = current,
+		max = max,
+		time = tick()
+	}
+
+	return current, max
+end
+
+local function GetHealthPercent(npc)
+	local current, max = GetCachedHealth(npc) --CustomLifeSelect(npc)
 
 	if current and max then
 		return current / max
@@ -390,6 +410,9 @@ local function getBestNPCFromGroup()
 		--  MODES (usando %)
 
 		local hp = healthPercent -- 0 → 1
+		
+		local distNorm = dist / AutoSystem.Range
+		local hpNorm = hp
 
 		if mode == "Closest" then
 			score = dist
@@ -402,7 +425,7 @@ local function getBestNPCFromGroup()
 
 		elseif mode == "ClosestLow" then
 			-- mistura equilibrada
-			score = dist + (hp * 50)
+			score = (distNorm * 0.5) + (hpNorm * 0.5)
 
 		elseif mode == "Strongest" then
 			-- foca no mais tank (boss)
