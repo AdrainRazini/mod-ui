@@ -794,7 +794,7 @@ local function CreateSelector(tab, name, options, callback)
 	return Regui.CreateSelectorOpitions(tab, {
 		Name = name,
 		Alignment = "Center",
-		Size_Frame = UDim2.new(1, -10, 0, 80),
+		Size_Frame = UDim2.new(1, -10, 0, 100),
 		Options = options,
 		Frame_Max = 50,
 		Type = "String"
