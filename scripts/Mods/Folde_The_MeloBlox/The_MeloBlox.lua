@@ -1399,7 +1399,7 @@ RunService.Heartbeat:Connect(function()
 	SetLabelText(LogsLabel, BuildLogs())
 end)
 
-Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",5)
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 
 -- :) by: @Adrian75556435
