@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "2.7.0",
+	Version = "2.8.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -83,7 +83,7 @@ local Selection = {
 
 
 local AutoSystem = {
-	
+
 	-- Configurações do sistema
 	Enabled = false, -- Ativação do sistema
 	TargetMode = "Force", -- Modo de aproximação
@@ -345,7 +345,7 @@ local function CustomLifeSelect(npc)
 end
 
 
-local HealthCache = {}
+local HealthCache = setmetatable({}, {__mode="k"}) -- WeakKeys
 
 local function GetCachedHealth(npc)
 	local cache = HealthCache[npc]
@@ -933,7 +933,7 @@ Gerencier:AddTask("Target", {
 		currentTarget = getBestNPCFromGroup()
 
 
-		if table.count(HealthCache) > 200 then
+		if #HealthCache > 200 then
 			HealthCache = {}
 		end
 
@@ -977,7 +977,7 @@ Gerencier:AddTask("Movement", {
 })
 
 Gerencier:AddRenderTask("Render", function()
-	
+
 	local enabled = AutoSystem.Enabled
 	local auto = AutoSystem.EnableAutoMode
 
@@ -1267,7 +1267,7 @@ end)
 
 -- Model Selector
 
-local Label_Ex_Farme = Regui.CreateLabel(FarmTab, {Text = "Example", Color = "White", Alignment = "Center"})
+local Label_Ex_Farme = Regui.CreateLabel(ExampleTab, {Text = "Example", Color = "White", Alignment = "Center"})
 
 
 local Check_Farme = Regui.CreateCheckboxe(ExampleTab, {Text = "Checkboxe", Color = "Blue"}, function(state)
