@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "2.1.0",
+	Version = "2.2.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -206,6 +206,15 @@ local Options_Farm = {
 	"Random",
 	"Custom"
 }
+
+local Options_Farm_Modes = {
+	"Auto",
+	"Fast",
+	"Move",
+	"Fly",
+	"Force"
+}
+
 
 -- Busca de Entidade
 local function getNearestEnemy()
@@ -546,17 +555,6 @@ local function flyToPosition(targetPos, speed)
 	root.Velocity = Vector3.new(moveDir.X * speed, root.Velocity.Y, moveDir.Z * speed)
 end
 
-
-local function smoothTeleport(targetPos)
-	local char = plr.Character
-	local root = char and char:FindFirstChild("HumanoidRootPart")
-	if not root then return end
-
-	local alpha = 0.15 -- suavidade (0.1 = lento / 1 = instant)
-	root.CFrame = root.CFrame:Lerp(CFrame.new(targetPos), alpha)
-end
-
-
 local function getForce()
 	local char = plr.Character
 	local root = char and char:FindFirstChild("HumanoidRootPart")
@@ -625,6 +623,23 @@ local function clearForce()
 	end
 end
 
+
+local function smoothTeleport(targetPos)
+	local char = plr.Character
+	local root = char and char:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	-- FAST MODE = teleport instantâneo
+	if AutoSystem.TargetMode == "Fast" then
+		root.CFrame = CFrame.new(targetPos)
+		root.Velocity = Vector3.zero -- evita carry de velocidade
+		return
+	end
+
+	-- NORMAL MODE (suave)
+	local alpha = 0.15 -- 0.1 = mais suave | 1 = instantâneo
+	root.CFrame = root.CFrame:Lerp(CFrame.new(targetPos), alpha)
+end
 
 -- Imput de Poss
 local function flyToNPC(npc)
@@ -763,6 +778,9 @@ local function moveToNPC_ByMode(npc)
 			forceToNPC(npc)
 			--forceMove(hrp.Position)
 		end
+		
+	elseif AutoSystem.TargetMode == "Fast" then
+		tpToNPC(npc)
 
 	elseif AutoSystem.TargetMode == "Auto" then
 		-- inteligente: escolhe baseado na distância
@@ -1038,7 +1056,7 @@ Regui.CreateLabel(MovementTabs["Settings"], {
 	Alignment = "Center"
 })
 
-CreateSelector(MovementTabs["Settings"], "Move Mode", {"Auto", "Move", "Fly", "Force"}, function(val)
+CreateSelector(MovementTabs["Settings"], "Move Mode", Options_Farm_Modes, function(val)
 	AutoSystem.TargetMode = val
 	clearForce()
 end)
@@ -1426,7 +1444,7 @@ if count > 1 then
 		Icon = "fa_rr_information",
 		Tempo = 10
 	})
-	
+
 	return
 end
 
