@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "2.6.0",
+	Version = "2.7.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -1425,7 +1425,15 @@ local Readme_Lb = Regui.CreateLabel(ReadmeTab, {
 ]]
 
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
+local MiniAdrian = Regui.CreateImage(ReadmeTab, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://127904385880677",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
 
+Regui.applyCorner(MiniAdrian)
 
 local Hepl_Txt = [[
 📘 MELOBLOX HELP GUIDE
