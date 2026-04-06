@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "2.8.0",
+	Version = "2.9.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -933,9 +933,13 @@ Gerencier:AddTask("Target", {
 		currentTarget = getBestNPCFromGroup()
 
 
-		if #HealthCache > 200 then
+		local count = 0
+        for _ in pairs(HealthCache) do count += 1 end
+        if count > 200 then HealthCache = setmetatable({}, {__mode="k"}) end
+
+		--[[if #HealthCache > 200 then
 			HealthCache = {}
-		end
+		  end]]
 
 		if math.random() < 0.1 then
 			CleanHealthCache()
