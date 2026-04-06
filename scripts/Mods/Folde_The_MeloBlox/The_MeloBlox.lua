@@ -182,7 +182,10 @@ local function selectNPC(npc)
 	Selection.CurrentNPC = npc
 
 	Selection.CurrentGroup = group
-	Selection.GroupMap = {}
+
+	Selection.GroupMap = nil  -- ← libera referência antiga
+    Selection.GroupMap = {}    -- ← novo mapa
+
 
 	Selection.CurrentFolder = folder
 	AutoSystem.TargetFolder = folder 
@@ -932,18 +935,10 @@ Gerencier:AddTask("Target", {
 
 		currentTarget = getBestNPCFromGroup()
 
-
-		local count = 0
-        for _ in pairs(HealthCache) do count += 1 end
-        if count > 200 then HealthCache = setmetatable({}, {__mode="k"}) end
-
-		--[[if #HealthCache > 200 then
-			HealthCache = {}
-		  end]]
-
-		if math.random() < 0.1 then
-			CleanHealthCache()
-		end
+		-- contagem, apenas:
+        if math.random() < 0.05 then  -- 5% de chance por ciclo (~1 vez por segundo)
+        CleanHealthCache()
+        end
 	end
 })
 
@@ -1308,19 +1303,19 @@ end)
 
 -- Principais sliders
 
-local SliderFloat = Regui.CreateSliderFloat(ExampleTab, {Text = "Timer Flaot", Color = "Blue", Value = 0.1, Minimum = 0, Maximum = 1}, function(state)
+local SliderFloatExample = Regui.CreateSliderFloat(ExampleTab, {Text = "Timer Flaot", Color = "Blue", Value = 0.1, Minimum = 0, Maximum = 1}, function(state)
 	Test_.Float_Value = state
 	print("Slider Float clicada! Estado:", Test_.Float_Value)
 
 end)
 
-local SliderInt = Regui.CreateSliderInt(ExampleTab, {Text = "Timer Int", Color = "Blue", Value = 1, Minimum = 0, Maximum = 100}, function(state)
+local SliderIntExample = Regui.CreateSliderInt(ExampleTab, {Text = "Timer Int", Color = "Blue", Value = 1, Minimum = 0, Maximum = 100}, function(state)
 	Test_.Int_Value = state
 	print("Slider Int clicada! Estado:", Test_.Int_Value)
 
 end)
 
-local SliderOption = Regui.CreateSliderOption(ExampleTab, {Text = "Timer Option", Color = "White", Background = "Blue" , Value = 1, Table = {"Melle","Fire","Aura"}}, function(state)
+local SliderOptionExample = Regui.CreateSliderOption(ExampleTab, {Text = "Timer Option", Color = "White", Background = "Blue" , Value = 1, Table = {"Melle","Fire","Aura"}}, function(state)
 	Test_.Type_Name = state
 	print("Slider Int clicada! Estado:", Test_.Type_Name)
 end)
