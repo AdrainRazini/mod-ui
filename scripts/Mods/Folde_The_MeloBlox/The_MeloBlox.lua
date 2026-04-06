@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "2.2.0",
+	Version = "2.6.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -74,22 +74,26 @@ local Test_ = {
 }
 
 local Selection = {
-	CurrentNPC = nil,
-	CurrentGroup = nil,
-	CurrentFolder = nil,
-	Highlights = {},
+	CurrentNPC = nil, -- Armazena o NPC atual
+	CurrentGroup = nil, -- Armazena o grupo atual
+	CurrentFolder = nil, -- Armazena a pasta atual
+	Highlights = {}, -- Armazena os Highlights ativos
 	ModeHealth = "Closest" -- ou "Highest", "ClosestLow", etc
 }
 
 
 local AutoSystem = {
-	Enabled = false,
-	TargetMode = "Force",
-	EnableAutoMode = false,
+	
+	-- Configurações do sistema
+	Enabled = false, -- Ativação do sistema
+	TargetMode = "Force", -- Modo de aproximação
+	EnableAutoMode = false, -- Ativa o modo automático
 
+	-- Controle de atualização automática
 	AutoUpdate = false, -- boolean (controle)
 	TargetFolder = nil, -- folder real
 
+	-- Configurações de movimento
 	SpeedForce = 80, -- Força aplicada ao movimento
 	LockCamera = false, -- Bloqueia a câmera e move
 	LockRoot = false, -- Bloqueia o movimento do player
@@ -99,7 +103,7 @@ local AutoSystem = {
 	FixY = 1, -- Fixa a altura do movimento Altura
 	Angle = 180, -- Angulo de inclinação -- de 0 a 360
 
-
+	-- Configurações de alvo
 	TargetPosition = nil,
 	Range = 100,
 	TargetNPC = nil,
@@ -176,13 +180,16 @@ local function selectNPC(npc)
 	clearHighlights()
 
 	Selection.CurrentNPC = npc
+
 	Selection.CurrentGroup = group
+	Selection.GroupMap = {}
 
 	Selection.CurrentFolder = folder
 	AutoSystem.TargetFolder = folder 
 
-	for _, n in ipairs(group) do
-		highlightNPC(n)
+	for _, npc in ipairs(group) do
+		highlightNPC(npc)
+		Selection.GroupMap[npc] = true
 	end
 
 	print("Selecionado:", npc.Name, "| Grupo:", folder.Name)
@@ -194,6 +201,7 @@ end
 
 updateChar(plr.Character or plr.CharacterAdded:Wait())
 plr.CharacterAdded:Connect(updateChar)
+
 
 local Options_Farm = {
 	"Closest",
@@ -214,6 +222,7 @@ local Options_Farm_Modes = {
 	"Fly",
 	"Force"
 }
+
 
 
 -- Busca de Entidade
@@ -237,7 +246,8 @@ local function getNearestEnemy()
 			local hum = obj:FindFirstChildOfClass("Humanoid")
 			if not hum or hum.Health <= 0 then continue end
 
-			if table.find(Selection.CurrentGroup, obj) then continue end
+			--if table.find(Selection.CurrentGroup, obj) then continue end
+			if Selection.GroupMap[obj] then continue end
 
 			local hrp = obj:FindFirstChild("HumanoidRootPart")
 			if not hrp then continue end
@@ -355,6 +365,14 @@ local function GetCachedHealth(npc)
 	return current, max
 end
 
+local function CleanHealthCache()
+	for npc, data in pairs(HealthCache) do
+		if not npc or not npc.Parent then
+			HealthCache[npc] = nil
+		end
+	end
+end
+
 local function GetHealthPercent(npc)
 	local current, max = GetCachedHealth(npc) --CustomLifeSelect(npc)
 
@@ -405,7 +423,7 @@ local function getBestNPCFromGroup()
 		local dist = (hrp.Position - root.Position).Magnitude
 
 		-- resolve vida UMA vez só
-		local current, max = CustomLifeSelect(npc)
+		local current, max = GetCachedHealth(npc) --CustomLifeSelect(npc)
 
 		local healthPercent
 		if current and max then
@@ -778,7 +796,7 @@ local function moveToNPC_ByMode(npc)
 			forceToNPC(npc)
 			--forceMove(hrp.Position)
 		end
-		
+
 	elseif AutoSystem.TargetMode == "Fast" then
 		tpToNPC(npc)
 
@@ -804,44 +822,169 @@ local function moveToNPC_ByMode(npc)
 	end
 end
 
+
 local RunService = game:GetService("RunService")
 
-local lastUpdate = 0
+local Gerencier = {
+	Tasks = {},
+	LastRun = {},
+	Metrics = {},
+	FPS = 60,
+	LoadFactor = 1 -- adaptador
+}
 
-RunService.Heartbeat:Connect(function()
-	if not AutoSystem.Enabled then clearForce() return end
+-- adicionar task avançada
+function Gerencier:AddTask(name, config)
+	self.Tasks[name] = {
+		Interval = config.Interval or 0.1,
+		Priority = config.Priority or 1,
+		Callback = config.Callback,
+		Dynamic = config.Dynamic or false
+	}
 
-	if tick() - lastUpdate < AutoSystem.Delay then return end
-	lastUpdate = tick()
+	self.LastRun[name] = 0
+	self.Metrics[name] = {
+		ExecTime = 0,
+		Calls = 0
+	}
+end
 
-	-- 🔄 atualização real (sem conflito)
-	if AutoSystem.AutoUpdate then
-		updateGroup()
+-- monitor de FPS
+RunService.Heartbeat:Connect(function(dt)
+	Gerencier.FPS = math.floor(1 / dt)
+
+	-- auto adaptação
+	if Gerencier.FPS < 40 then
+		Gerencier.LoadFactor = 1.5
+	elseif Gerencier.FPS < 25 then
+		Gerencier.LoadFactor = 2
+	else
+		Gerencier.LoadFactor = 1
 	end
-
-	if AutoSystem.EnableAutoMode then
-		local target = getBestNPCFromGroup()
-
-		if target then
-			moveToNPC_ByMode(target) -- Envia Target ou npc
-			Selection.CurrentNPC = target
-		else
-			clearForce() -- importante pra não ficar bugado
-		end
-
-		return
-	end
-
-
-	clearForce() -- garante que não fica com velocity travada
 end)
 
-RunService.RenderStepped:Connect(function()
-	if not AutoSystem.Enabled then
+-- runner principal
+function Gerencier:Run()
+	RunService.Heartbeat:Connect(function()
+		local now = tick()
+
+		-- ordena por prioridade
+		local ordered = {}
+
+		for name, task in pairs(self.Tasks) do
+			table.insert(ordered, {name = name, task = task})
+		end
+
+		table.sort(ordered, function(a, b)
+			return a.task.Priority > b.task.Priority
+		end)
+
+		for _, data in ipairs(ordered) do
+			local name = data.name
+			local task = data.task
+
+			local interval = task.Interval
+
+			-- adaptive interval
+			if task.Dynamic then
+				interval *= self.LoadFactor
+			end
+
+			if now - self.LastRun[name] >= interval then
+				self.LastRun[name] = now
+
+				local start = tick()
+
+				local ok, err = pcall(task.Callback)
+
+				local execTime = tick() - start
+
+				-- métricas
+				local metric = self.Metrics[name]
+				metric.ExecTime = execTime
+				metric.Calls += 1
+
+				if not ok then
+					warn("[Task Error]", name, err)
+				end
+			end
+		end
+	end)
+end
+
+function Gerencier:AddRenderTask(name, fn)
+	RunService.RenderStepped:Connect(fn)
+end
+
+local currentTarget = nil
+
+Gerencier:AddTask("Target", {
+	Interval = AutoSystem.Delay,
+	Priority = 3,
+	Dynamic = true,
+
+	Callback = function()
+		if not (AutoSystem.Enabled and AutoSystem.EnableAutoMode) then return end
+
+		if AutoSystem.AutoUpdate then
+			updateGroup()
+		end
+
+		currentTarget = getBestNPCFromGroup()
+
+
+		if table.count(HealthCache) > 200 then
+			HealthCache = {}
+		end
+
+		if math.random() < 0.1 then
+			CleanHealthCache()
+		end
+	end
+})
+
+Gerencier:AddTask("Movement", {
+	Interval = AutoSystem.Delay,
+	Priority = 2,
+
+	Callback = function()
+		if not AutoSystem.Enabled then 
+			clearForce()
+			return 
+		end
+
+		-- SE DESATIVOU AUTO MODE → PARA TUDO
+		if not AutoSystem.EnableAutoMode then
+			clearForce()
+			--SetAutoRotate(true)
+
+			currentTarget = nil
+			Selection.CurrentNPC = nil -- ESSENCIAL
+
+			return
+		end
+
+		-- AUTO MODE ATIVO
+		local target = currentTarget
+
+		if target then
+			moveToNPC_ByMode(target)
+			Selection.CurrentNPC = target
+		else
+			clearForce()
+		end
+	end
+})
+
+Gerencier:AddRenderTask("Render", function()
+	
+	local enabled = AutoSystem.Enabled
+	local auto = AutoSystem.EnableAutoMode
+
+	if not enabled or not auto then
 		SetAutoRotate(true)
 	end
 
-	-- ROOT + CAMERA (FORÇA TOTAL)
 	local npc = Selection.CurrentNPC
 	if not npc then return end
 
@@ -851,18 +994,18 @@ RunService.RenderStepped:Connect(function()
 
 	if not hrp or not root then return end
 
-	-- ROOT LOCK (FORÇA TOTAL)
 	if AutoSystem.LockRoot then
 		SetAutoRotate(false)
 		ForceLockRoot(root, hrp.Position)
 	end
 
-	-- CAMERA LOCK (FORÇA TOTAL)
 	if AutoSystem.LockCamera then
 		local camPos = camera.CFrame.Position
 		camera.CFrame = CFrame.new(camPos, hrp.Position)
 	end
 end)
+
+Gerencier:Run()
 
 mouse.Button1Down:Connect(function()
 	if not AutoSystem.Enabled then return end
