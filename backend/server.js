@@ -99,20 +99,38 @@ app.get("/favicon.png", (req, res) => res.status(204).end());
 
 // Log simples (depois pode virar Logger real)
 app.use((req, res, next) => {
-  res.on("finish", () => {
-    if (!req.url.startsWith("/api")) return;
+  /* 
+  // v2
+res.on("finish", async () => {
+  if (!req.url.startsWith("/api")) return;
 
-    setTimeout(() => {
-      addDocument("logs", {
-        path: req.url,
-        method: req.method,
-        status: res.statusCode,
-        ua: req.headers["user-agent"],
-        ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-        time: Date.now()
-      }).catch(() => {});
-    }, 0);
-  });
+  try {
+    await addDocument("logs", {
+      path: req.url,
+      method: req.method,
+      status: res.statusCode,
+      ua: req.headers["user-agent"],
+      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+      time: Date.now()
+    });
+  } catch {}
+});
+*/
+
+res.on("finish", () => {
+  if (!req.url.startsWith("/api")) return;
+
+  Promise.resolve().then(() =>
+    addDocument("logs", {
+      path: req.url,
+      method: req.method,
+      status: res.statusCode,
+      ua: req.headers["user-agent"],
+      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+      time: Date.now()
+    })
+  ).catch(() => {});
+});
 
   next();
 });

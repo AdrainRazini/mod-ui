@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 
 const router = Router();
-
+//v2
 router.get(/^\/(.+)/, (req, res) => {
   const scriptPath = req.params[0];
 
