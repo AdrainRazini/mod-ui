@@ -97,10 +97,27 @@ app.use("/resolver", resolverRoutes);
 
 
 // Log simples (depois pode virar Logger real)
+
+app.use((req, res, next) => {
+  next();
+
+  // roda depois da resposta (não trava)
+  setTimeout(() => {
+    addDocument("logs", {
+      path: req.url,
+      method: req.method,
+      ua: req.headers["user-agent"],
+      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+      time: Date.now()
+    }).catch(() => {});
+  }, 0);
+});
+/*
 app.use((req, res, next) => {
   console.log(`[${req.method}] ${req.url}`);
   next();
 });
+*/
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
