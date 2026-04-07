@@ -120,16 +120,25 @@ res.on("finish", async () => {
 res.on("finish", () => {
   if (!req.url.startsWith("/api")) return;
 
-  Promise.resolve().then(() =>
-    addDocument("logs", {
-      path: req.url,
-      method: req.method,
-      status: res.statusCode,
-      ua: req.headers["user-agent"],
-      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-      time: Date.now()
-    })
-  ).catch(() => {});
+  const log = {
+    path: req.url,
+    method: req.method,
+    status: res.statusCode,
+    ua: req.headers["user-agent"],
+    ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+    time: Date.now()
+  };
+
+  // erros sempre
+  if (res.statusCode >= 400) {
+    Promise.resolve().then(() => addDocument("logs", log)).catch(() => {});
+    return;
+  }
+
+  // sampling (10%)
+  if (Math.random() < 0.1) {
+    Promise.resolve().then(() => addDocument("logs", log)).catch(() => {});
+  }
 });
 
   next();
