@@ -1360,6 +1360,32 @@ local SliderInt = Regui.CreateSliderInt(Tab_F_Logs, {Text = "Timer Int", Color =
 
 local Label_Farme2 = Regui.CreateLabel(ConfigsTab, {Text = "Example", Color = "White", Alignment = "Center"})
 
+Size_Window_Choice = "Normal"
+
+-- Função que ajusta o tamanho da janela
+function Set_Size(Obj)
+	if Size_Window_Choice == "Small" then
+		Obj.Size = UDim2.new(0, 300, 0, 200)
+	elseif Size_Window_Choice == "Normal" then
+		Obj.Size = UDim2.new(0, 350, 0, 250)
+	elseif Size_Window_Choice == "Large" then
+		Obj.Size = UDim2.new(0, 400, 0, 300)
+	end
+end
+
+-- SliderOption para escolher o tamanho da janela
+local Slider_Size = Regui.CreateSliderOption(ConfigsTab, {
+	Text = "Window Size",
+	Color = "White",
+	Background = "Blue",
+	Value = 2, -- valor inicial
+	Table = {"Small", "Normal", "Large"} -- opções
+}, function(state)
+	Size_Window_Choice = state -- atualiza a variável
+	Set_Size(Window.Frame) -- aplica o tamanho na janela
+end)
+
+
 -- Exemplo de uso:
 local Painter = Regui.CreatePainterPanel(ConfigsTab, {
 	{name = "Main_Frame", Obj = Window.Frame},
@@ -1386,33 +1412,6 @@ local OptionsStrings = Regui.CreateSelectorOpitions(ConfigsTab, {
 	print("Você escolheu:", val)
 end)
 
-
-
-
-Size_Window_Choice = "Normal"
-
--- Função que ajusta o tamanho da janela
-function Set_Size(Obj)
-	if Size_Window_Choice == "Small" then
-		Obj.Size = UDim2.new(0, 300, 0, 200)
-	elseif Size_Window_Choice == "Normal" then
-		Obj.Size = UDim2.new(0, 350, 0, 250)
-	elseif Size_Window_Choice == "Large" then
-		Obj.Size = UDim2.new(0, 400, 0, 300)
-	end
-end
-
--- SliderOption para escolher o tamanho da janela
-local Slider_Size = Regui.CreateSliderOption(ConfigsTab, {
-	Text = "Window Size",
-	Color = "White",
-	Background = "Blue",
-	Value = 2, -- valor inicial
-	Table = {"Small", "Normal", "Large"} -- opções
-}, function(state)
-	Size_Window_Choice = state -- atualiza a variável
-	Set_Size(Window.Frame) -- aplica o tamanho na janela
-end)
 
 local OptionsInstance = Regui.CreateSelectorOpitions(ConfigsTab, {
 	Name = "Selector",
