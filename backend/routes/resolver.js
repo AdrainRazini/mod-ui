@@ -39,11 +39,8 @@ router.get("/", (req, res) => {
     cache: {
       enabled: true,
       cdn: true,
-      strategy: "http-cache",
-      maxAge: "60s",
-      staleWhileRevalidate: "600s",
-      strategy: "memory",
-      defaultTTL: "30s"
+      http: { strategy: "http-cache", maxAge: "60s", staleWhileRevalidate: "600s" },
+      memory: { strategy: "memory", defaultTTL: "30s" }
     }
 
   });
