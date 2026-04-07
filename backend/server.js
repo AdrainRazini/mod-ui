@@ -118,7 +118,7 @@ res.on("finish", async () => {
 */
 
 res.on("finish", () => {
-  if (!req.url.startsWith("/api")) return;
+  if (!req.url.startsWith("/api") && !req.url.startsWith("/resolver")) return;
 
   const log = {
     path: req.url,
