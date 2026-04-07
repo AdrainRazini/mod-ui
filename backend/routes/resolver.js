@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
 
   res.json({
     name: "Mod_UI Backend",
-    version: "1.0.0",
+    version: process.env.VERSION || "1.0.0",
     environment: process.env.NODE_ENV || "development",
     timestamp: Date.now(),
 
@@ -26,6 +26,11 @@ router.get("/", (req, res) => {
       apps: `${baseUrl}/apps`,
       config: `${baseUrl}/config`,
       resolver: `${baseUrl}/resolver`
+    },
+
+    scripts: {
+      MeloBlox: `${baseUrl}/api/Mods/Folder_The_MeloBlox/The_MeloBlox`,
+      Apocalypse: `${baseUrl}/api/Mods/Folder_The_Apocalypse/The_Apocalypse`
     },
 
     cache: {
