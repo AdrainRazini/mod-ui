@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "2.9.0",
+	Version = "3.0.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -184,7 +184,7 @@ local function selectNPC(npc)
 	Selection.CurrentGroup = group
 
 	Selection.GroupMap = nil  -- ← libera referência antiga
-    Selection.GroupMap = {}    -- ← novo mapa
+	Selection.GroupMap = {}    -- ← novo mapa
 
 
 	Selection.CurrentFolder = folder
@@ -936,9 +936,9 @@ Gerencier:AddTask("Target", {
 		currentTarget = getBestNPCFromGroup()
 
 		-- contagem, apenas:
-        if math.random() < 0.05 then  -- 5% de chance por ciclo (~1 vez por segundo)
-        CleanHealthCache()
-        end
+		if math.random() < 0.05 then  -- 5% de chance por ciclo (~1 vez por segundo)
+			CleanHealthCache()
+		end
 	end
 })
 
@@ -1387,6 +1387,32 @@ local OptionsStrings = Regui.CreateSelectorOpitions(ConfigsTab, {
 end)
 
 
+
+
+Size_Window_Choice = "Normal"
+
+-- Função que ajusta o tamanho da janela
+function Set_Size(Obj)
+	if Size_Window_Choice == "Small" then
+		Obj.Size = UDim2.new(0, 300, 0, 200)
+	elseif Size_Window_Choice == "Normal" then
+		Obj.Size = UDim2.new(0, 350, 0, 250)
+	elseif Size_Window_Choice == "Large" then
+		Obj.Size = UDim2.new(0, 400, 0, 300)
+	end
+end
+
+-- SliderOption para escolher o tamanho da janela
+local Slider_Size = Regui.CreateSliderOption(ConfigsTab, {
+	Text = "Window Size",
+	Color = "White",
+	Background = "Blue",
+	Value = 2, -- valor inicial
+	Table = {"Small", "Normal", "Large"} -- opções
+}, function(state)
+	Size_Window_Choice = state -- atualiza a variável
+	Set_Size(Window.Frame) -- aplica o tamanho na janela
+end)
 
 local OptionsInstance = Regui.CreateSelectorOpitions(ConfigsTab, {
 	Name = "Selector",
