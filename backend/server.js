@@ -97,7 +97,6 @@ app.use("/resolver", resolverRoutes);
 
 
 // Log simples (depois pode virar Logger real)
-
 app.use((req, res, next) => {
   next();
 
