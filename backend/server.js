@@ -94,22 +94,27 @@ app.use("/api", apiRoutes);
 app.use("/resolver", resolverRoutes);
 // app.use("/features", featureRoutes);
 
-
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+app.get("/favicon.png", (req, res) => res.status(204).end());
 
 // Log simples (depois pode virar Logger real)
 app.use((req, res, next) => {
-  next();
+  res.on("finish", () => {
+    if (!req.url.startsWith("/api")) return;
 
-  // roda depois da resposta (não trava)
-  setTimeout(() => {
-    addDocument("logs", {
-      path: req.url,
-      method: req.method,
-      ua: req.headers["user-agent"],
-      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
-      time: Date.now()
-    }).catch(() => {});
-  }, 0);
+    setTimeout(() => {
+      addDocument("logs", {
+        path: req.url,
+        method: req.method,
+        status: res.statusCode,
+        ua: req.headers["user-agent"],
+        ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+        time: Date.now()
+      }).catch(() => {});
+    }, 0);
+  });
+
+  next();
 });
 /*
 app.use((req, res, next) => {
@@ -136,7 +141,10 @@ if (!isServerless) {
     console.log(`[Mod_UI] Backend rodando na porta ${PORT}`);
   });
 } else {
-  console.log("Backend pronto para Serverless");
+  if (!globalThis._bootLogged) {
+  console.log("Backend iniciado (serverless)");
+  globalThis._bootLogged = true;
+}
 }
 
 export default app;
