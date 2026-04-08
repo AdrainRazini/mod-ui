@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "3.0.0",
+	Version = "3.0.1",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -62,7 +62,7 @@ if PlayerGui:FindFirstChild(GuiName) then
 end
 
 
-
+-- Testes de Mods 
 local Test_ = {
 	Button_Box = false,
 	Toggle_Test = false,
@@ -78,7 +78,8 @@ local Selection = {
 	CurrentGroup = nil, -- Armazena o grupo atual
 	CurrentFolder = nil, -- Armazena a pasta atual
 	Highlights = {}, -- Armazena os Highlights ativos
-	ModeHealth = "Closest" -- ou "Highest", "ClosestLow", etc
+	ModeHealth = "Closest", -- ou "Highest", "ClosestLow", etc
+	Filters = {}, -- Armazena os NPCs encontrados ex: Name e Lv.xx
 }
 
 
@@ -104,9 +105,9 @@ local AutoSystem = {
 	Angle = 180, -- Angulo de inclinação -- de 0 a 360
 
 	-- Configurações de alvo
-	TargetPosition = nil,
-	Range = 100,
-	TargetNPC = nil,
+	TargetPosition = nil, -- Posição do alvo
+	Range = 100, -- Raio de detecção
+	TargetNPC = nil, -- NPC alvo
 	Delay = 0.2
 }
 
@@ -267,6 +268,35 @@ local function getNearestEnemy()
 	return nearest
 end
 
+-- WeakKeys para limpar referências de NPCs automaticamente
+local NpcInfoCache = setmetatable({}, {__mode="k"}) -- chave = npc
+
+local HealthCache = setmetatable({}, {__mode="k"}) -- WeakKeys
+
+-- Busca de Entidade (Melhorada)
+local Filters = {
+	{1,"HealthGUI","BillboardGui"}, -- referência ao objeto GUI
+	{2,"CreatureName", "TextLabel"}, -- text lb
+	{3,"LvlTxt", "TextLabel"}, -- text lb
+	{4,"HealthTxt", "TextLabel"}, -- text lb
+}
+
+-- Ex: "Goblin Lv. 12"
+local function ExtractLevel(text)
+	if not text then return end
+	-- procura por "Lv." seguido de número
+	local level = string.match(text, "Lv%.%s*(%d+)")
+	return tonumber(level)
+end
+
+-- Ex: "Goblin Lv. 12"
+local function ExtractName(text)
+	if not text then return end
+	-- remove a parte "Lv. XX" se existir
+	local name = text:gsub("Lv%.%s*%d+", ""):gsub("^%s*(.-)%s*$", "%1")
+	return name
+end
+
 local function ExtractHealth(text)
 	if not text then return end
 
@@ -279,6 +309,51 @@ local function ExtractHealth(text)
 	end
 end
 
+
+-- Busca recursiva de objetos que correspondem aos filtros
+local function FindNpcInfo(npcRoot)
+	if not npcRoot then return end
+
+	local info = {}
+
+	-- Percorre todos os descendentes do NPC
+	for _, descendant in pairs(npcRoot:GetDescendants()) do
+		for _, filter in pairs(Filters) do
+			local id, namePattern, className = table.unpack(filter)
+			if descendant:IsA(className) and descendant.Name:find(namePattern) then
+				local text = descendant.Text
+				if text then
+					if className == "TextLabel" then
+						if namePattern == "CreatureName" then
+							info.Name = ExtractName(text)
+						elseif namePattern == "LvlTxt" then
+							info.Level = ExtractLevel(text)
+						elseif namePattern == "HealthTxt" then
+							info.CurrentHealth, info.MaxHealth = ExtractHealth(text)
+						end
+					end
+				end
+			end
+		end
+	end
+
+	-- Se não encontrou nada, tenta heurística rápida
+	if not info.Name or not info.Level then
+		for _, descendant in pairs(npcRoot:GetDescendants()) do
+			if descendant:IsA("TextLabel") and descendant.Text then
+				local name = ExtractName(descendant.Text)
+				local level = ExtractLevel(descendant.Text)
+				if name and not info.Name then info.Name = name end
+				if level and not info.Level then info.Level = level end
+			end
+		end
+	end
+
+	-- Armazena no cache (weak key)
+	NpcInfoCache[npcRoot] = info
+	print(info.Name, info.Level)
+	return info
+end
 
 local function SmartScanHealth(npcRoot)
 	local bestCurrent, bestMax
@@ -347,8 +422,6 @@ local function CustomLifeSelect(npc)
 	--print("❌ Sem vida detectada:", npc.Name)
 end
 
-
-local HealthCache = setmetatable({}, {__mode="k"}) -- WeakKeys
 
 local function GetCachedHealth(npc)
 	local cache = HealthCache[npc]
@@ -1014,6 +1087,7 @@ mouse.Button1Down:Connect(function()
 	local npc = getNPCModel(result.Instance)
 
 	if npc then
+		FindNpcInfo(npc)
 		selectNPC(npc)
 	else
 		-- salva posição de movimento
