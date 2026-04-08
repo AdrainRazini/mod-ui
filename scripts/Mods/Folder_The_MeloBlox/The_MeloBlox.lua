@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "3.0.2",
+	Version = "3.0.3",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -79,7 +79,11 @@ local Selection = {
 	CurrentFolder = nil, -- Armazena a pasta atual
 	Highlights = {}, -- Armazena os Highlights ativos
 	ModeHealth = "Closest", -- ou "Highest", "ClosestLow", etc
-	Filters = {}, -- Armazena os NPCs encontrados ex: Name e Lv.xx
+	Filters = {
+		Name = nil,      -- string ou pattern
+		MinLevel = 0,  -- número mínimo
+		MaxLevel = 5,  -- número máximo
+	} -- Armazena os NPCs encontrados ex: Name e Lv.xx
 }
 
 
@@ -458,6 +462,52 @@ local function GetHealthPercent(npc)
 	end
 end
 
+local function PassesFilters(npc)
+	if not npc or not npc.Parent then return false end
+	local info = FindNpcInfo(npc)
+	if not info then return false end
+
+	local filters = Selection.Filters
+
+	-- filtro por nome (ignora se for "All" ou nil)
+	if filters.Name and filters.Name ~= "All" then
+		if not string.find(info.Name or "", filters.Name) then
+			return false
+		end
+	end
+
+	-- filtro por nível mínimo
+	if filters.MinLevel and (info.Level or 0) < filters.MinLevel then
+		return false
+	end
+
+	-- filtro por nível máximo
+	if filters.MaxLevel and (info.Level or 5) > filters.MaxLevel then
+		return false
+	end
+
+	return true
+end
+-- Função para gerar nomes únicos
+local function GenerateUniqueNames()
+	local uniqueNames = {}
+	local seen = {}
+
+	for npc, info in pairs(NpcInfoCache) do
+		if npc and npc.Parent and info.Name then
+			local name = info.Name
+			if not seen[name] then
+				table.insert(uniqueNames, name)
+				seen[name] = true
+			end
+		end
+	end
+
+	-- Adiciona opção "All" sempre no topo
+	table.insert(uniqueNames, 1, "All")
+
+	return uniqueNames
+end
 
 -- Pegar NPC mais próximo
 local function getBestNPCFromGroup()
@@ -491,6 +541,8 @@ local function getBestNPCFromGroup()
 
 	for _, npc in ipairs(group) do
 		if not npc or not npc.Parent then continue end
+		
+		if not PassesFilters(npc) then continue end  -- aplica filtro aqui
 
 		local hum = npc:FindFirstChild("Humanoid")
 		local hrp = npc:FindFirstChild("HumanoidRootPart")
@@ -1080,6 +1132,9 @@ end)
 
 Gerencier:Run()
 
+local OptionsStrings_Filter
+local LevelSlider
+
 mouse.Button1Down:Connect(function()
 	if not AutoSystem.Enabled then return end
 	local result = getMouseHit()
@@ -1088,7 +1143,6 @@ mouse.Button1Down:Connect(function()
 	local npc = getNPCModel(result.Instance)
 
 	if npc then
-		FindNpcInfo(npc)
 		selectNPC(npc)
 	else
 		-- salva posição de movimento
@@ -1208,6 +1262,54 @@ Regui.CreateButton(FarmTab, {
 
 	clearForce()
 end)
+
+
+
+-- Cria selector
+OptionsStrings_Filter = Regui.CreateSelectorOpitions(FarmTab, {
+	Name = "Selector",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,100),
+	Options = {"All"}, -- valor inicial
+	Frame_Max = 50,
+	Type = "String"
+}, function(val)
+	Selection.Filters.Name = val == "All" and nil or val -- "All" ignora filtro
+	print("Você escolheu:", val)
+end)
+
+-- Atualiza opções do selector quando mudar a tabela
+local function UpdateSelectorOptions()
+	local names = GenerateUniqueNames()
+	OptionsStrings_Filter.Reset(names)
+end
+
+-- Exemplo: atualizar a cada 5 segundos
+spawn(function()
+	while true do
+		UpdateSelectorOptions()
+		wait(5)
+	end
+end)
+
+
+CreateToggle(FarmTab, "Enable Select Infinit Lv", function(state)
+
+	if state then
+		Selection.Filters.MaxLevel = 9999
+		LevelSlider.Set(9999)
+	else
+		
+	end
+	
+end)
+
+
+LevelSlider = CreateSlider(FarmTab, "Level", Selection.Filters.MaxLevel, 1, 500, function(val)
+	Selection.Filters.MaxLevel = val
+end)
+
+
 
 local EnableClickSelect = CreateToggle(FarmTab, "Enable Click Select", function(state)
 	AutoSystem.Enabled = state
