@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "3.0.1",
+	Version = "3.0.2",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -275,10 +275,9 @@ local HealthCache = setmetatable({}, {__mode="k"}) -- WeakKeys
 
 -- Busca de Entidade (Melhorada)
 local Filters = {
-	{1,"HealthGUI","BillboardGui"}, -- referência ao objeto GUI
-	{2,"CreatureName", "TextLabel"}, -- text lb
-	{3,"LvlTxt", "TextLabel"}, -- text lb
-	{4,"HealthTxt", "TextLabel"}, -- text lb
+	{ "CreatureName", "TextLabel", "Name" },
+	{ "LvlTxt", "TextLabel", "Level" },
+	{ "HealthTxt", "TextLabel", "Health" },
 }
 
 -- Ex: "Goblin Lv. 12"
@@ -314,42 +313,44 @@ end
 local function FindNpcInfo(npcRoot)
 	if not npcRoot then return end
 
+	if NpcInfoCache[npcRoot] then
+		return NpcInfoCache[npcRoot]
+	end
+
 	local info = {}
 
-	-- Percorre todos os descendentes do NPC
 	for _, descendant in pairs(npcRoot:GetDescendants()) do
 		for _, filter in pairs(Filters) do
-			local id, namePattern, className = table.unpack(filter)
-			if descendant:IsA(className) and descendant.Name:find(namePattern) then
+			local id, className, key = table.unpack(filter)
+			if descendant:IsA(className) and descendant.Name:find(id) then
 				local text = descendant.Text
 				if text then
-					if className == "TextLabel" then
-						if namePattern == "CreatureName" then
-							info.Name = ExtractName(text)
-						elseif namePattern == "LvlTxt" then
-							info.Level = ExtractLevel(text)
-						elseif namePattern == "HealthTxt" then
-							info.CurrentHealth, info.MaxHealth = ExtractHealth(text)
-						end
+					if key == "Name" then
+						info.Name = ExtractName(text)
+					elseif key == "Level" then
+						info.Level = ExtractLevel(text)
+					elseif key == "Health" then
+						info.CurrentHealth, info.MaxHealth = ExtractHealth(text)
 					end
 				end
 			end
 		end
 	end
 
-	-- Se não encontrou nada, tenta heurística rápida
-	if not info.Name or not info.Level then
-		for _, descendant in pairs(npcRoot:GetDescendants()) do
-			if descendant:IsA("TextLabel") and descendant.Text then
-				local name = ExtractName(descendant.Text)
-				local level = ExtractLevel(descendant.Text)
-				if name and not info.Name then info.Name = name end
-				if level and not info.Level then info.Level = level end
+	-- Heurística rápida se não encontrou
+	for _, descendant in pairs(npcRoot:GetDescendants()) do
+		if descendant:IsA("TextLabel") and descendant.Text then
+			if not info.Name then
+				local ok, name = pcall(ExtractName, descendant.Text)
+				if ok then info.Name = name end
+			end
+			if not info.Level then
+				local ok, lvl = pcall(ExtractLevel, descendant.Text)
+				if ok then info.Level = lvl end
 			end
 		end
 	end
 
-	-- Armazena no cache (weak key)
 	NpcInfoCache[npcRoot] = info
 	print(info.Name, info.Level)
 	return info
