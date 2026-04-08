@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "3.0.3",
+	Version = "3.0.4",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -489,23 +489,30 @@ local function PassesFilters(npc)
 	return true
 end
 -- Função para gerar nomes únicos
-local function GenerateUniqueNames()
+local function GenerateUniqueNames(Folder)
 	local uniqueNames = {}
 	local seen = {}
 
-	for npc, info in pairs(NpcInfoCache) do
-		if npc and npc.Parent and info.Name then
-			local name = info.Name
-			if not seen[name] then
-				table.insert(uniqueNames, name)
-				seen[name] = true
+	if Folder then
+		for _, npc in ipairs(Folder:GetChildren()) do
+			if npc:IsA("Model") and npc:FindFirstChild("Humanoid") then
+				local info = FindNpcInfo(npc)
+				if info and info.Name and not seen[info.Name] then
+					table.insert(uniqueNames, info.Name)
+					seen[info.Name] = true
+				end
+			end
+		end
+	else
+		for npc, info in pairs(NpcInfoCache) do
+			if npc and npc.Parent and info.Name and not seen[info.Name] then
+				table.insert(uniqueNames, info.Name)
+				seen[info.Name] = true
 			end
 		end
 	end
 
-	-- Adiciona opção "All" sempre no topo
 	table.insert(uniqueNames, 1, "All")
-
 	return uniqueNames
 end
 
@@ -541,7 +548,7 @@ local function getBestNPCFromGroup()
 
 	for _, npc in ipairs(group) do
 		if not npc or not npc.Parent then continue end
-		
+
 		if not PassesFilters(npc) then continue end  -- aplica filtro aqui
 
 		local hum = npc:FindFirstChild("Humanoid")
@@ -1280,7 +1287,7 @@ end)
 
 -- Atualiza opções do selector quando mudar a tabela
 local function UpdateSelectorOptions()
-	local names = GenerateUniqueNames()
+	local names = GenerateUniqueNames(Selection.CurrentFolder)
 	OptionsStrings_Filter.Reset(names)
 end
 
@@ -1299,9 +1306,9 @@ CreateToggle(FarmTab, "Enable Select Infinit Lv", function(state)
 		Selection.Filters.MaxLevel = 9999
 		LevelSlider.Set(9999)
 	else
-		
+
 	end
-	
+
 end)
 
 
