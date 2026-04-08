@@ -85,7 +85,7 @@ local Selection = {
 	CurrentNPC = nil, -- Armazena o NPC atual
 	CurrentGroup = nil, -- Armazena o grupo atual
 	CurrentFolder = nil, -- Armazena a pasta atual
-	Highlights = {}, -- Armazena os Highlights ativos
+	Highlights = setmetatable({}, {__mode="k"}), -- Armazena os Highlights ativos com Chaves k
 	ModeHealth = "Closest", -- ou "Highest", "ClosestLow", etc
 	Filters = {
 		Name = nil,      -- string ou pattern
@@ -588,13 +588,13 @@ local function getBestNPCFromGroup()
 
 		if mode == "Closest" then
 			score = dist
-			
+
 		elseif mode == "Orbital" then
-			
+
 			local direction = (hrp.Position - root.Position)
 			AutoSystem.Angle = math.deg(math.atan2(direction.Z, direction.X)) % 360
 			score = -dist
-			
+
 		elseif mode == "Lowest" then
 			score = hp -- menor % primeiro
 
@@ -1134,7 +1134,7 @@ function Gerencier:AddTask(name, config)
 		Enabled = true,
 		SafeMode = config.SafeMode ~= false -- Padrão é true (protegido)
 	}
-	
+
 	self.LastRun[name] = 0
 	self.Metrics[name] = {
 		ExecTime = 0,
@@ -1291,7 +1291,7 @@ function Gerencier:Run()
 				self.LastRun[name] = now
 
 				local start = tick()
-				
+
 				--local ok, err = pcall(task.Callback)
 				local ok, err 
 				if task.SafeMode then
@@ -1299,12 +1299,12 @@ function Gerencier:Run()
 					if not ok then
 						warn(string.format("[Gerencier] Task '%s' error: %s", name, err))
 					end
-						-- Tratamento de erro...
+					-- Tratamento de erro...
 				else
 					ok = true
-						task.Callback() -- Execução direta, sem overhead
+					task.Callback() -- Execução direta, sem overhead
 				end
-				
+
 				local execTime = tick() - start
 
 				local metric = self.Metrics[name]
