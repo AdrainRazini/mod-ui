@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "3.0.4",
+	Version = "3.0.5",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -1271,10 +1271,15 @@ Regui.CreateButton(FarmTab, {
 end)
 
 
+Regui.CreateLabel(FarmTab, {
+	Text = "-- Select Filters --",
+	Color = "White",
+	Alignment = "Center"
+})
 
 -- Cria selector
 OptionsStrings_Filter = Regui.CreateSelectorOpitions(FarmTab, {
-	Name = "Selector",
+	Name = "Selector: NPC",
 	Alignment = "Center",
 	Size_Frame = UDim2.new(1,-10,0,100),
 	Options = {"All"}, -- valor inicial
@@ -1299,6 +1304,12 @@ spawn(function()
 	end
 end)
 
+Regui.CreateLabel(FarmTab, {
+	Text = "-- Select Level xx --",
+	Color = "White",
+	Alignment = "Center"
+})
+
 
 CreateToggle(FarmTab, "Enable Select Infinit Lv", function(state)
 
@@ -1317,6 +1328,12 @@ LevelSlider = CreateSlider(FarmTab, "Level", Selection.Filters.MaxLevel, 1, 500,
 end)
 
 
+Regui.CreateLabel(FarmTab, {
+	Text = "-- Activate Internal System --",
+	Color = "White",
+	Alignment = "Center"
+})
+
 
 local EnableClickSelect = CreateToggle(FarmTab, "Enable Click Select", function(state)
 	AutoSystem.Enabled = state
@@ -1324,6 +1341,13 @@ end)
 
 EnableClickSelect.Set(true)
 
+
+
+Regui.CreateLabel(FarmTab, {
+	Text = "-- Movement System --",
+	Color = "White",
+	Alignment = "Center"
+})
 -- =========================
 -- 🧭 MOVEMENT (SUB SYSTEM)
 -- =========================
