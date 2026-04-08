@@ -85,7 +85,7 @@ local Selection = {
 	CurrentNPC = nil, -- Armazena o NPC atual
 	CurrentGroup = nil, -- Armazena o grupo atual
 	CurrentFolder = nil, -- Armazena a pasta atual
-	Highlights = setmetatable({}, {__mode="v"}), -- Armazena os Highlights ativos com Chaves k
+	Highlights = setmetatable({}, {__mode="k"}), -- Armazena os Highlights ativos com Chaves k
 	ModeHealth = "Closest", -- ou "Highest", "ClosestLow", etc
 	Filters = {
 		Name = nil,      -- string ou pattern
