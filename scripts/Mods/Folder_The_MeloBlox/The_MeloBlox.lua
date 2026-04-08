@@ -37,7 +37,7 @@ else
 	-- Tenta baixar remoto
 	local HttpService = game:GetService("HttpService")
 	local ok, err = pcall(function()
-		local code = game:HttpGet("https://raw.githubusercontent.com/AdrainRazini/mastermod/refs/heads/main/module/dataGui.lua")
+		local code = game:HttpGet("https://raw.githubusercontent.com/AdrainRazini/mastermod/refs/heads/main/module/dataGui.lua") -- Meu Git UI
 		Regui = loadstring(code)()
 	end)
 
@@ -2216,7 +2216,7 @@ Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 -- API de Tradução
 local success, response = pcall(function()
-	return game:HttpGet("https://animal-simulator-server.vercel.app/lua/TranslateV2.lua")
+	return game:HttpGet("https://animal-simulator-server.vercel.app/lua/TranslateV2.lua") -- -- Meu Site Translate_API Com logica Inversa
 end)
 -- Espera de Duplicatas
 local LOAD_DELAY = 0.5
