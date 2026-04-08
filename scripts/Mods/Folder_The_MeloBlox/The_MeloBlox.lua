@@ -18,7 +18,7 @@ local cam = workspace.CurrentCamera
 -- Meta dados
 local ModInfo = {
 	Name = "The MeloBlox",
-	Version = "3.0.5",
+	Version = "3.1.0",
 	Date = "2026-04-05",
 
 	Notes = "Mode Menu"
@@ -64,6 +64,14 @@ end
 
 -- Testes de Mods 
 local Test_ = {
+
+    -- plr
+	Speed = {},
+	Jump = {},
+	FOV = nil,
+	NoClip = {},
+
+    -- args
 	Button_Box = false,
 	Toggle_Test = false,
 	Int_Value = 0,
@@ -1216,11 +1224,13 @@ Window = Regui.TabsWindow({
 -- =========================
 
 local FarmTab     = Regui.CreateTab(Window, {Name = "Farm"})
+local PlayerTab  = Regui.CreateTab(Window, {Name = "Player"})
 local ModesTab    = Regui.CreateTab(Window, {Name = "Modes"})
 local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
+
+
 --[[
-local PlayerTab  = Regui.CreateTab(Window, {Name = "Player"})
 local GameTab    = Regui.CreateTab(Window, {Name = "Game"})
 ]]
 
@@ -1472,8 +1482,99 @@ CreateSlider(FarmTab, "Search Range", AutoSystem.Range, 0, 500, function(val)
 	AutoSystem.Range = val
 end)
 
--- Model Selector
 
+-- =========================
+-- PLAYER EDITOR
+-- =========================
+
+-- Título principal
+Regui.CreateLabel(PlayerTab, {
+	Text = "-- Player Editor --",
+	Color = "White",
+	Alignment = "Center"
+})
+
+-- SPEED
+Regui.CreateLabel(PlayerTab, {
+	Text = "Adjust your walking speed:",
+	Color = "LightBlue",
+	Alignment = "Left"
+})
+Test_.Speed.Slider = CreateSlider(PlayerTab, "Player Speed", 16, 0, 100, function(val)
+	local plr = game.Players.LocalPlayer
+	if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+		plr.Character.Humanoid.WalkSpeed = val
+	end
+	Test_.Speed.Value = val
+end)
+Test_.Speed.Slider.Set(16)
+
+-- JUMP
+Regui.CreateLabel(PlayerTab, {
+	Text = "Adjust jump power:",
+	Color = "LightBlue",
+	Alignment = "Left"
+})
+Test_.Jump.Slider = CreateSlider(PlayerTab, "Player Jump", 50, 0, 200, function(val)
+	local plr = game.Players.LocalPlayer
+	if plr.Character and plr.Character:FindFirstChild("Humanoid") then
+		plr.Character.Humanoid.JumpPower = val
+	end
+	Test_.Jump.Value = val
+end)
+Test_.Jump.Slider.Set(50)
+
+-- CAMERA FOV
+Regui.CreateLabel(PlayerTab, {
+	Text = "Camera Field of View:",
+	Color = "LightBlue",
+	Alignment = "Left"
+})
+Test_.FOV = CreateSlider(PlayerTab, "Camera FOV", workspace.CurrentCamera.FieldOfView, 70, 120, function(val)
+	workspace.CurrentCamera.FieldOfView = val
+end)
+
+-- NOCLIP
+Regui.CreateLabel(PlayerTab, {
+	Text = "Enable or disable NoClip:",
+	Color = "LightBlue",
+	Alignment = "Left"
+})
+Test_.NoClip.Toggle = CreateToggle(PlayerTab, "Enable NoClip", function(state)
+	Test_.NoClip = state
+end)
+
+-- NoClip Loop
+spawn(function()
+	while true do
+		if Test_.NoClip then
+			local plr = game.Players.LocalPlayer
+			local char = plr.Character
+			if char then
+				for _, part in pairs(char:GetDescendants()) do
+					if part:IsA("BasePart") then
+						part.CanCollide = false
+					end
+				end
+			end
+		end
+		wait(0.1)
+	end
+end)
+
+-- PLAYER TYPE
+Regui.CreateLabel(PlayerTab, {
+	Text = "Select a player type:",
+	Color = "LightBlue",
+	Alignment = "Left"
+})
+Test_.Type_Name = CreateSelector(PlayerTab, "Player Type", {"Default","God","Fast","Custom"}, function(val)
+	Test_.Type_Name = val
+	Notify("Player Type", "Changed to: " .. val)
+end)
+
+
+-- Model Selector
 local Label_Ex_Farme = Regui.CreateLabel(ExampleTab, {Text = "Example", Color = "White", Alignment = "Center"})
 
 
