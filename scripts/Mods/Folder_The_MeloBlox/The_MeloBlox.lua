@@ -65,13 +65,13 @@ end
 -- Testes de Mods 
 local Test_ = {
 
-    -- plr
+	-- plr
 	Speed = {},
 	Jump = {},
 	FOV = nil,
 	NoClip = {},
 
-    -- args
+	-- args
 	Button_Box = false,
 	Toggle_Test = false,
 	Int_Value = 0,
@@ -221,6 +221,7 @@ plr.CharacterAdded:Connect(updateChar)
 
 local Options_Farm = {
 	"Closest",
+	"Orbital",
 	"Lowest",
 	"LowestPercent", -- novo
 	"ClosestLow",
@@ -587,7 +588,13 @@ local function getBestNPCFromGroup()
 
 		if mode == "Closest" then
 			score = dist
-
+			
+		elseif mode == "Orbital" then
+			
+			local direction = (hrp.Position - root.Position)
+			AutoSystem.Angle = math.deg(math.atan2(direction.Z, direction.X)) % 360
+			score = -dist
+			
 		elseif mode == "Lowest" then
 			score = hp -- menor % primeiro
 
