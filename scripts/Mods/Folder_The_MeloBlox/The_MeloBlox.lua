@@ -26,9 +26,9 @@ local ModInfo = {
 
 
 
--- Tenta carregar localmente
+-- Tenta carregar localmente para testes
 local success, module = pcall(function()
-	return require(script.Parent:FindFirstChild("Mod_UI"))
+	return require(script.Parent:FindFirstChild("Mod_UI")) -- Teste localmente ou em StarterGui
 end)
 
 if success and module then
@@ -37,7 +37,7 @@ else
 	-- Tenta baixar remoto
 	local HttpService = game:GetService("HttpService")
 	local ok, err = pcall(function()
-		local code = game:HttpGet("https://raw.githubusercontent.com/AdrainRazini/mastermod/refs/heads/main/module/dataGui.lua") -- Meu Git UI
+		local code = game:HttpGet("https://mod-ui.vercel.app/api/Core/Mod_UI") -- Meu Servidor Api Git UI
 		Regui = loadstring(code)()
 	end)
 
@@ -973,125 +973,7 @@ local function moveToNPC_ByMode(npc)
 	end
 end
 
-
---[[
-local RunService = game:GetService("RunService")
-
-local Gerencier = {
-	Tasks = {},
-	LastRun = {},
-	Metrics = {},
-	FPS = 60,
-	LoadFactor = 1 -- adaptador
-}
-
--- adicionar task avançada
-function Gerencier:AddTask(name, config)
-	self.Tasks[name] = {
-		Interval = config.Interval or 0.1,
-		Priority = config.Priority or 1,
-		Callback = config.Callback,
-		Dynamic = config.Dynamic or false
-	}
-
-	self.LastRun[name] = 0
-	self.Metrics[name] = {
-		ExecTime = 0,
-		Calls = 0
-	}
-end
-
--- Sub-motor
-function Gerencier:CreateSubMotor(name, cfg)
-	local motor = {Tasks = {}, LastRun = {}}
-	motor.AddTask = function(taskName, cfg)
-		motor.Tasks[taskName] = cfg
-		motor.LastRun[taskName] = 0
-	end
-	RunService.Heartbeat:Connect(function()
-		local now = tick()
-		for tName, t in pairs(motor.Tasks) do
-			if now - motor.LastRun[tName] >= t.Interval then
-				motor.LastRun[tName] = now
-				pcall(t.Callback)
-			end
-		end
-	end)
-	return motor
-end
-
--- monitor de FPS
-RunService.Heartbeat:Connect(function(dt)
-	Gerencier.FPS = math.floor(1 / dt)
-
-	-- auto adaptação
-	if Gerencier.FPS < 40 then
-		Gerencier.LoadFactor = 1.5
-	elseif Gerencier.FPS < 25 then
-		Gerencier.LoadFactor = 2
-	else
-		Gerencier.LoadFactor = 1
-	end
-end)
-
--- runner principal
-function Gerencier:Run()
-	RunService.Heartbeat:Connect(function()
-		local now = tick()
-
-		-- ordena por prioridade
-		local ordered = {}
-
-		for name, task in pairs(self.Tasks) do
-			table.insert(ordered, {name = name, task = task})
-		end
-
-		table.sort(ordered, function(a, b)
-			return a.task.Priority > b.task.Priority
-		end)
-
-		for _, data in ipairs(ordered) do
-			local name = data.name
-			local task = data.task
-
-			local interval = task.Interval
-
-			-- adaptive interval
-			if task.Dynamic then
-				interval *= self.LoadFactor
-			end
-
-			if now - self.LastRun[name] >= interval then
-				self.LastRun[name] = now
-
-				local start = tick()
-
-				local ok, err = pcall(task.Callback)
-
-				local execTime = tick() - start
-
-				-- métricas
-				local metric = self.Metrics[name]
-				metric.ExecTime = execTime
-				metric.Calls += 1
-
-				if not ok then
-					warn("[Task Error]", name, err)
-				end
-			end
-		end
-	end)
-end
-
-function Gerencier:AddRenderTask(name, fn)
-	RunService.RenderStepped:Connect(fn)
-end
-
-function Gerencier:AddSpawnTask(name, fn)
-	task.spawn(fn)
-end
-]]
-
+-- Sistema de gerenciamento de tarefas
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
@@ -1527,18 +1409,11 @@ Window = Regui.TabsWindow({
 -- =========================
 -- 🪟 TABS
 -- =========================
-
 local FarmTab     = Regui.CreateTab(Window, {Name = "Farm"})
 local PlayerTab  = Regui.CreateTab(Window, {Name = "Player"})
+local GameTab    = Regui.CreateTab(Window, {Name = "Game"})
 local ModesTab    = Regui.CreateTab(Window, {Name = "Modes"})
 local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
-
-
-
---[[
-local GameTab    = Regui.CreateTab(Window, {Name = "Game"})
-]]
-
 local ConfigsTab = Regui.CreateTab(Window, {Name = "Configs"})
 
 
@@ -2216,7 +2091,7 @@ Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 -- API de Tradução
 local success, response = pcall(function()
-	return game:HttpGet("https://animal-simulator-server.vercel.app/lua/TranslateV2.lua") -- -- Meu Site Translate_API Com logica Inversa
+	return game:HttpGet("https://mod-ui.vercel.app/api/Core/Translator") -- -- Meu Site Translate_API Com logica Inversa
 end)
 -- Espera de Duplicatas
 local LOAD_DELAY = 0.5
