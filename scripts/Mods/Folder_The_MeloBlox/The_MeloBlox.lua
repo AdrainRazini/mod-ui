@@ -24,8 +24,6 @@ local ModInfo = {
 	Notes = "Mode Menu"
 }
 
-
-
 -- Tenta carregar localmente para testes
 local success, module = pcall(function()
 	return require(script.Parent:FindFirstChild("Mod_UI")) -- Teste localmente ou em StarterGui
