@@ -1,20 +1,30 @@
 local HttpService = game:GetService("HttpService")
 
--- compatibilidade com exploits
-local request = request or http_request or syn and syn.request
+local request =
+    (syn and syn.request)
+    or (http and http.request)
+    or http_request
+    or request
+    or (fluxus and fluxus.request)
+    or (krnl and krnl.request)
 
 if not request then
-    warn("Exploit não suporta request")
+    error("Executor não suporta HTTP request")
+end
+
+local ctx = getgenv().__CTX__
+
+if type(ctx) ~= "table" then
+    warn("CTX inválido")
     return
 end
 
-local ctx = getgenv().__CTX__ or {}
-
--- fallback básico
 if not ctx.mod then
-    warn("CTX inválido: mod não definido")
+    warn("CTX sem mod")
     return
 end
+
+print("CTX:", HttpService:JSONEncode(ctx))
 
 local success, response = pcall(function()
     return request({
@@ -27,23 +37,36 @@ local success, response = pcall(function()
     })
 end)
 
-if not success or not response then
-    warn("Falha na requisição")
+if not success then
+    warn("Erro na request:", response)
     return
 end
 
-if response.StatusCode ~= 200 then
-    warn("Erro do servidor:", response.StatusCode)
+if not response then
+    warn("Sem resposta")
     return
 end
 
-local code = response.Body
+-- suporte a formatos diferentes de executor
+local status = response.StatusCode or response.status
+local body = response.Body or response.body
 
--- execução segura
+if status ~= 200 then
+    warn("Erro HTTP:", status, body)
+    return
+end
+
+if not body or body == "" then
+    warn("Resposta vazia")
+    return
+end
+
+print("Script recebido")
+
 local ok, err = pcall(function()
-    loadstring(code)()
+    loadstring(body)()
 end)
 
 if not ok then
-    warn("Erro ao executar script:", err)
+    warn("Erro ao executar:", err)
 end
