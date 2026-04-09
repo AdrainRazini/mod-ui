@@ -1,3 +1,4 @@
+--[[@translator .. v 1.0]]
 local Translator = {}
 local Cache = {}
 
