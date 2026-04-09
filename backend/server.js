@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 
 // Rotas Caseiras 
+import loaderRoutes from "../backend/routes/loader.js";
 import configRoutes from "../backend/routes/config.js";
 import appsRoutes from "../backend/routes/apps.js";
 import apiRoutes from "../backend/routes/api.js";
@@ -87,7 +88,7 @@ app.get("/health", (req, res) => {
 });
 
 // (FUTURO)
-
+app.use("loader",loaderRoutes)
 app.use("/config", configRoutes);
 app.use("/apps", appsRoutes);
 app.use("/api", apiRoutes);
