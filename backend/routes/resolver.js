@@ -30,12 +30,12 @@ router.get("/", (req, res) => {
       config: `${baseUrl}/config`,
       resolver: `${baseUrl}/resolver`
     },
-
+/*
     scripts: {
       MeloBlox: `${baseUrl}/api/Mods/Folder_The_MeloBlox/The_MeloBlox`,
       Apocalypse: `${baseUrl}/api/Mods/Folder_The_Apocalypse/The_Apocalypse`
     },
-
+ */
     cache: {
       enabled: true,
       cdn: true,
