@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 const router = Router();
-/* 
+
 router.get("/", (req, res) => {
   const protocol =
     req.headers["x-forwarded-proto"] || req.protocol;
@@ -45,7 +45,7 @@ router.get("/", (req, res) => {
 
   });
 });
-*/
+
 
 router.post("/exec", async (req, res) => {
   try {
@@ -57,7 +57,7 @@ router.post("/exec", async (req, res) => {
       return res.status(400).send("-- no mod provided")
     }
 
-    // 🔹 mapa seguro (NÃO expõe estrutura real)
+    // mapa seguro (NÃO expõe estrutura real)
     const MOD_MAP = {
       MeloBlox: "Mods/Folder_The_MeloBlox/The_MeloBlox",
       Apocalypse: "Mods/Folder_The_Apocalypse/The_Apocalypse"
