@@ -1,3 +1,4 @@
+
 /* Server.js */
 // backend/server.js
 
@@ -88,7 +89,7 @@ app.get("/health", (req, res) => {
 });
 
 // (FUTURO)
-app.use("loader",loaderRoutes)
+app.use("/loader",loaderRoutes)
 app.use("/config", configRoutes);
 app.use("/apps", appsRoutes);
 app.use("/api", apiRoutes);

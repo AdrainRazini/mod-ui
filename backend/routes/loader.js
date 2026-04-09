@@ -1,11 +1,10 @@
-// backend/routes/loader.js
 import { Router } from "express";
-
+import fs from "fs";
+import path from "path";
 
 const router = Router();
 
-
-router.get("/loader", (req, res) => {
+router.get("/", (req, res) => {
   try {
     const filePath = path.resolve("scripts/Loader.lua");
 
