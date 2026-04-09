@@ -52,6 +52,19 @@ local status = response.StatusCode or response.status
 local body = response.Body or response.body
 
 if status ~= 200 then
+    warn("Tentando fallback GET...")
+
+    local url = "https://mod-ui.vercel.app/resolver/exec?mod=" .. ctx.mod
+
+    local r = request({
+        Url = url,
+        Method = "GET"
+    })
+
+    body = r.Body or r.body
+end
+
+if status ~= 200 then
     warn("Erro HTTP:", status, body)
     return
 end
