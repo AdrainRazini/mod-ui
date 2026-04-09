@@ -76,9 +76,21 @@ end
 
 print("Script recebido")
 
-local ok, err = pcall(function()
-    loadstring(body)()
+local fn, compileErr = loadstring(body)
+
+if not fn then
+    warn("Erro ao compilar:", compileErr)
+    return
+end
+
+-- stack trace real
+local ok, runtimeErr = xpcall(fn, function(err)
+    return debug.traceback(err)
 end)
+
+if not ok then
+    warn("Erro detalhado:\n", runtimeErr)
+end
 
 if not ok then
     warn("Erro ao executar:", err)
