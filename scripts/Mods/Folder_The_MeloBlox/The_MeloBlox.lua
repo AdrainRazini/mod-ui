@@ -2089,7 +2089,7 @@ Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 -- API de Tradução
 local success, response = pcall(function()
-	return game:HttpGet("https://mod-ui.vercel.app/api/Core/Translator") -- -- Meu Site Translate_API Com logica Inversa
+	return game:HttpGet("https://mod-ui.vercel.app/api/Core/Translator_v2") -- -- Meu Site Translate_API Com logica Inversa
 end)
 -- Espera de Duplicatas
 local LOAD_DELAY = 0.5
@@ -2122,7 +2122,7 @@ if success and response then
 		print("✅ API de tradução carregada com sucesso!")
 		Regui.Notifications(PlayerGui, {
 			Title = "Alert",
-			Text = "✅ Auto Translate_Api",
+			Text = "✅ Auto Translate_Api v2.0",
 			Icon = "fa_ss_marker",
 			Tempo = 5
 		})
