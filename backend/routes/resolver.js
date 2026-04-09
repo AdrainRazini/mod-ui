@@ -2,7 +2,7 @@
 import { Router } from "express";
 
 const router = Router();
-
+/* 
 router.get("/", (req, res) => {
   const protocol =
     req.headers["x-forwarded-proto"] || req.protocol;
@@ -45,5 +45,51 @@ router.get("/", (req, res) => {
 
   });
 });
+*/
+
+router.post("/exec", async (req, res) => {
+  try {
+    const ctx = req.body || {}
+
+    const { mod, features = [] } = ctx
+
+    if (!mod) {
+      return res.status(400).send("-- no mod provided")
+    }
+
+    // 🔹 mapa seguro (NÃO expõe estrutura real)
+    const MOD_MAP = {
+      MeloBlox: "Mods/Folder_The_MeloBlox/The_MeloBlox",
+      Apocalypse: "Mods/Folder_The_Apocalypse/The_Apocalypse"
+    }
+
+    const scriptPath = MOD_MAP[mod]
+
+    if (!scriptPath) {
+      return res.status(404).send("-- mod not found")
+    }
+
+    // pega script internamente (sem expor rota pública)
+    const filePath = path.resolve("scripts", `${scriptPath}.lua`)
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).send("-- script missing")
+    }
+
+    let script = fs.readFileSync(filePath, "utf-8")
+
+    // aqui você pode injetar ctx no script
+    const injected = `
+        getgenv().__CTX__ = ${JSON.stringify(ctx)}
+    \n${script}`
+
+    res.setHeader("Content-Type", "text/plain")
+    res.send(injected)
+
+  } catch (err) {
+    console.error(err)
+    res.status(500).send("-- internal error")
+  }
+})
 
 export default router;
