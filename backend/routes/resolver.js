@@ -6,6 +6,36 @@ import path from "path";
 
 const router = Router();
 
+function escapeLuaString(str) {
+  return str
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+}
+
+function toLuaTable(obj) {
+  if (typeof obj === "string") {
+    return `"${escapeLuaString(obj)}"`
+  }
+
+  if (typeof obj === "number" || typeof obj === "boolean") {
+    return String(obj)
+  }
+
+  if (Array.isArray(obj)) {
+    return `{ ${obj.map(toLuaTable).join(", ")} }`
+  }
+
+  if (typeof obj === "object" && obj !== null) {
+    return `{ ${Object.entries(obj)
+      .map(([k, v]) => `${k} = ${toLuaTable(v)}`)
+      .join(", ")} }`
+  }
+
+  return "nil"
+}
+
 router.get("/", (req, res) => {
   const protocol =
     req.headers["x-forwarded-proto"] || req.protocol;
@@ -82,9 +112,7 @@ router.post("/exec", async (req, res) => {
     let script = fs.readFileSync(filePath, "utf-8")
 
     // aqui você pode injetar ctx no script
-    const injected = `
-        getgenv().__CTX__ = ${JSON.stringify(ctx)}
-    \n${script}`
+    const injected =`getgenv().__CTX__ = ${toLuaTable(ctx)}${script}`
 
     res.setHeader("Content-Type", "text/plain")
     res.send(injected)
