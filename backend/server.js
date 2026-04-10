@@ -31,11 +31,7 @@ import { db } from "./services/firebase.js";
 // ============================
 
 // Carrega variáveis do .env
-//dotenv.config();
-if (!process.env.__ENV_LOADED) {
-  require("dotenv").config()
-  process.env.__ENV_LOADED = "true"
-}
+dotenv.config();
 
 // ============================
 // APP
@@ -105,6 +101,23 @@ app.get("/favicon.png", (req, res) => res.status(204).end());
 
 // Log simples (depois pode virar Logger real)
 app.use((req, res, next) => {
+  /* 
+  // v2
+res.on("finish", async () => {
+  if (!req.url.startsWith("/api")) return;
+
+  try {
+    await addDocument("logs", {
+      path: req.url,
+      method: req.method,
+      status: res.statusCode,
+      ua: req.headers["user-agent"],
+      ip: req.headers["x-forwarded-for"] || req.socket.remoteAddress,
+      time: Date.now()
+    });
+  } catch {}
+});
+*/
 
 res.on("finish", () => {
   if (!req.url.startsWith("/api") && !req.url.startsWith("/resolver")) return;
@@ -132,7 +145,12 @@ res.on("finish", () => {
 
   next();
 });
-
+/*
+app.use((req, res, next) => {
+  console.log(`[${req.method}] ${req.url}`);
+  next();
+});
+*/
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: "Internal Server Error" });
