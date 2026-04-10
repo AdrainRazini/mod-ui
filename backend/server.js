@@ -31,7 +31,11 @@ import { db } from "./services/firebase.js";
 // ============================
 
 // Carrega variáveis do .env
-dotenv.config();
+//dotenv.config();
+if (!process.env.__ENV_LOADED) {
+  require("dotenv").config()
+  process.env.__ENV_LOADED = "true"
+}
 
 // ============================
 // APP
