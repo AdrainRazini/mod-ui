@@ -3,12 +3,15 @@ local Translator = {}
 local Cache = {}
 local Pending = {}
 local LastRequest = 0
+local CTX = getgenv and getgenv().__CTX__ or {} -- contextos aplicados remotamente
+local Config = CTX.translator or {}
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
-
 local player = Players.LocalPlayer
-local targetLang = string.sub(player.LocaleId, 1, 2)
+
+--local targetLang = string.sub(player.LocaleId, 1, 2)
+local targetLang = Config.target ~= "auto" and Config.target or string.sub(player.LocaleId, 1, 2)
 
 local requestFunction =
 (syn and syn.request)                 -- Synapse X (legacy)
