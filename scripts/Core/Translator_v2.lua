@@ -153,8 +153,7 @@ function Translator.TranslateText(text)
 
     -- 4. Pending (evita duplicação)
     if Pending[key] then
-         if Cache[key] then return Cache[key] end
-        return text
+    return Cache[key] or text
     end
 
     
