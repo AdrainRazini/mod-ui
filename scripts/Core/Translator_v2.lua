@@ -1,17 +1,29 @@
---[[@translator .. v 3.0]]
+--[[@translator .. v 4.0]]
+
+local function getConfig()
+    local ctx = getgenv and getgenv().__CTX__ or {}
+    return ctx.translator or {}
+end
+ -- contextos aplicados remotamente
+local Config = getConfig()
+
 local Translator = {}
 local Cache = {}
 local Pending = {}
 local LastRequest = 0
-local CTX = getgenv and getgenv().__CTX__ or {} -- contextos aplicados remotamente
-local Config = CTX.translator or {}
 
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
 local player = Players.LocalPlayer
 
+local function getLang()
+    local Config = getConfig()
+    return Config.target ~= "auto"
+        and Config.target
+        or string.sub(player.LocaleId, 1, 2)
+end
 --local targetLang = string.sub(player.LocaleId, 1, 2)
-local targetLang = Config.target ~= "auto" and Config.target or string.sub(player.LocaleId, 1, 2)
+local targetLang = getLang()
 
 local requestFunction =
 (syn and syn.request)                 -- Synapse X (legacy)
@@ -40,8 +52,16 @@ or
 or
 (getgenv().request)                  -- alguns loaders injetam aqui
 
-local BASE_URL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" .. targetLang .. "&dt=t&q="
+--local BASE_URL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" .. targetLang .. "&dt=t&q="
 
+local function getBaseUrl()
+    local Config = getConfig()
+    local lang = Config.target ~= "auto"
+        and Config.target
+        or string.sub(player.LocaleId, 1, 2)
+
+    return "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" .. lang .. "&dt=t&q="
+end
 
 if not requestFunction then
     error("Executor não suporta HTTP request")
@@ -66,28 +86,42 @@ end
 local function throttle()
     local now = tick()
     local delta = now - LastRequest
+    local Config = getConfig()
+    local delay = Config.throttle or 0.15
 
-    if delta < 0.15 then
-        task.wait(0.15 - delta)
+    if delta < delay then
+     task.wait(delay - delta)
     end
 
     LastRequest = tick()
 end
 
+local function release(key)
+    Pending[key] = nil
+end
+
 -- Tradução segura
 function Translator.TranslateText(text)
 
+    local Config = getConfig()
+
+    if Config.enabled == false then
+        return text
+    end
     -- 1. Validação IMEDIATA (mais leve primeiro)
     if not text or text == "" or #text < 2 then
         return text
     end
 
     -- 2. Heurística (evita request inútil)
-    if targetLang == "en" and not string.find(text, "[^\x00-\x7F]") then
+    if getLang() == "en" and not string.find(text, "[^\x00-\x7F]") then
         return text
     end
 
-    local key = normalizeKey(text)
+    --local key = normalizeKey(text)
+
+    local lang = getLang()
+    local key = lang .. ":" .. normalizeKey(text)
 
     --3. Cache (ultra rápido)
     if Cache[key] then
@@ -96,7 +130,7 @@ function Translator.TranslateText(text)
 
     -- 4. Pending (evita duplicação)
     if Pending[key] then
-         local timeout = 5
+         local timeout = getConfig().timeout or 5
           local start = tick()
           while Pending[key] and (tick() - start) < timeout do
           task.wait()
@@ -116,7 +150,8 @@ function Translator.TranslateText(text)
 
     local successRequest, result = pcall(function()
 
-    local url = BASE_URL .. HttpService:UrlEncode(text)
+    --local url = BASE_URL .. HttpService:UrlEncode(text)
+    local url = getBaseUrl() .. HttpService:UrlEncode(text)
 
         local response = requestFunction({
             Url = url,
@@ -139,9 +174,16 @@ function Translator.TranslateText(text)
             return nil
         end
 
+        --return data[1][1][1] -- v1
+        local full = ""
+        for _, part in ipairs(data[1]) do
+          full = full .. (part[1] or "")
+        end
 
-        return data[1][1][1]
+        return full
     end)
+
+    release(key) -- Limpar 
 
     -- 🔹 6. Aplicação segura
     if successRequest and result and result ~= "" then
@@ -187,7 +229,8 @@ function Translator.AutoTranslate(gui, searchMode)
             if textToTranslate and #textToTranslate > 1 then
 
             local objRef = obj
-            task.spawn(function()
+            --task.spawn(function()
+            task.defer(function()
                local translated = Translator.TranslateText(textToTranslate)
                 if objRef and objRef.Parent and objRef:IsA("TextLabel") then
                   objRef.Text = translated
@@ -195,7 +238,8 @@ function Translator.AutoTranslate(gui, searchMode)
                   end
             end)
 
-             --[[local translated = Translator.TranslateText(textToTranslate)
+             --[[
+             local translated = Translator.TranslateText(textToTranslate)
              obj.Text = translated
              obj:SetAttribute("Translated", true)
              task.wait(0.15) --(anti-crash HUD)
