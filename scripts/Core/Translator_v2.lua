@@ -1,4 +1,4 @@
---[[@translator .. v 4.0]]
+--[[@translator .. v 4.0]] -- futuro marcador para leitura de coments
 
 local function getConfig()
     local ok, genv = pcall(function()
@@ -240,9 +240,10 @@ function Translator.AutoTranslate(gui, searchMode)
         if textToTranslate and #textToTranslate > 1 then
             local objRef = obj
 
-            task.defer(function()
+            --task.defer(function() -- Um pouco lento 
+            task.spawn(function() -- Mais ação tradução em tempo real 
                 local translated = Translator.TranslateText(textToTranslate)
-                if objRef and objRef.Parent and objRef:IsA("TextLabel") then
+                if objRef and objRef.Parent and (objRef:IsA("TextLabel") or objRef:IsA("TextButton")) then
                     objRef.Text = translated
                     objRef:SetAttribute("Translated", true)
                 end
