@@ -1,13 +1,24 @@
 --[[@translator .. v 4.0]]
 
 local function getConfig()
-    local ctx = getgenv and getgenv().__CTX__ or {}
-    return ctx.translator or {}
+    local ok, genv = pcall(function()
+        return getgenv and getgenv()
+    end)
+
+    if ok and type(genv) == "table" then
+        local ctx = genv.__CTX__
+        if type(ctx) == "table" then
+            return ctx.translator or {}
+        end
+    end
+
+    return {}
 end
  -- contextos aplicados remotamente
 local Config = getConfig()
 
 local Translator = {}
+
 local Cache = {}
 local Pending = {}
 local LastRequest = 0
@@ -24,33 +35,45 @@ local function getLang()
 end
 --local targetLang = string.sub(player.LocaleId, 1, 2)
 local targetLang = getLang()
+local function getRequestFunction()
+    local names = {
+        "syn_request","http_request","request","httprequest","secure_request"
+    }
 
-local requestFunction =
-(syn and syn.request)                 -- Synapse X (legacy)
-or
-(syn_request)                         -- algumas builds antigas
-or
-(http_request)                        -- padrão comum
-or
-(request)                             -- fallback global
-or
-(httprequest)                         -- variação sem underscore
-or
-(fluxus and fluxus.request)          -- Fluxus
-or
-(krnl and krnl.request)              -- KRNL
-or
-(sentinel and sentinel.request)      -- Sentinel (antigo)
-or
-(protosmasher and protosmasher.request) -- ProtoSmasher
-or
-(is_sirhurt_closure and request)     -- SirHurt (hacky check)
-or
-(secure_request)                     -- alguns privados usam isso
-or
-(rconsole and rconsole.request)      -- raríssimo / custom
-or
-(getgenv().request)                  -- alguns loaders injetam aqui
+    for _, name in ipairs(names) do
+        local fn = rawget(_G, name)
+        if type(fn) == "function" then
+            return fn
+        end
+    end
+
+    local ok, genv = pcall(function()
+        return getgenv and getgenv()
+    end)
+
+    if ok and type(genv) == "table" and type(genv.request) == "function" then
+        return genv.request
+    end
+
+    local executors = {"syn","fluxus","krnl","sentinel","protosmasher","rconsole"}
+
+    for _, ex in ipairs(executors) do
+        local ok2, obj = pcall(function()
+            return _G[ex]
+        end)
+
+        if ok2 and type(obj) == "table" then
+            local fn = obj.request
+            if type(fn) == "function" then
+                return fn
+            end
+        end
+    end
+
+    return nil
+end
+
+local requestFunction = getRequestFunction()
 
 --local BASE_URL = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=" .. targetLang .. "&dt=t&q="
 
@@ -130,11 +153,6 @@ function Translator.TranslateText(text)
 
     -- 4. Pending (evita duplicação)
     if Pending[key] then
-         local timeout = getConfig().timeout or 5
-          local start = tick()
-          while Pending[key] and (tick() - start) < timeout do
-          task.wait()
-          end
          if Cache[key] then return Cache[key] end
         return text
     end
@@ -210,43 +228,30 @@ function Translator.AutoTranslate(gui, searchMode)
 
     for i = 1, #descendants do
         local obj = descendants[i]
-    --for _, obj in ipairs(gui:GetDescendants()) do
-        if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+  
+      if not obj:GetAttribute("Translated") then
+        if not string.find(obj.Name, "Translate_Off") then
 
-            if obj:GetAttribute("Translated") then
-                continue
-            end
+        local textToTranslate =
+            (searchMode == "Name" and obj.Name)
+            or (searchMode == "All" and (obj.Text ~= "" and obj.Text or obj.Name))
+            or obj.Text
 
-            if string.find(obj.Name, "Translate_Off") then
-                continue
-            end
-
-            local textToTranslate =
-                (searchMode == "Name" and obj.Name)
-                or (searchMode == "All" and (obj.Text ~= "" and obj.Text or obj.Name))
-                or obj.Text
-
-            if textToTranslate and #textToTranslate > 1 then
-
+        if textToTranslate and #textToTranslate > 1 then
             local objRef = obj
-            --task.spawn(function()
+
             task.defer(function()
-               local translated = Translator.TranslateText(textToTranslate)
+                local translated = Translator.TranslateText(textToTranslate)
                 if objRef and objRef.Parent and objRef:IsA("TextLabel") then
-                  objRef.Text = translated
-                  objRef:SetAttribute("Translated", true)
-                  end
+                    objRef.Text = translated
+                    objRef:SetAttribute("Translated", true)
+                end
             end)
-
-             --[[
-             local translated = Translator.TranslateText(textToTranslate)
-             obj.Text = translated
-             obj:SetAttribute("Translated", true)
-             task.wait(0.15) --(anti-crash HUD)
-             ]]
-
-            end
         end
+
+    end
+end
+
     end
 end
 
