@@ -226,31 +226,38 @@ function Translator.AutoTranslate(gui, searchMode)
 
     local descendants = gui:GetDescendants()
 
-    for i = 1, #descendants do
-        local obj = descendants[i]
-  
-      if not obj:GetAttribute("Translated") then
-        if not string.find(obj.Name, "Translate_Off") then
+     for i = 1, #descendants do
+      local obj = descendants[i]
 
-        local textToTranslate =
-            (searchMode == "Name" and obj.Name)
-            or (searchMode == "All" and (obj.Text ~= "" and obj.Text or obj.Name))
-            or obj.Text
+       if obj:IsA("TextLabel") or obj:IsA("TextButton") then
+        
+         if not obj:GetAttribute("Translated") then
+            if not string.find(obj.Name, "Translate_Off") then
 
-        if textToTranslate and #textToTranslate > 1 then
-            local objRef = obj
+                local textToTranslate =
+                    (searchMode == "Name" and obj.Name)
+                    or (searchMode == "All" and (obj.Text ~= "" and obj.Text or obj.Name))
+                    or obj.Text
 
-            --task.defer(function() -- Um pouco lento 
-            task.spawn(function() -- Mais ação tradução em tempo real 
-                local translated = Translator.TranslateText(textToTranslate)
-                if objRef and objRef.Parent and (objRef:IsA("TextLabel") or objRef:IsA("TextButton")) then
-                    objRef.Text = translated
-                    objRef:SetAttribute("Translated", true)
+                if textToTranslate and #textToTranslate > 1 then
+                    local objRef = obj
+
+                    task.spawn(function()
+                        local translated = Translator.TranslateText(textToTranslate)
+
+                        if objRef and objRef.Parent then
+                            objRef.Text = translated
+                            objRef:SetAttribute("Translated", true)
+                        end
+                    end)
+
                 end
-            end)
+            end
         end
 
     end
+end
+
 end
 
     end
