@@ -97,6 +97,8 @@ local AutoSystem = {
 
 	-- Configurações do sistema
 	Enabled = false, -- Ativação do sistema
+	SelectMode = "button", -- mouse
+	
 	TargetMode = "Force", -- Modo de aproximação
 	EnableAutoMode = false, -- Ativa o modo automático
 
@@ -1362,8 +1364,8 @@ selectButton.Visible = false
 selectButton.Parent = screenGui
 
 selectButton.MouseButton1Click:Connect(function()
-	if Selection.CurrentNPC then
-		selectNPC(Selection.CurrentNPC)
+	if Selection.HoverNPC then
+		selectNPC(Selection.HoverNPC)
 	end
 end)
 
@@ -1392,40 +1394,46 @@ Gerencier:AddRenderTask("AimHUD", {
 	TargetFPS = 30,
 	Callback = function()
 
-		if not AutoSystem.Enabled then 
+		local enabled = AutoSystem.Enabled
+		local mode = AutoSystem.SelectMode
+
+		if not enabled or mode == "mouse" then
 			selectButton.Visible = false
-			return 
+			crosshair.Visible = false
+			return
 		end
+
+		crosshair.Visible = true
 
 		local result = getCenterHit()
 
-		if result then
-			local npc = getNPCModel(result.Instance)
-
-			if npc then
-				crosshair.BackgroundColor3 = Color3.fromRGB(0,255,0)
-
-				Selection.CurrentNPC = npc
-
-				if updateButtonPosition(npc) then
-					selectButton.Visible = true
-				else
-					selectButton.Visible = false
-				end
-			else
-				crosshair.BackgroundColor3 = Color3.fromRGB(255,255,255)
-				selectButton.Visible = false
-			end
-		else
+		if not result then
 			crosshair.BackgroundColor3 = Color3.fromRGB(255,255,255)
 			selectButton.Visible = false
+			return
 		end
+
+		local npc = getNPCModel(result.Instance)
+
+		if not npc then
+			crosshair.BackgroundColor3 = Color3.fromRGB(255,255,255)
+			selectButton.Visible = false
+			return
+		end
+
+		-- 🎯 alvo válido
+		crosshair.BackgroundColor3 = Color3.fromRGB(0,255,0)
+		Selection.HoverNPC = npc
+
+		selectButton.Visible = updateButtonPosition(npc)
 
 	end
 })
 
 mouse.Button1Down:Connect(function()
 	if not AutoSystem.Enabled then return end
+	if AutoSystem.SelectMode ~= "mouse" then return end
+
 	local result = getMouseHit()
 	if not result then return end
 
@@ -1434,7 +1442,6 @@ mouse.Button1Down:Connect(function()
 	if npc then
 		selectNPC(npc)
 	else
-		-- salva posição de movimento
 		AutoSystem.TargetPosition = result.Position
 	end
 end)
@@ -1612,6 +1619,18 @@ Regui.CreateLabel(FarmTab, {
 	Color = "White",
 	Alignment = "Center"
 })
+
+Ser = Regui.CreateSelectorOpitions(FarmTab, {
+	Name = "Selector: Button",
+	Alignment = "Center",
+	Size_Frame = UDim2.new(1,-10,0,50),
+	Options = {"button", "mouse"}, -- valor inicial
+	Frame_Max = 50,
+	Type = "String"
+}, function(val)
+	AutoSystem.SelectMode = val
+	print("Você escolheu:", val)
+end)
 
 
 local EnableClickSelect = CreateToggle(FarmTab, "Enable Click Select", function(state)
