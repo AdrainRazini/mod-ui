@@ -135,7 +135,7 @@ local MiniAdrian = Regui.CreateImage(HelpTab, {
 
 local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
 
-Regui.CreateButton(FarmTab, {
+Regui.CreateButton(HelpTab, {
 	Text = "Delete GUI",
 	Color = "Blue"
 }, function()
