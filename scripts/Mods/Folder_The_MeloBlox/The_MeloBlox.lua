@@ -1337,6 +1337,7 @@ local OptionsStrings_Filter
 local LevelSlider
 
 local screenGui = Instance.new("ScreenGui")
+screenGui.IgnoreGuiInset = true
 screenGui.Name = "AimHUD"
 screenGui.Parent = PlayerGui
 
@@ -1371,10 +1372,16 @@ local function updateButtonPosition(npc)
 	local hrp = npc and npc:FindFirstChild("HumanoidRootPart")
 	if not hrp then return false end
 
-	local pos, onScreen = cam:WorldToViewportPoint(hrp.Position)
+	local pos, onScreen = cam:WorldToScreenPoint(hrp.Position)
 
-	if onScreen then
-		selectButton.Position = UDim2.fromOffset(pos.X, pos.Y - 40)
+	if onScreen and pos.Z > 0 then
+		local viewport = cam.ViewportSize
+
+		selectButton.Position = UDim2.fromOffset(
+			pos.X,
+			math.clamp(pos.Y - 60, 0, viewport.Y)
+		)
+
 		return true
 	end
 
