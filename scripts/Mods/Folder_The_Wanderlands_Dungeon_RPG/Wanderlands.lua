@@ -123,7 +123,27 @@ Window = Regui.TabsWindow({
 	Icon_btn = true
 })
 
+local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
+local MiniAdrian = Regui.CreateImage(HelpTab, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://122365940403758",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
+
+local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
+
+Regui.CreateButton(FarmTab, {
+	Text = "Delete GUI",
+	Color = "Blue"
+}, function()
+	Window:Destroy()
+end)
+
+
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 
 -- :) by: @Adrian75556435
