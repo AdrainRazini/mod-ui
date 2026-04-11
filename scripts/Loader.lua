@@ -1,14 +1,48 @@
+--[[@Loader .. v 2.0 ]]
 local HttpService = game:GetService("HttpService")
 
-local request =
-    (syn and syn.request)
-    or (http and http.request)
-    or http_request
-    or request
-    or (fluxus and fluxus.request)
-    or (krnl and krnl.request)
+-- Multi Loader ex ..
+local function getRequestFunction()
+    local names = {
+        "syn_request","http_request","request","httprequest","secure_request"
+    }
 
-if not request then
+    for _, name in ipairs(names) do
+        local fn = rawget(_G, name)
+        if type(fn) == "function" then
+            return fn
+        end
+    end
+
+    local ok, genv = pcall(function()
+        return getgenv and getgenv()
+    end)
+
+    if ok and type(genv) == "table" and type(genv.request) == "function" then
+        return genv.request
+    end
+
+    local executors = {"syn","fluxus","krnl","sentinel","protosmasher","rconsole"}
+
+    for _, ex in ipairs(executors) do
+        local ok2, obj = pcall(function()
+            return _G[ex]
+        end)
+
+        if ok2 and type(obj) == "table" then
+            local fn = obj.request
+            if type(fn) == "function" then
+                return fn
+            end
+        end
+    end
+
+    return nil
+end
+
+local requestFunction = getRequestFunction()
+
+if not requestFunction then
     error("Executor não suporta HTTP request")
 end
 
@@ -27,9 +61,11 @@ end
 print("CTX:", HttpService:JSONEncode(ctx))
 
 local success, response = pcall(function()
-    return request({
+    return requestFunction({
         Url = "https://mod-ui.vercel.app/resolver/exec",
+        url = "https://mod-ui.vercel.app/resolver/exec",
         Method = "POST",
+        method = "POST",
         Headers = {
             ["Content-Type"] = "application/json"
         },
@@ -56,11 +92,14 @@ if status ~= 200 then
 
     local url = "https://mod-ui.vercel.app/resolver/exec?mod=" .. ctx.mod
 
-    local r = request({
+    local r = requestFunction({
         Url = url,
-        Method = "GET"
+        url = url,
+        Method = "GET",
+        method = "GET"
     })
 
+    status = r.StatusCode or r.status
     body = r.Body or r.body
 end
 
@@ -93,5 +132,5 @@ if not ok then
 end
 
 if not ok then
-    warn("Erro ao executar:", err)
+    warn("Erro ao executar:", runtimeErr)
 end
