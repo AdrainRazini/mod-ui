@@ -136,6 +136,16 @@ local function getMouseHit()
 	return workspace:Raycast(ray.Origin, ray.Direction * 1000, rayParams)
 end
 
+local function getCenterRay()
+	local viewport = cam.ViewportSize
+	return cam:ViewportPointToRay(viewport.X/2, viewport.Y/2)
+end
+
+local function getCenterHit()
+	local ray = getCenterRay()
+	return workspace:Raycast(ray.Origin, ray.Direction * 1000, rayParams)
+end
+
 -- pega o MODEL do NPC
 local function getNPCModel(part)
 	if not part then return end
@@ -1325,6 +1335,87 @@ Gerencier:Run()
 
 local OptionsStrings_Filter
 local LevelSlider
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "AimHUD"
+screenGui.Parent = PlayerGui
+
+local crosshair = Instance.new("Frame")
+crosshair.Size = UDim2.fromOffset(6, 6)
+crosshair.Position = UDim2.fromScale(0.5, 0.5)
+crosshair.Visible = false
+crosshair.AnchorPoint = Vector2.new(0.5, 0.5)
+crosshair.BackgroundColor3 = Color3.fromRGB(255,255,255)
+crosshair.BorderSizePixel = 0
+crosshair.Parent = screenGui
+
+Instance.new("UICorner", crosshair).CornerRadius = UDim.new(1,0)
+
+local selectButton = Instance.new("TextButton")
+selectButton.Size = UDim2.fromOffset(100, 40)
+selectButton.AnchorPoint = Vector2.new(0.5, 0.5)
+selectButton.Text = "SELECT"
+selectButton.BackgroundColor3 = Color3.fromRGB(0,170,255)
+selectButton.TextColor3 = Color3.new(1,1,1)
+selectButton.Visible = false
+selectButton.Parent = screenGui
+
+selectButton.MouseButton1Click:Connect(function()
+	if Selection.CurrentNPC then
+		selectNPC(Selection.CurrentNPC)
+	end
+end)
+
+
+local function updateButtonPosition(npc)
+	local hrp = npc and npc:FindFirstChild("HumanoidRootPart")
+	if not hrp then return false end
+
+	local pos, onScreen = cam:WorldToViewportPoint(hrp.Position)
+
+	if onScreen then
+		selectButton.Position = UDim2.fromOffset(pos.X, pos.Y - 40)
+		return true
+	end
+
+	return false
+end
+
+Gerencier:AddRenderTask("AimHUD", {
+	TargetFPS = 30,
+	Callback = function()
+
+		if not AutoSystem.Enabled then 
+			selectButton.Visible = false
+			return 
+		end
+
+		local result = getCenterHit()
+
+		if result then
+			local npc = getNPCModel(result.Instance)
+
+			if npc then
+				crosshair.BackgroundColor3 = Color3.fromRGB(0,255,0)
+
+				Selection.CurrentNPC = npc
+
+				if updateButtonPosition(npc) then
+					selectButton.Visible = true
+				else
+					selectButton.Visible = false
+				end
+			else
+				crosshair.BackgroundColor3 = Color3.fromRGB(255,255,255)
+				selectButton.Visible = false
+			end
+		else
+			crosshair.BackgroundColor3 = Color3.fromRGB(255,255,255)
+			selectButton.Visible = false
+		end
+
+	end
+})
 
 mouse.Button1Down:Connect(function()
 	if not AutoSystem.Enabled then return end
