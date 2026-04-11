@@ -139,7 +139,7 @@ Regui.CreateButton(HelpTab, {
 	Text = "Delete GUI",
 	Color = "Blue"
 }, function()
-	Window:Destroy()
+	Window.enabled = false
 end)
 
 
