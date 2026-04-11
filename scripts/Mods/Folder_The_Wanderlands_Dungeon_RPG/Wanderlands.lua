@@ -1,6 +1,6 @@
 local Regui
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-local GuiName = "Mod_The_MeloBlox_"..game.Players.LocalPlayer.Name
+local GuiName = "Mod_The_Wanderlands_"..game.Players.LocalPlayer.Name
 local camera = workspace.CurrentCamera
 
 local Players = game:GetService("Players")
