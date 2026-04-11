@@ -93,7 +93,8 @@ router.post("/exec", async (req, res) => {
     // mapa seguro (NÃO expõe estrutura real)
     const MOD_MAP = {
       MeloBlox: "Mods/Folder_The_MeloBlox/The_MeloBlox",
-      Apocalypse: "Mods/Folder_The_Apocalypse/The_Apocalypse"
+      Apocalypse: "Mods/Folder_The_Apocalypse/The_Apocalypse",
+      Wanderlands: "Mods/Folder_The_Wanderlands_Dungeon_RPG"
     }
 
     const scriptPath = MOD_MAP[mod]
