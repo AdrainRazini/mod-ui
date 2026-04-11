@@ -1344,7 +1344,7 @@ screenGui.Name = "AimHUD"
 screenGui.Parent = PlayerGui
 
 local crosshair = Instance.new("Frame")
-crosshair.Size = UDim2.fromOffset(6, 6)
+crosshair.Size = UDim2.fromOffset(5, 5)
 crosshair.Position = UDim2.fromScale(0.5, 0.5)
 crosshair.Visible = false
 crosshair.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1421,7 +1421,7 @@ Gerencier:AddRenderTask("AimHUD", {
 			return
 		end
 
-		-- 🎯 alvo válido
+		-- alvo válido
 		crosshair.BackgroundColor3 = Color3.fromRGB(0,255,0)
 		Selection.HoverNPC = npc
 
@@ -1620,18 +1620,17 @@ Regui.CreateLabel(FarmTab, {
 	Alignment = "Center"
 })
 
-Ser = Regui.CreateSelectorOpitions(FarmTab, {
-	Name = "Selector: Button",
-	Alignment = "Center",
-	Size_Frame = UDim2.new(1,-10,0,50),
-	Options = {"button", "mouse"}, -- valor inicial
-	Frame_Max = 50,
-	Type = "String"
-}, function(val)
-	AutoSystem.SelectMode = val
-	print("Você escolheu:", val)
-end)
 
+local Slider_Selector_Typer_S = Regui.CreateSliderOption(FarmTab, {
+	Text = "Selector: Button",
+	Color = "White",
+	Background = "Blue",
+	Value = 1, -- valor inicial
+	Table = {"button", "mouse"} -- opções
+}, function(state)
+	AutoSystem.SelectMode = state
+	print("Você escolheu:", state)
+end)
 
 local EnableClickSelect = CreateToggle(FarmTab, "Enable Click Select", function(state)
 	AutoSystem.Enabled = state
