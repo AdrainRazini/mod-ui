@@ -115,7 +115,7 @@ end
 function Intercept:Execute(name, remote, ...)
     local args = {...}
 
- -- Falback 
+    -- fallback
     if not remote then
         local data = self:GetArgs(name)
         if data then
@@ -126,39 +126,7 @@ function Intercept:Execute(name, remote, ...)
         end
     end
 
-    -- salva args + remote
-    if self:IsTemp(name) then
-        self:AddArgs(name, remote, unpack(args))
-        self:LogAll(name, unpack(args))
-    end
-
-    -- hooks (modificação de args)
-    if instance.Hooks[name] then
-    local success, result = pcall(function()
-        return instance.Hooks[name](unpack(args))
-    end)
-
-    if success then
-        if result == false then
-            return -- cancela
-        end
-
-        if type(result) == "table" then
-            return old(selfRemote, unpack(result))
-        end
-    else
-        warn("Hook error:", result)
-    end
-    end
-
-    --[[if self.Hooks[name] then
-        local newArgs = self.Hooks[name](unpack(args))
-        if newArgs then
-            args = newArgs
-        end
-    end]]
-
-    -- executa corretamente baseado no tipo
+    -- apenas executa
     if remote:IsA("RemoteEvent") then
         return remote:FireServer(unpack(args))
     else
@@ -177,7 +145,7 @@ function Intercept:Enable()
 
     setreadonly(mt, false)
 
-    mt.__namecall = newcclosure(function(selfRemote, ...)
+    --[[mt.__namecall = newcclosure(function(selfRemote, ...)
         local method = getnamecallmethod()
         local args = {...}
 
@@ -203,7 +171,28 @@ function Intercept:Enable()
         end
 
         return old(selfRemote, ...)
-    end)
+    end)]]
+
+    mt.__namecall = newcclosure(function(selfRemote, ...)
+    local method = getnamecallmethod()
+    local args = {...}
+
+    if method == "InvokeServer" or method == "FireServer" then
+        local name = selfRemote:GetFullName()
+
+        if self.Enabled and InterceptInstance then
+            local instance = InterceptInstance
+
+            if instance:IsTemp(name) then
+                instance:AddArgs(name, selfRemote, unpack(args))
+                instance:LogAll(name, unpack(args))
+            end
+        end
+    end
+
+    -- 🔒 SEMPRE chama original (SEM ALTERAÇÃO)
+    return old(selfRemote, ...)
+end)
 
     setreadonly(mt, true)
 
