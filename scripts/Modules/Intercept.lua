@@ -186,4 +186,14 @@ end
 -- =========================
 InterceptInstance = Intercept.new()
 
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+player.CharacterAdded:Connect(function()
+	task.wait(1)
+
+	print("Respawn detectado -> limpando cache")
+	Intercept:ClearArgs()
+end)
+
 return InterceptInstance
