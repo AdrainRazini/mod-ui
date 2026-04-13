@@ -286,6 +286,9 @@ local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Aim Players", function(s
 	AutoSystem.AutoAim = state
 end)
 
+CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(val)
+	Selection.MaxDistance = val
+end)
 
 
 TaskScheduler:AddTask("Eat", {
