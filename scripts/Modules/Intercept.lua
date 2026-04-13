@@ -73,8 +73,12 @@ end
 -- suporta match parcial (upgrade)
 function Intercept:IsTemp(name)
     for tempName in pairs(self.TempList) do
+        if tempName == name then
+            return true -- match exato
+        end
+
         if string.find(string.lower(name), string.lower(tempName)) then
-            return true
+            return true -- match parcial
         end
     end
     return false
