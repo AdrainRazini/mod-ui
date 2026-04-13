@@ -330,17 +330,6 @@ local MemeCat = Regui.CreateImage(ModFarm, {
 
 
 local ReadmeTab = Regui.CreateTab(Window, {Name = "Readme"})
---[[
-
-local Readme_Lb = Regui.CreateLabel(ReadmeTab, {
-	Text = "\n• This UI library was created by @Adrian75556435 Thanks."
-		.. "\n• Owner Of Script: @Adrian75556435"
-		.. "\n• Script & Management By: @Adrian75556435",
-	Color = "White",
-	Alignment = "Left"
-})
-
-]]
 
 local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
 local MiniAdrian = Regui.CreateImage(ReadmeTab, {
