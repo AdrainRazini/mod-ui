@@ -146,36 +146,7 @@ function Intercept:Enable()
     local old = mt.__namecall
 
     setreadonly(mt, false)
-
-    --[[mt.__namecall = newcclosure(function(selfRemote, ...)
-        local method = getnamecallmethod()
-        local args = {...}
-
-        if method == "InvokeServer" or method == "FireServer" then
-            --local name = selfRemote.Name
-            local name = selfRemote:GetFullName()
-
-            if self.Enabled and InterceptInstance then
-                local instance = InterceptInstance
-
-                if instance:IsTemp(name) then
-                    instance:AddArgs(name, selfRemote, unpack(args))
-                    instance:LogAll(name, unpack(args))
-                end
-
-                if instance.Hooks[name] then
-                    local newArgs = instance.Hooks[name](unpack(args))
-                    if newArgs then
-                        return old(selfRemote, unpack(newArgs))
-                    end
-                end
-            end
-        end
-
-        return old(selfRemote, ...)
-    end)]]
-
-    --mt.__namecall = newcclosure(function(selfRemote, ...)
+    
     mt.__namecall = function(selfRemote, ...)
     local method = getnamecallmethod()
     local args = {...}
