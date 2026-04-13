@@ -141,6 +141,33 @@ if Intercept then
 	Intercept:AddTemp("Eat")
 end
 
+
+
+local TaskScheduler
+
+local success, response = pcall(function()
+	return game:HttpGet("https://mod-ui.vercel.app/api/Modules/TaskScheduler")
+end)
+
+if success and response then
+	local ok, module = pcall(function()
+		return loadstring(response)()
+	end)
+
+	if ok and module then
+		TaskScheduler = module
+	else
+		warn("Erro ao carregar Intercept:", module)
+	end
+else
+	warn("Erro ao baixar TaskScheduler:", response)
+end
+
+-- só executa se existir
+if Intercept then
+	TaskScheduler:Run()
+end
+
 local AutoSystem = { AutoEat = false, TimerEat = 0.5}
 
 -- =========================
@@ -167,7 +194,7 @@ CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
 	AutoSystem.TimerEat = val
 end)
 
-task.spawn(function()
+--[[task.spawn(function()
 	while true do
 		task.wait(AutoSystem.TimerEat)
 
@@ -175,7 +202,19 @@ task.spawn(function()
 			Intercept:Replay("Eat")
 		end
 	end
-end)
+end)]]
+
+
+TaskScheduler:AddTask("Eat", {
+	Interval = AutoSystem.TimerEat,
+	Priority = 1,
+
+	Callback = function()
+		if AutoSystem.AutoEat then
+			Intercept:Replay("Eat")
+		end
+	end
+})
 
 local MiniAdrian = Regui.CreateImage(ModFarm, {
 	Name = "Mini Adrian",
