@@ -175,14 +175,8 @@ task.spawn(function()
 		if not Intercept then
 			continue
 		end
-
-		local args = Intercept:GetArgs("Eat")
-
-		if args then
-			-- replay usando args capturados
-			Intercept:Execute("Eat", unpack(args))
-		end
-	end
+		
+       Intercept:Replay("Eat")
 end)
 
 local MiniAdrian = Regui.CreateImage(ModFarm, {
