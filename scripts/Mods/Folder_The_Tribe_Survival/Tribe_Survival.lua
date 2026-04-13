@@ -303,7 +303,7 @@ TaskScheduler:AddTask("Eat", {
 })
 
 TaskScheduler:AddTask("AimAssist", {
-	Interval = 0.03, -- bem fluido
+	Interval = 0.01, -- bem fluido
 	Priority = 2,
 
 	Callback = function()
