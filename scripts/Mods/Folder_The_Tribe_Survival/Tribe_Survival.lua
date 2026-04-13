@@ -112,38 +112,6 @@ local function Notify(Title, text, icon, tempo)
 	})
 end
 
--- =========================
--- 🪟 WINDOW
--- =========================
-
-Window = Regui.TabsWindow({
-	Title = GuiName,
-	Text = ModInfo.Name,
-	Size = UDim2.new(0, 350, 0, 250),
-	Icon_btn = true
-})
-
-local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
-
-local MiniAdrian = Regui.CreateImage(HelpTab, {
-	Name = "Mini Adrian",
-	Transparence = 1,
-	Alignment = "Center",
-	Id_Image = "rbxassetid://122365940403758",
-	Size_Image = UDim2.new(0, 100, 0, 100)
-})
-
-local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
-
-Regui.CreateButton(HelpTab, {
-	Text = "Delete GUI",
-	Color = "Blue"
-}, function()
-	Window.screenGui.enabled = false
-end)
-
-
-Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 
 local Intercept
@@ -172,6 +140,61 @@ if Intercept then
 	Intercept:SetEnabled(true)
 	Intercept:AddTemp("Eat")
 end
+
+local AutoSystem = { AutoEat = false}
+
+-- =========================
+-- 🪟 WINDOW
+-- =========================
+
+Window = Regui.TabsWindow({
+	Title = GuiName,
+	Text = ModInfo.Name,
+	Size = UDim2.new(0, 350, 0, 250),
+	Icon_btn = true
+})
+
+local ModFarm     = Regui.CreateTab(Window, {Name = "Help"})
+
+
+local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
+
+local EnableClickSelect = CreateToggle(FarmTab, "Auto Eat", function(state)
+	AutoSystem.AutoEat = state
+end)
+
+
+task.spawn(function()
+	while true do
+		task.wait(0.5) -- controle de frequência
+
+		if not AutoSystem.AutoEat then
+			continue
+		end
+
+		if not Intercept then
+			continue
+		end
+
+		local args = Intercept:GetArgs("Eat")
+
+		if args then
+			-- replay usando args capturados
+			Intercept:Execute("Eat", unpack(args))
+		end
+	end
+end)
+
+local MiniAdrian = Regui.CreateImage(ModFarm, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://122365940403758",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
+
+
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 
 -- :) by: @Adrian75556435
