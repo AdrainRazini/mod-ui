@@ -1,0 +1,173 @@
+-- [[@Intercept .. v 1.0]]
+-- Sistema de interceptação de remotes (InvokeServer / FireServer)
+
+local Intercept = {}
+Intercept.__index = Intercept
+
+-- =========================
+-- CONSTRUCTOR
+-- =========================
+function Intercept.new()
+    local self = setmetatable({}, Intercept)
+
+    self.Cache = {}
+    self.Hooks = {}
+    self.TempList = {}
+
+    self.Enabled = false
+    self._hooked = false
+
+    return self
+end
+
+-- =========================
+-- CACHE
+-- =========================
+function Intercept:AddArgs(key, ...)
+    self.Cache[key] = {...}
+end
+
+function Intercept:GetArgs(key)
+    return self.Cache[key]
+end
+
+function Intercept:ClearArgs(key)
+    if key then
+        self.Cache[key] = nil
+    else
+        self.Cache = {}
+    end
+end
+
+-- =========================
+-- HOOKS
+-- =========================
+function Intercept:AddHook(name, callback)
+    self.Hooks[name] = callback
+end
+
+function Intercept:RemoveHook(name)
+    self.Hooks[name] = nil
+end
+
+-- =========================
+-- TEMP LIST
+-- =========================
+function Intercept:AddTemp(name, duration)
+    self.TempList[name] = true
+
+    if duration then
+        task.delay(duration, function()
+            self.TempList[name] = nil
+        end)
+    end
+end
+
+function Intercept:RemoveTemp(name)
+    self.TempList[name] = nil
+end
+
+-- suporta match parcial (upgrade)
+function Intercept:IsTemp(name)
+    for tempName in pairs(self.TempList) do
+        if string.find(string.lower(name), string.lower(tempName)) then
+            return true
+        end
+    end
+    return false
+end
+
+-- =========================
+-- REPLAY
+-- =========================
+function Intercept:Replay(key, remote)
+    local args = self:GetArgs(key)
+    if args then
+        return remote:InvokeServer(unpack(args))
+    end
+end
+
+-- =========================
+-- LOG
+-- =========================
+function Intercept:LogAll(name, ...)
+    print("[Intercept][" .. name .. "]", ...)
+end
+
+-- =========================
+-- EXECUTE MANUAL
+-- =========================
+function Intercept:Execute(name, remote, ...)
+    local args = {...}
+
+    if self:IsTemp(name) then
+        self:AddArgs(name, unpack(args))
+        self:LogAll(name, unpack(args))
+    end
+
+    if self.Hooks[name] then
+        local newArgs = self.Hooks[name](unpack(args))
+        if newArgs then
+            args = newArgs
+        end
+    end
+
+    return remote:InvokeServer(unpack(args))
+end
+
+-- =========================
+-- GLOBAL HOOK (__namecall)
+-- =========================
+function Intercept:Enable()
+    if self._hooked then return end
+
+    local mt = getrawmetatable(game)
+    local old = mt.__namecall
+
+    setreadonly(mt, false)
+
+    mt.__namecall = newcclosure(function(selfRemote, ...)
+        local method = getnamecallmethod()
+        local args = {...}
+
+        if method == "InvokeServer" or method == "FireServer" then
+            local name = selfRemote.Name
+
+            if self.Enabled and InterceptInstance then
+                local instance = InterceptInstance
+
+                if instance:IsTemp(name) then
+                    instance:AddArgs(name, unpack(args))
+                    instance:LogAll(name, unpack(args))
+                end
+
+                if instance.Hooks[name] then
+                    local newArgs = instance.Hooks[name](unpack(args))
+                    if newArgs then
+                        return old(selfRemote, unpack(newArgs))
+                    end
+                end
+            end
+        end
+
+        return old(selfRemote, ...)
+    end)
+
+    setreadonly(mt, true)
+
+    self._hooked = true
+end
+
+-- =========================
+-- TOGGLE
+-- =========================
+function Intercept:SetEnabled(state)
+    self.Enabled = state
+end
+
+-- =========================
+-- SINGLETON (global access)
+-- =========================
+InterceptInstance = Intercept.new()
+
+return InterceptInstance
