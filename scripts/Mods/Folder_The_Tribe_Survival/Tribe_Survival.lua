@@ -307,10 +307,15 @@ TaskScheduler:AddTask("AimAssist", {
 	Priority = 2,
 
 	Callback = function()
-		if not AutoSystem.AutoAim then return end
-        SetAutoRotate(false)
-		UpdateTarget()
-		ApplyAim()
+
+    if not AutoSystem.AutoAim then
+	 SetAutoRotate(true)
+	 return
+    end
+
+     SetAutoRotate(false)
+	 UpdateTarget()
+	 ApplyAim()
 	end
 })
 
