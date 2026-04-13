@@ -159,7 +159,7 @@ local ModFarm     = Regui.CreateTab(Window, {Name = "Help"})
 
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
 
-local EnableClickSelect = CreateToggle(FarmTab, "Auto Eat", function(state)
+local EnableClickSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
 	AutoSystem.AutoEat = state
 end)
 
