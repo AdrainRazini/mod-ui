@@ -106,9 +106,11 @@ end
 -- LOG
 -- =========================
 function Intercept:LogAll(name, ...)
-    print("[Intercept][" .. name .. "]", ...)
+	print("Intercept", name)
+	for i,v in ipairs({...}) do
+		print("  Arg", i, ":", v)
+	end
 end
-
 -- =========================
 -- EXECUTE MANUAL
 -- =========================
