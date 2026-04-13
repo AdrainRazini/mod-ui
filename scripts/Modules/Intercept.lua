@@ -193,7 +193,7 @@ player.CharacterAdded:Connect(function()
 	task.wait(1)
 
 	print("Respawn detectado -> limpando cache")
-	Intercept:ClearArgs()
+	InterceptInstance:ClearArgs()
 end)
 
 return InterceptInstance
