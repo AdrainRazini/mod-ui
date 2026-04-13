@@ -254,7 +254,7 @@ local function ApplyAim()
 
 	if not targetRoot or not myRoot then return end
 
-	SmoothLockRoot(myRoot, targetRoot.Position, 0.2)
+	SmoothLockRoot(myRoot, targetRoot.Position, 0)
 end
 
 -- =========================
