@@ -181,7 +181,7 @@ Window = Regui.TabsWindow({
 	Icon_btn = true
 })
 
-local ModFarm     = Regui.CreateTab(Window, {Name = "Help"})
+local ModFarm     = Regui.CreateTab(Window, {Name = "Farm"})
 
 
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
@@ -217,13 +217,39 @@ TaskScheduler:AddTask("Eat", {
 	end
 })
 
-local MiniAdrian = Regui.CreateImage(ModFarm, {
+local MemeCat = Regui.CreateImage(ModFarm, {
 	Name = "Mini Adrian",
 	Transparence = 1,
 	Alignment = "Center",
 	Id_Image = "rbxassetid://122365940403758",
 	Size_Image = UDim2.new(0, 100, 0, 100)
 })
+
+
+local ReadmeTab = Regui.CreateTab(Window, {Name = "Readme"})
+--[[
+
+local Readme_Lb = Regui.CreateLabel(ReadmeTab, {
+	Text = "\n• This UI library was created by @Adrian75556435 Thanks."
+		.. "\n• Owner Of Script: @Adrian75556435"
+		.. "\n• Script & Management By: @Adrian75556435",
+	Color = "White",
+	Alignment = "Left"
+})
+
+]]
+
+local Credits = Regui.CreditsUi(ReadmeTab, { Alignment = "Center", Alignment_Texts = "Left"}, function() end)
+local MiniAdrian = Regui.CreateImage(ReadmeTab, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://127904385880677",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
+
+Regui.applyCorner(MiniAdrian)
+
 
 
 Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
