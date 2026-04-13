@@ -48,7 +48,19 @@ end
 
 assert(Regui, "Regui não foi carregado!")
 
+-- New --[[@Intercept .. v 1.0 ]]
+--  Remotes Spy --[[ @... v 1.0 ]] 
+local success, Intercept = pcall(function()
+	local code = game:HttpGet("https://mod-ui.vercel.app/api/Modules/Intercept")
+	return loadstring(code)()
+end)
 
+if not success or not Intercept then
+	warn("Erro ao carregar Intercept:", Intercept)
+	return
+end
+
+-- Mod
 -- Evita múltiplas GUIs
 if PlayerGui:FindFirstChild(GuiName) then
 	Regui.Notifications(PlayerGui, {
@@ -123,6 +135,18 @@ Window = Regui.TabsWindow({
 	Size = UDim2.new(0, 350, 0, 250),
 	Icon_btn = true
 })
+
+-- Model args (Eat) -- :/
+--[[
+local args = {
+    [1] = "{be79cdbe-e7ef-46c9-aa2d-6047da1507f4} ", -- Token
+    [2] = 3700.413760161001, -- Poss 
+    [3] = true, -- Tool
+    [4] = false -- ???
+}
+
+game:GetService("Players").LocalPlayer.Character.Apple.FoodScripts.Eat:InvokeServer(unpack(args))
+]]
 
 
 

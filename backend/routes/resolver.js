@@ -94,7 +94,8 @@ router.post("/exec", async (req, res) => {
     const MOD_MAP = {
       MeloBlox: "Mods/Folder_The_MeloBlox/The_MeloBlox",
       Apocalypse: "Mods/Folder_The_Apocalypse/The_Apocalypse",
-      Wanderlands: "Mods/Folder_The_Wanderlands_Dungeon_RPG/Wanderlands"
+      Wanderlands: "Mods/Folder_The_Wanderlands_Dungeon_RPG/Wanderlands",
+      TribeSurvival:"Mods/Folder_The_Tribe_Survival/Tribe_Survival"
     }
 
     const scriptPath = MOD_MAP[mod]
