@@ -139,7 +139,7 @@ Regui.CreateButton(HelpTab, {
 	Text = "Delete GUI",
 	Color = "Blue"
 }, function()
-	Window.enabled = false
+	Window.screenGui.enabled = false
 end)
 
 
