@@ -205,6 +205,13 @@ local function SmoothLockRoot(root, targetPos, alpha)
 	root.CFrame = root.CFrame:Lerp(targetCF, alpha)
 end
 
+local function InstantLockRoot(root, targetPos)
+    local pos = root.Position
+    local lookAt = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
+
+    root.CFrame = CFrame.new(pos, lookAt)
+end
+
 local function GetClosestPlayer(maxDistance)
 	local closest = nil
 	local shortest = maxDistance or math.huge
@@ -254,7 +261,8 @@ local function ApplyAim()
 
 	if not targetRoot or not myRoot then return end
 
-	SmoothLockRoot(myRoot, targetRoot.Position, 0.01)
+	--SmoothLockRoot(myRoot, targetRoot.Position, 0.01)
+	InstantLockRoot(myRoot, targetRoot.Position)
 end
 
 -- =========================
