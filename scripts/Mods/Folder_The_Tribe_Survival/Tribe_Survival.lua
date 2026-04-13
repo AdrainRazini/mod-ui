@@ -164,11 +164,98 @@ else
 end
 
 -- só executa se existir
-if Intercept then
+if TaskScheduler then
 	TaskScheduler:Run()
 end
 
-local AutoSystem = { AutoEat = false, TimerEat = 0.5}
+
+-- Aim Lock
+local function SetAutoRotate(state)
+	local char = plr.Character
+	local hum = char and char:FindFirstChild("Humanoid")
+	if hum then
+		hum.AutoRotate = state
+	end
+end
+
+local function ForceLockRoot(root, targetPos)
+	local pos = root.Position
+	local target = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
+
+	root.CFrame = CFrame.new(pos, target)
+end
+
+local function LockRootToPosition(targetPosition)
+	local root = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+	if not root then return end
+
+	local pos = root.Position
+	local target = Vector3.new(targetPosition.X, pos.Y, targetPosition.Z)
+
+	root.CFrame = CFrame.new(pos, target)
+end
+
+local function SmoothLockRoot(root, targetPos, alpha)
+	alpha = alpha or 0.2
+
+	local pos = root.Position
+	local target = Vector3.new(targetPos.X, pos.Y, targetPos.Z)
+
+	local targetCF = CFrame.new(pos, target)
+	root.CFrame = root.CFrame:Lerp(targetCF, alpha)
+end
+
+local function GetClosestPlayer(maxDistance)
+	local closest = nil
+	local shortest = maxDistance or math.huge
+
+	local myChar = plr.Character
+	if not myChar then return nil end
+
+	local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+	if not myRoot then return nil end
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= plr then
+			local char = player.Character
+			local hum = char and char:FindFirstChild("Humanoid")
+			local root = char and char:FindFirstChild("HumanoidRootPart")
+
+			if hum and hum.Health > 0 and root then
+				local dist = (root.Position - myRoot.Position).Magnitude
+
+				if dist < shortest then
+					shortest = dist
+					closest = player
+				end
+			end
+		end
+	end
+
+	return closest
+end
+
+local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
+local AutoSystem = { AutoEat = false, TimerEat = 0.5, AutoAim = false}
+
+-- Target
+local function UpdateTarget()
+	Selection.CurrentTarget = GetClosestPlayer(Selection.MaxDistance)
+end
+
+local function ApplyAim()
+	if not Selection.CurrentTarget then return end
+
+	local char = Selection.CurrentTarget.Character
+	if not char then return end
+
+	local targetRoot = char:FindFirstChild("HumanoidRootPart")
+	local myRoot = plr.Character and plr.Character:FindFirstChild("HumanoidRootPart")
+
+	if not targetRoot or not myRoot then return end
+
+	SmoothLockRoot(myRoot, targetRoot.Position, 0.2)
+end
 
 -- =========================
 -- 🪟 WINDOW
@@ -195,15 +282,10 @@ CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
 	TaskScheduler:UpdateTaskInterval("Eat", val)
 end)
 
---[[task.spawn(function()
-	while true do
-		task.wait(AutoSystem.TimerEat)
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Aim Players", function(state)
+	AutoSystem.AutoAim = state
+end)
 
-		if AutoSystem.AutoEat then
-			Intercept:Replay("Eat")
-		end
-	end
-end)]]
 
 
 TaskScheduler:AddTask("Eat", {
@@ -216,6 +298,19 @@ TaskScheduler:AddTask("Eat", {
 		end
 	end
 })
+
+TaskScheduler:AddTask("AimAssist", {
+	Interval = 0.03, -- bem fluido
+	Priority = 2,
+
+	Callback = function()
+		if not AutoSystem.AutoAim then return end
+
+		UpdateTarget()
+		ApplyAim()
+	end
+})
+
 
 local MemeCat = Regui.CreateImage(ModFarm, {
 	Name = "Mini Adrian",
