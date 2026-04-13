@@ -150,6 +150,7 @@ function Intercept:Execute(name, remote, ...)
         warn("Hook error:", result)
     end
     end
+
     --[[if self.Hooks[name] then
         local newArgs = self.Hooks[name](unpack(args))
         if newArgs then
