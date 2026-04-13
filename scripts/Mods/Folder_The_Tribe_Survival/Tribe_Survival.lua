@@ -1,4 +1,3 @@
-
 local Regui
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 local GuiName = "Mod_The_Tribe_"..game.Players.LocalPlayer.Name
@@ -18,7 +17,7 @@ local cam = workspace.CurrentCamera
 
 -- Meta dados
 local ModInfo = {
-	Name = "Tribe-Survival",
+	Name = "Tribe Survival",
 	Version = "1.0.0",
 	Date = "2026-04-05",
 
@@ -47,7 +46,8 @@ end
 
 assert(Regui, "Regui não foi carregado!")
 
--- Mod
+
+
 -- Evita múltiplas GUIs
 if PlayerGui:FindFirstChild(GuiName) then
 	Regui.Notifications(PlayerGui, {
@@ -123,32 +123,27 @@ Window = Regui.TabsWindow({
 	Icon_btn = true
 })
 
-local success, Intercept = pcall(function()
-	local code = game:HttpGet("https://mod-ui.vercel.app/api/Modules/Intercept")
-	return loadstring(code)()
+local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
+
+local MiniAdrian = Regui.CreateImage(HelpTab, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://122365940403758",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
+
+local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
+
+Regui.CreateButton(HelpTab, {
+	Text = "Delete GUI",
+	Color = "Blue"
+}, function()
+	Window.enabled = false
 end)
 
-if not success or not Intercept then
-	warn("Erro ao carregar Intercept:", Intercept)
-	return
-end
 
--- Model args (Eat) -- :/
---[[
-local args = {
-    [1] = "{be79cdbe-e7ef-46c9-aa2d-6047da1507f4} ", -- Token
-    [2] = 3700.413760161001, -- Poss 
-    [3] = true, -- Tool
-    [4] = false -- ???
-}
-
-game:GetService("Players").LocalPlayer.Character.Apple.FoodScripts.Eat:InvokeServer(unpack(args))
-]]
--- Active Spy Remotes 
-Intercept:Enable()
-Intercept:SetEnabled(true)
-
-Intercept:AddTemp("Eat")
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 
 -- :) by: @Adrian75556435
