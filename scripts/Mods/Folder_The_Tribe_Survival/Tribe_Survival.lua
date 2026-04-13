@@ -192,6 +192,7 @@ end)
 
 CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
 	AutoSystem.TimerEat = val
+	TaskScheduler:UpdateTaskInterval("Eat", val)
 end)
 
 --[[task.spawn(function()
