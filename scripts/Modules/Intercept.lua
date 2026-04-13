@@ -23,8 +23,11 @@ end
 -- =========================
 -- CACHE
 -- =========================
-function Intercept:AddArgs(key, ...)
-    self.Cache[key] = {...}
+function Intercept:AddArgs(key, remote, ...)
+    self.Cache[key] = {
+        Remote = remote,
+        Args = {...}
+    }
 end
 
 function Intercept:GetArgs(key)
@@ -80,13 +83,21 @@ end
 -- =========================
 -- REPLAY
 -- =========================
-function Intercept:Replay(key, remote)
-    local args = self:GetArgs(key)
-    if args then
+function Intercept:Replay(key)
+    local data = self:GetArgs(key)
+    if not data then return end
+
+    local remote = data.Remote
+    local args = data.Args
+
+    if not remote then return end
+
+    if remote:IsA("RemoteEvent") then
+        return remote:FireServer(unpack(args))
+    else
         return remote:InvokeServer(unpack(args))
     end
 end
-
 -- =========================
 -- LOG
 -- =========================
@@ -100,11 +111,24 @@ end
 function Intercept:Execute(name, remote, ...)
     local args = {...}
 
+ -- Falback 
+    if not remote then
+        local data = self:GetArgs(name)
+        if data then
+            remote = data.Remote
+            args = data.Args
+        else
+            return warn("Execute falhou: sem remote")
+        end
+    end
+
+    -- salva args + remote
     if self:IsTemp(name) then
-        self:AddArgs(name, unpack(args))
+        self:AddArgs(name, remote, unpack(args))
         self:LogAll(name, unpack(args))
     end
 
+    -- hooks (modificação de args)
     if self.Hooks[name] then
         local newArgs = self.Hooks[name](unpack(args))
         if newArgs then
@@ -112,7 +136,12 @@ function Intercept:Execute(name, remote, ...)
         end
     end
 
-    return remote:InvokeServer(unpack(args))
+    -- executa corretamente baseado no tipo
+    if remote:IsA("RemoteEvent") then
+        return remote:FireServer(unpack(args))
+    else
+        return remote:InvokeServer(unpack(args))
+    end
 end
 
 -- =========================
@@ -131,13 +160,14 @@ function Intercept:Enable()
         local args = {...}
 
         if method == "InvokeServer" or method == "FireServer" then
-            local name = selfRemote.Name
+            --local name = selfRemote.Name
+            local name = selfRemote:GetFullName()
 
             if self.Enabled and InterceptInstance then
                 local instance = InterceptInstance
 
                 if instance:IsTemp(name) then
-                    instance:AddArgs(name, unpack(args))
+                    instance:AddArgs(name, selfRemote, unpack(args))
                     instance:LogAll(name, unpack(args))
                 end
 
