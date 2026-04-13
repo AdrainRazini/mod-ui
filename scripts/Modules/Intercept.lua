@@ -195,7 +195,7 @@ function Intercept:Enable()
 
     -- 🔒 SEMPRE chama original (SEM ALTERAÇÃO)
     return old(selfRemote, ...)
-end)
+end
 
     setreadonly(mt, true)
 
