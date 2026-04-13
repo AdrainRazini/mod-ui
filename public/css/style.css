@@ -1,5 +1,8 @@
 /* Variáveis globais */
 :root {
+
+    /* Index-z */
+
     --primary-color: #6366f1;
     --primary-glow: rgba(99, 102, 241, 0.4);
 
@@ -206,6 +209,7 @@ header p {
 /* Modal */
 
 .modal {
+    z-index: 9999;
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.7);
