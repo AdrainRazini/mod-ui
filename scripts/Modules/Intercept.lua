@@ -133,12 +133,29 @@ function Intercept:Execute(name, remote, ...)
     end
 
     -- hooks (modificação de args)
-    if self.Hooks[name] then
+    if instance.Hooks[name] then
+    local success, result = pcall(function()
+        return instance.Hooks[name](unpack(args))
+    end)
+
+    if success then
+        if result == false then
+            return -- cancela
+        end
+
+        if type(result) == "table" then
+            return old(selfRemote, unpack(result))
+        end
+    else
+        warn("Hook error:", result)
+    end
+    end
+    --[[if self.Hooks[name] then
         local newArgs = self.Hooks[name](unpack(args))
         if newArgs then
             args = newArgs
         end
-    end
+    end]]
 
     -- executa corretamente baseado no tipo
     if remote:IsA("RemoteEvent") then

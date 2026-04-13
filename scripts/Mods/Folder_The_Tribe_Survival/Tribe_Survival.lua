@@ -176,12 +176,12 @@ task.spawn(function()
 			continue
 		end
 
-		local args = Intercept:GetArgs("Eat")
+		local data = Intercept:GetArgs("Eat")
 
-		if args then
-			-- replay usando args capturados
-			Intercept:Execute("Eat", unpack(args))
-		end
+        if data and data.Remote then
+	    Intercept:Execute("Eat", data.Remote, unpack(data.Args))
+        end
+	
 	end
 end)
 
