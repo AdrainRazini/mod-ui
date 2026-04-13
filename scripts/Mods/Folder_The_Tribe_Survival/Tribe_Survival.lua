@@ -147,8 +147,11 @@ local args = {
 
 game:GetService("Players").LocalPlayer.Character.Apple.FoodScripts.Eat:InvokeServer(unpack(args))
 ]]
+-- Active Spy Remotes 
+Intercept:Enable()
+Intercept:SetEnabled(true)
 
-
+Intercept:AddTemp("Eat")
 
 
 -- :) by: @Adrian75556435
