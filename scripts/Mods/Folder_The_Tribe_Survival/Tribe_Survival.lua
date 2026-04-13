@@ -141,7 +141,7 @@ if Intercept then
 	Intercept:AddTemp("Eat")
 end
 
-local AutoSystem = { AutoEat = false}
+local AutoSystem = { AutoEat = false, TimerEat = 0.5}
 
 -- =========================
 -- 🪟 WINDOW
@@ -159,10 +159,13 @@ local ModFarm     = Regui.CreateTab(Window, {Name = "Help"})
 
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
 
-local EnableClickSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
 	AutoSystem.AutoEat = state
 end)
 
+CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
+	AutoSystem.TimerEat = val
+end)
 
 task.spawn(function()
 	while true do
