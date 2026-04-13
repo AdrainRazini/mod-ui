@@ -1,4 +1,4 @@
--- [[@Intercept .. v 2.0]]
+-- [[@Intercept .. v 1.0]]
 -- Sistema de interceptação de remotes (InvokeServer / FireServer)
 
 local Intercept = {}
@@ -19,22 +19,12 @@ function Intercept.new()
 
     return self
 end
--- fn 
-local function getRemoteFromPath(path)
-	local current = game
-	for part in string.gmatch(path, "[^%.]+") do
-		current = current:FindFirstChild(part)
-		if not current then return nil end
-	end
-	return current
-end
 
 -- =========================
 -- CACHE
 -- =========================
 function Intercept:AddArgs(key, remote, ...)
     self.Cache[key] = {
-        Path = remote:GetFullName(),
         Remote = remote,
         Args = {...}
     }
@@ -98,19 +88,20 @@ end
 -- REPLAY
 -- =========================
 function Intercept:Replay(key)
-	local data = self:GetArgs(key)
-	if not data then return end
+    local data = self:GetArgs(key)
+    if not data then return end
 
-	local remote = getRemoteFromPath(data.Path)
-	if not remote then return warn("Remote não encontrado") end
+    local remote = data.Remote
+    local args = data.Args
 
-	if remote:IsA("RemoteEvent") then
-		return remote:FireServer(unpack(data.Args))
-	else
-		return remote:InvokeServer(unpack(data.Args))
-	end
+    if not remote then return end
+
+    if remote:IsA("RemoteEvent") then
+        return remote:FireServer(unpack(args))
+    else
+        return remote:InvokeServer(unpack(args))
+    end
 end
-
 -- =========================
 -- LOG
 -- =========================
