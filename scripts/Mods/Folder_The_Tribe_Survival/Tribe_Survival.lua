@@ -47,18 +47,6 @@ end
 
 assert(Regui, "Regui não foi carregado!")
 
--- New --[[@Intercept .. v 1.0 ]]
---  Remotes Spy --[[ @... v 1.0 ]] 
-local success, Intercept = pcall(function()
-	local code = game:HttpGet("https://mod-ui.vercel.app/api/Modules/Intercept")
-	return loadstring(code)()
-end)
-
-if not success or not Intercept then
-	warn("Erro ao carregar Intercept:", Intercept)
-	return
-end
-
 -- Mod
 -- Evita múltiplas GUIs
 if PlayerGui:FindFirstChild(GuiName) then
@@ -134,6 +122,16 @@ Window = Regui.TabsWindow({
 	Size = UDim2.new(0, 350, 0, 250),
 	Icon_btn = true
 })
+
+local success, Intercept = pcall(function()
+	local code = game:HttpGet("https://mod-ui.vercel.app/api/Modules/Intercept")
+	return loadstring(code)()
+end)
+
+if not success or not Intercept then
+	warn("Erro ao carregar Intercept:", Intercept)
+	return
+end
 
 -- Model args (Eat) -- :/
 --[[
