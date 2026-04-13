@@ -181,7 +181,8 @@ function Intercept:Enable()
     local args = {...}
 
     if method == "InvokeServer" or method == "FireServer" then
-        local name = selfRemote:GetFullName()
+        --local name = selfRemote:GetFullName()
+        local name = selfRemote.Name
 
         if self.Enabled and InterceptInstance then
             local instance = InterceptInstance
