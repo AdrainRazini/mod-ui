@@ -166,22 +166,11 @@ end)
 
 task.spawn(function()
 	while true do
-		task.wait(0.5) -- controle de frequência
+		task.wait(0.5)
 
-		if not AutoSystem.AutoEat then
-			continue
+		if AutoSystem.AutoEat then
+			Intercept:Replay("Eat")
 		end
-
-		if not Intercept then
-			continue
-		end
-
-		local data = Intercept:GetArgs("Eat")
-
-        if data and data.Remote then
-	    Intercept:Execute("Eat", data.Remote, unpack(data.Args))
-        end
-	
 	end
 end)
 
