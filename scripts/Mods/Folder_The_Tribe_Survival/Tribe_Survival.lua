@@ -169,7 +169,7 @@ end)
 
 task.spawn(function()
 	while true do
-		task.wait(0.5)
+		task.wait(AutoSystem.TimerEat)
 
 		if AutoSystem.AutoEat then
 			Intercept:Replay("Eat")
