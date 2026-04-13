@@ -277,7 +277,7 @@ Window = Regui.TabsWindow({
 })
 
 local ModFarm     = Regui.CreateTab(Window, {Name = "Farm"})
-
+local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
 
@@ -290,7 +290,7 @@ CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
 	TaskScheduler:UpdateTaskInterval("Eat", val)
 end)
 
-local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Aim Players", function(state)
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
 	AutoSystem.AutoAim = state
 end)
 
@@ -335,6 +335,17 @@ local MemeCat = Regui.CreateImage(ModFarm, {
 	Id_Image = "rbxassetid://122365940403758",
 	Size_Image = UDim2.new(0, 100, 0, 100)
 })
+
+
+local Hlp = [[
+-- Guide
+Grab the food and use the Auto-Eat event;
+Eat the food a few times to capture
+the feeding event.
+]]
+
+
+local LabelHelp = Regui.CreateLabel(HelpTab, {Text = Hlp, Color = "White", Alignment = "Center"})
 
 
 local ReadmeTab = Regui.CreateTab(Window, {Name = "Readme"})
