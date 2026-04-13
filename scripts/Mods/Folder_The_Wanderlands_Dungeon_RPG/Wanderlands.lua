@@ -145,6 +145,19 @@ end)
 
 Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
+local success, Intercept = pcall(function()
+	return game:HttpGet("https://mod-ui.vercel.app/api/Modules/Intercept") 
+end)
+
+if success and Intercept then
+	local ok, Intercept_Api = pcall(function()
+		return loadstring(Intercept)()
+	end)
+end
+
+Intercept:Enable()
+Intercept:SetEnabled(true)
+Intercept:AddTemp("Eat")
 
 -- :) by: @Adrian75556435
 -- API de Tradução
