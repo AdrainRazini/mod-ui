@@ -25,6 +25,7 @@ end
 -- =========================
 function Intercept:AddArgs(key, remote, ...)
     self.Cache[key] = {
+        Path = remote:GetFullName(),
         Remote = remote,
         Args = {...}
     }
