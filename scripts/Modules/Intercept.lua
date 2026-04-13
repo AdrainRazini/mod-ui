@@ -175,7 +175,8 @@ function Intercept:Enable()
         return old(selfRemote, ...)
     end)]]
 
-    mt.__namecall = newcclosure(function(selfRemote, ...)
+    --mt.__namecall = newcclosure(function(selfRemote, ...)
+    mt.__namecall = function(selfRemote, ...)
     local method = getnamecallmethod()
     local args = {...}
 
