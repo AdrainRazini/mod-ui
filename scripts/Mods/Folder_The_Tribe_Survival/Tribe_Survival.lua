@@ -243,7 +243,7 @@ local function GetClosestPlayer(maxDistance)
 end
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
-local AutoSystem = { AutoEat = false, TimerEat = 0.5, AutoAim = false}
+local AutoSystem = { AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
 
 -- Target
 local function UpdateTarget()
@@ -298,6 +298,19 @@ CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(v
 	Selection.MaxDistance = val
 end)
 
+local EnableAutoAbSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
+	AutoSystem.AutoAbility = state
+ while AutoSystem.AutoAbility do
+    task.wait()
+    local arg = {[1]= game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Wooden Shield")}
+    game:GetService("Players").LocalPlayer.Character.Secondary.UseAbility:FireServer(unpack(arg))
+ end
+
+end)
+
+CreateSlider(ModFarm, "_Test", Selection.AbilityTimer, 1, 3, function(val)
+	Selection.AbilityTimer = val
+end)
 
 TaskScheduler:AddTask("Eat", {
 	Interval = AutoSystem.TimerEat,
