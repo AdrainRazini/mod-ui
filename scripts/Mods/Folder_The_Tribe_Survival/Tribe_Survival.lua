@@ -307,6 +307,28 @@ CreateSlider(ModFarm, "_Test", Selection.AbilityTimer, 1, 3, function(val)
 	Selection.AbilityTimer = val
 end)
 
+
+while AutoSystem.AutoAbility do
+		task.wait(Selection.AbilityTimer or 1)
+
+		local character = plr.Character
+		if not character then continue end
+
+		local backpack = plr:FindFirstChild("Backpack")
+		if not backpack then continue end
+
+		local tool = backpack:FindFirstChild("Wooden Shield") 
+			or character:FindFirstChild("Wooden Shield")
+
+		if tool and character:FindFirstChild("Secondary") then
+			local remote = character.Secondary:FindFirstChild("UseAbility")
+
+			if remote then
+				remote:FireServer(tool)
+			end
+		end
+	end
+
 TaskScheduler:AddTask("Eat", {
 	Interval = AutoSystem.TimerEat,
 	Priority = 1,
@@ -332,34 +354,6 @@ TaskScheduler:AddTask("AimAssist", {
      SetAutoRotate(false)
 	 UpdateTarget()
 	 ApplyAim()
-	end
-})
-
-TaskScheduler:AddTask("AutoAbility", {
-	Interval = function()
-		return Selection.AbilityTimer or 1
-	end,
-	Priority = 3,
-
-	Callback = function()
-		if not AutoSystem.AutoAbility then return end
-
-		local character = plr.Character
-		if not character then return end
-
-		local backpack = plr:FindFirstChild("Backpack")
-		if not backpack then return end
-
-		local tool = backpack:FindFirstChild("Wooden Shield") 
-			or character:FindFirstChild("Wooden Shield")
-
-		if tool and character:FindFirstChild("Secondary") then
-			local remote = character.Secondary:FindFirstChild("UseAbility")
-
-			if remote then
-				remote:FireServer(tool)
-			end
-		end
 	end
 })
 
