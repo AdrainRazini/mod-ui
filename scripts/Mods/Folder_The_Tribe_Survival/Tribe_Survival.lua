@@ -298,36 +298,21 @@ CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(v
 	Selection.MaxDistance = val
 end)
 
-local EnableAutoAbilitySelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
+local EnableAutoAbSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
 	AutoSystem.AutoAbility = state
 end)
-
 
 CreateSlider(ModFarm, "_Test", Selection.AbilityTimer, 1, 3, function(val)
 	Selection.AbilityTimer = val
 end)
 
-
-while AutoSystem.AutoAbility do
-		task.wait(Selection.AbilityTimer or 1)
-
-		local character = plr.Character
-		if not character then continue end
-
-		local backpack = plr:FindFirstChild("Backpack")
-		if not backpack then continue end
-
-		local tool = backpack:FindFirstChild("Wooden Shield") 
-			or character:FindFirstChild("Wooden Shield")
-
-		if tool and character:FindFirstChild("Secondary") then
-			local remote = character.Secondary:FindFirstChild("UseAbility")
-
-			if remote then
-				remote:FireServer(tool)
-			end
-		end
-	end
+ while true do
+	if AutoSystem.AutoAbility then
+    task.wait(Selection.AbilityTimer)
+    local arg = {[1]= game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Wooden Shield")}
+    game:GetService("Players").LocalPlayer.Character.Secondary.UseAbility:FireServer(unpack(arg))
+ end
+ end
 
 TaskScheduler:AddTask("Eat", {
 	Interval = AutoSystem.TimerEat,
