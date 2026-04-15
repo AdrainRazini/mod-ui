@@ -290,7 +290,7 @@ CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
 	TaskScheduler:UpdateTaskInterval("Eat", val)
 end)
 
-local EnableAutoAimSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
 	AutoSystem.AutoAim = state
 end)
 
@@ -300,19 +300,17 @@ end)
 
 local EnableAutoAbSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
 	AutoSystem.AutoAbility = state
+ while AutoSystem.AutoAbility do
+    task.wait(Selection.AbilityTimer)
+    local arg = {[1]= game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Wooden Shield")}
+    game:GetService("Players").LocalPlayer.Character.Secondary.UseAbility:FireServer(unpack(arg))
+ end
+
 end)
 
 CreateSlider(ModFarm, "_Test", Selection.AbilityTimer, 1, 3, function(val)
 	Selection.AbilityTimer = val
 end)
-
- while true do
-	if AutoSystem.AutoAbility then
-    task.wait(Selection.AbilityTimer)
-    local arg = {[1]= game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Wooden Shield")}
-    game:GetService("Players").LocalPlayer.Character.Secondary.UseAbility:FireServer(unpack(arg))
- end
- end
 
 TaskScheduler:AddTask("Eat", {
 	Interval = AutoSystem.TimerEat,
