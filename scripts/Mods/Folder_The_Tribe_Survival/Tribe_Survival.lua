@@ -290,7 +290,7 @@ CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
 	TaskScheduler:UpdateTaskInterval("Eat", val)
 end)
 
-local EnableAutoEatSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
+local EnableAutoAimSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
 	AutoSystem.AutoAim = state
 end)
 
@@ -298,29 +298,8 @@ CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(v
 	Selection.MaxDistance = val
 end)
 
-local EnableAutoAbSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
+local EnableAutoAbilitySelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
 	AutoSystem.AutoAbility = state
-
-	while AutoSystem.AutoAbility do
-		task.wait(Selection.AbilityTimer or 1)
-
-		local character = plr.Character
-		if not character then continue end
-
-		local backpack = plr:FindFirstChild("Backpack")
-		if not backpack then continue end
-
-		local tool = backpack:FindFirstChild("Wooden Shield") 
-			or character:FindFirstChild("Wooden Shield")
-
-		if tool and character:FindFirstChild("Secondary") then
-			local remote = character.Secondary:FindFirstChild("UseAbility")
-
-			if remote then
-				remote:FireServer(tool)
-			end
-		end
-	end
 end)
 
 
@@ -353,6 +332,34 @@ TaskScheduler:AddTask("AimAssist", {
      SetAutoRotate(false)
 	 UpdateTarget()
 	 ApplyAim()
+	end
+})
+
+TaskScheduler:AddTask("AutoAbility", {
+	Interval = function()
+		return Selection.AbilityTimer or 1
+	end,
+	Priority = 3,
+
+	Callback = function()
+		if not AutoSystem.AutoAbility then return end
+
+		local character = plr.Character
+		if not character then return end
+
+		local backpack = plr:FindFirstChild("Backpack")
+		if not backpack then return end
+
+		local tool = backpack:FindFirstChild("Wooden Shield") 
+			or character:FindFirstChild("Wooden Shield")
+
+		if tool and character:FindFirstChild("Secondary") then
+			local remote = character.Secondary:FindFirstChild("UseAbility")
+
+			if remote then
+				remote:FireServer(tool)
+			end
+		end
 	end
 })
 
