@@ -5,13 +5,13 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/11.5.0/firebase
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA0xGJY3hZu56GRxn9wAy6CImbYqcO-Zds",
-  authDomain: "pontos-sdk.firebaseapp.com",
-  projectId: "pontos-sdk",
-  storageBucket: "pontos-sdk.firebasestorage.app",
-  messagingSenderId: "374726213745",
-  appId: "1:374726213745:web:bc4207fee40acab9b3dbd0",
-  measurementId: "G-VDZWL568KF"
+  apiKey: "AIzaSyBjuMu3dwfMgBczIF44UhcJkCyvkNO1blY",
+  authDomain: "mod-ui.firebaseapp.com",
+  projectId: "mod-ui",
+  storageBucket: "mod-ui.firebasestorage.app",
+  messagingSenderId: "143755281016",
+  appId: "1:143755281016:web:a3d7b3aa48e590cbe6638d",
+  measurementId: "G-683B49ZWY7"
 };
 
 
