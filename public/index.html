@@ -23,9 +23,10 @@
     <i class="fa-solid fa-upload"></i> Upload
 </button>
 
-<button class="hud-btn">
+<button class="hud-btn" id="loginBtn">
     <i class="fa-solid fa-right-to-bracket"></i> Login
 </button>
+
     </div>
 
     <div class="user-panel">
@@ -60,7 +61,11 @@
         <img src="./image/gato-do-cafe.jpg" alt="Gato Do Café meme" class="meme-Card" onclick="openModal('./image/gato-do-cafe.jpg','Working...','Call me if it s urgent.')">
         <img src="./image/Adn-Neon.png" alt="Logo" class="meme-Card" onclick="openModal('./image/Adn-Neon.png','...','fn(...)')">
     </main>
-
+<script>
+document.getElementById("loginBtn").addEventListener("click", () => {
+    window.location.href = "login.html";
+});
+</script>
     <!-- JS -->
     <script src="./js/script.js"></script>
 </body>
