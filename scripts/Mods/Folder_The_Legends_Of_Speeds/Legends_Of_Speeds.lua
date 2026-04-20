@@ -52,6 +52,32 @@ if PlayerGui:FindFirstChild(GuiName) then
 end
 
 
+local TaskScheduler
+
+local success, response = pcall(function()
+	return game:HttpGet("https://mod-ui.vercel.app/api/Modules/TaskScheduler")
+end)
+
+if success and response then
+	local ok, module = pcall(function()
+		return loadstring(response)()
+	end)
+
+	if ok and module then
+		TaskScheduler = module
+	else
+		warn("Erro ao carregar Intercept:", module)
+	end
+else
+	warn("Erro ao baixar TaskScheduler:", response)
+end
+
+-- só executa se existir
+if TaskScheduler then
+	TaskScheduler:Run()
+end
+
+
 --====================================================================================================================--
 
 local AF = {
@@ -879,6 +905,18 @@ local Label_Config_Info = Regui.CreateLabel(ConfigsTab, {
 function UpsLabelConfig()
 	Label_Config_Info.Text = "Info: " .. tostring(batchSize) .. " Eventos por vez"
 end
+--[[
+TaskScheduler:AddTask("Eat", {
+	Interval = AutoSystem.TimerEat,
+	Priority = 1,
+
+	Callback = function()
+		if AutoSystem.AutoEat then
+			Intercept:Replay("Eat")
+		end
+	end
+})
+]]
 
 Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
