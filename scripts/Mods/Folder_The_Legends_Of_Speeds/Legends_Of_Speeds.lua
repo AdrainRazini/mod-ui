@@ -52,6 +52,59 @@ if PlayerGui:FindFirstChild(GuiName) then
 end
 
 
+
+-- =========================
+-- 🧠 HELPERS UI
+-- =========================
+local function CreateLabel(tab, text, color, size, alignment)
+	return  Regui.CreateLabel(tab, {
+		Text = text or "Loading...",
+		Color = color or "White",
+		Size = size or UDim2.new(1, -10, 0, 25),
+		Alignment = alignment or"Left"
+	})
+end
+
+local function CreateSlider(tab, text, value, min, max, callback)
+	return Regui.CreateSliderInt(tab, {
+		Text = text,
+		Color = "Blue",
+		Value = value,
+		Minimum = min,
+		Maximum = max
+	}, callback)
+end
+
+local function CreateToggle(tab, text, callback)
+	return Regui.CreateCheckboxe(tab, {
+		Text = text,
+		Color = "Blue"
+	}, callback)
+end
+
+local function CreateSelector(tab, name, options, callback)
+	return Regui.CreateSelectorOpitions(tab, {
+		Name = name,
+		Alignment = "Center",
+		Size_Frame = UDim2.new(1, -10, 0, 100),
+		Options = options,
+		Frame_Max = 50,
+		Type = "String"
+	}, callback)
+end
+
+--Notify
+local function Notify(Title, text, icon, tempo)
+	Regui.NotificationPerson(Window.Frame.Parent, {
+		Title = Title or "Alert",
+		Text = text,
+		Icon = icon or "fa_rr_information",
+		Tempo = tempo or 5,
+		Casch = {}
+	})
+end
+
+
 local TaskScheduler
 
 local success, response = pcall(function()
