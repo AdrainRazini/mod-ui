@@ -135,8 +135,9 @@ end
 -- só executa se existir
 if Intercept then
 	Intercept:Enable()
+	--Intercept:AddTemp("ALL")
+	Intercept:AddTemp("ALL")
 	Intercept:SetEnabled(true)
-	--Intercept:AddTemp("Eat")
 end
 
 
