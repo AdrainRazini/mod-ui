@@ -113,9 +113,6 @@ local function Notify(Title, text, icon, tempo)
 	})
 end
 
-
-
-
 -- Spy Simple /console
 local Intercept
 
@@ -183,8 +180,6 @@ end)
 CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(val)
 	Selection.MaxDistance = val
 end)
-
-
 
 
 
