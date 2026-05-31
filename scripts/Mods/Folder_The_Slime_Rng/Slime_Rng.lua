@@ -145,11 +145,7 @@ if Intercept then
 end
 
 
-
-
-
 --> Hud Do Mod 
-
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
 local AutoSystem = { AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
