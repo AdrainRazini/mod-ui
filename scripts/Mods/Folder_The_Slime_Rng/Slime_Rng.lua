@@ -62,6 +62,59 @@ end
 
 
 
+-- =========================
+-- 🧠 HELPERS UI
+-- =========================
+local function CreateLabel(tab, text, color, size, alignment)
+	return  Regui.CreateLabel(tab, {
+		Text = text or "Loading...",
+		Color = color or "White",
+		Size = size or UDim2.new(1, -10, 0, 25),
+		Alignment = alignment or"Left"
+	})
+end
+
+local function CreateSlider(tab, text, value, min, max, callback)
+	return Regui.CreateSliderInt(tab, {
+		Text = text,
+		Color = "Blue",
+		Value = value,
+		Minimum = min,
+		Maximum = max
+	}, callback)
+end
+
+local function CreateToggle(tab, text, callback)
+	return Regui.CreateCheckboxe(tab, {
+		Text = text,
+		Color = "Blue"
+	}, callback)
+end
+
+local function CreateSelector(tab, name, options, callback)
+	return Regui.CreateSelectorOpitions(tab, {
+		Name = name,
+		Alignment = "Center",
+		Size_Frame = UDim2.new(1, -10, 0, 100),
+		Options = options,
+		Frame_Max = 50,
+		Type = "String"
+	}, callback)
+end
+
+--Notify
+local function Notify(Title, text, icon, tempo)
+	Regui.NotificationPerson(Window.Frame.Parent, {
+		Title = Title or "Alert",
+		Text = text,
+		Icon = icon or "fa_rr_information",
+		Tempo = tempo or 5,
+		Casch = {}
+	})
+end
+
+
+
 
 -- Spy Simple /console
 local Intercept
@@ -98,19 +151,42 @@ end
 --> Hud Do Mod 
 
 
+local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
+local AutoSystem = { AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
 
 
+-- =========================
+-- 🪟 WINDOW
+-- =========================
 
+Window = Regui.TabsWindow({
+	Title = GuiName,
+	Text = ModInfo.Name,
+	Size = UDim2.new(0, 350, 0, 250),
+	Icon_btn = true
+})
 
+local ModFarm     = Regui.CreateTab(Window, {Name = "Farm"})
+local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
+local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
 
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
+	AutoSystem.AutoEat = state
+end)
 
+CreateSlider(ModFarm, "Speed Auto Eat", AutoSystem.TimerEat, 0, 1, function(val)
+	AutoSystem.TimerEat = val
+	TaskScheduler:UpdateTaskInterval("Eat", val)
+end)
 
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Automatically Aim", function(state)
+	AutoSystem.AutoAim = state
+end)
 
-
-
-
-
+CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(val)
+	Selection.MaxDistance = val
+end)
 
 
 
