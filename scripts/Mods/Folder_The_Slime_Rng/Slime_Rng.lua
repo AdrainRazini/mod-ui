@@ -172,7 +172,7 @@ end
 --> Hud Do Mod 
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
-local AutoSystem = { AutoEquipPet= false, TimerAutoEquipPet=1,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
+local AutoSystem = {AutoColetObj = false,TimerAutoColet = 1, AutoEquipPet= false, TimerAutoEquipPet=1,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
 local Requsts = { Best ="requestEquipBest"}
 
 -- =========================
@@ -213,6 +213,59 @@ game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("leifstout_n
 		end
 	end
 })
+
+
+
+-- obj = setmetatable({}, {__mode="k"})
+local LootFolder = workspace:FindFirstChild("Loot")
+
+local function CollectObject(objId)
+	local Remote = game:GetService("ReplicatedStorage")
+		.Packages._Index["leifstout_networker@0.3.1"]
+		.networker._remotes.LootService.RemoteFunction
+
+	local args = {
+		"requestCollect",
+		objId
+	}
+
+	pcall(function()
+		Remote:InvokeServer(unpack(args))
+	end)
+end
+
+TaskScheduler:AddTask("AutoColetObj", {
+	Interval = AutoSystem.TimerAutoColet,
+	Priority = 1,
+
+	Callback = function()
+		if not AutoSystem.AutoColetObj then
+			return
+		end
+
+		local LootFolder = workspace:FindFirstChild("Loot")
+		if not LootFolder then
+			return
+		end
+
+		for _, obj in ipairs(LootFolder:GetChildren()) do
+			if obj and obj.Name and obj.Name ~= "" then
+				CollectObject(obj.Name)
+			end
+		end
+	end
+})
+
+
+local EnableAutoEquip = CreateToggle(ModFarm, "Auto TimerAutoColet", function(state)
+	AutoSystem.AutoColetObj = state
+end)
+
+CreateSlider(ModFarm, "Speed Auto Equip Best", AutoSystem.TimerAutoColet, 1, 10, function(val)
+	AutoSystem.TimerAutoColet = val
+	TaskScheduler:UpdateTaskInterval("TimerAutoColet", val)
+end)
+
 
 --[[
 local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
