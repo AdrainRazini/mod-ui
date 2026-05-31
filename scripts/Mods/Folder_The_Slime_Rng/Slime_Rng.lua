@@ -2,7 +2,7 @@
 
 local Regui
 local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-local GuiName = "Mod_The_Tribe_"..game.Players.LocalPlayer.Name
+local GuiName = "Mod_Rng_Slime"..game.Players.LocalPlayer.Name
 local camera = workspace.CurrentCamera
 
 local Players = game:GetService("Players")
