@@ -262,7 +262,7 @@ local EnableAutoEquip = CreateToggle(ModFarm, "Auto TimerAutoColet", function(st
 	AutoSystem.AutoColetObj = state
 end)
 
-CreateSlider(ModFarm, "Speed Auto Equip Best", AutoSystem.TimerAutoColet, 1, 10, function(val)
+CreateSlider(ModFarm, "Speed Auto Colet", AutoSystem.TimerAutoColet, 1, 10, function(val)
 	AutoSystem.TimerAutoColet = val
 	TaskScheduler:UpdateTaskInterval("TimerAutoColet", val)
 end)
