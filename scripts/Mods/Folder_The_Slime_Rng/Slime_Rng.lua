@@ -199,7 +199,7 @@ local MiniAdrian = Regui.CreateImage(HelpTab, {
 
 local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
 
-local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
+local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Test", Color = "White", Alignment = "Center"})
 
 
 local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
