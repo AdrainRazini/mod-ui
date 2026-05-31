@@ -77,6 +77,10 @@ end
 
 -- suporta match parcial (upgrade)
 function Intercept:IsTemp(name)
+    if self.TempList["ALL"] then
+        return true
+    end
+
     if typeof(name) ~= "string" or name == "" then
         return false
     end
@@ -92,7 +96,7 @@ function Intercept:IsTemp(name)
                 string.lower(name),
                 string.lower(tempName),
                 1,
-                true -- sem pattern matching
+                true
             ) then
                 return true
             end
