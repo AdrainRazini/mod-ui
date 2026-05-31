@@ -141,10 +141,38 @@ if Intercept then
 end
 
 
+-- LOOPS FPS
+local TaskScheduler
+
+local success, response = pcall(function()
+	return game:HttpGet("https://mod-ui.vercel.app/api/Modules/TaskScheduler")
+end)
+
+if success and response then
+	local ok, module = pcall(function()
+		return loadstring(response)()
+	end)
+
+	if ok and module then
+		TaskScheduler = module
+	else
+		warn("Erro ao carregar Intercept:", module)
+	end
+else
+	warn("Erro ao baixar TaskScheduler:", response)
+end
+
+-- só executa se existir
+if TaskScheduler then
+	TaskScheduler:Run()
+end
+
+
+
 --> Hud Do Mod 
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
-local AutoSystem = { AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
+local AutoSystem = { AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
 
 
 -- =========================
@@ -172,6 +200,22 @@ local MiniAdrian = Regui.CreateImage(HelpTab, {
 local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
 
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
+
+
+local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
+	AutoSystem.AutoZone = state
+end)
+
+TaskScheduler:AddTask("AutoZones", {
+	Interval = AutoSystem.TimerZones,
+	Priority = 1,
+
+	Callback = function()
+		if AutoSystem.AutoZone then
+			Intercept:Replay("requestPurchaseZone") -- Remot Event 
+		end
+	end
+})
 
 local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
 	AutoSystem.AutoEat = state
