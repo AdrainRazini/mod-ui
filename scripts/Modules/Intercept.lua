@@ -57,6 +57,11 @@ end
 -- TEMP LIST
 -- =========================
 function Intercept:AddTemp(name, duration)
+    if typeof(name) ~= "string" or name == "" then
+        warn("AddTemp: nome inválido")
+        return
+    end
+
     self.TempList[name] = true
 
     if duration then
@@ -72,15 +77,28 @@ end
 
 -- suporta match parcial (upgrade)
 function Intercept:IsTemp(name)
-    for tempName in pairs(self.TempList) do
-        if tempName == name then
-            return true -- match exato
-        end
+    if typeof(name) ~= "string" or name == "" then
+        return false
+    end
 
-        if string.find(string.lower(name), string.lower(tempName)) then
-            return true -- match parcial
+    for tempName in pairs(self.TempList) do
+        if typeof(tempName) == "string" and tempName ~= "" then
+
+            if tempName == name then
+                return true
+            end
+
+            if string.find(
+                string.lower(name),
+                string.lower(tempName),
+                1,
+                true -- sem pattern matching
+            ) then
+                return true
+            end
         end
     end
+
     return false
 end
 
