@@ -19,7 +19,7 @@ local cam = workspace.CurrentCamera -- Camera
 
 -- Meta dados
 local ModInfo = {
-	Name = "Tribe Survival",
+	Name = "Slime RNG",
 	Version = "1.0.0",
 	Date = "2026-04-05",
 
