@@ -1,0 +1,168 @@
+-- Slime-RNG S _v 1.0
+
+local Regui
+local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local GuiName = "Mod_The_Tribe_"..game.Players.LocalPlayer.Name
+local camera = workspace.CurrentCamera
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+
+local plr = game.Players.LocalPlayer -- Local Plr
+local mouse = plr:GetMouse() -- Mouse Hit 
+local cam = workspace.CurrentCamera -- Camera 
+
+-- Meta dados
+local ModInfo = {
+	Name = "Tribe Survival",
+	Version = "1.0.0",
+	Date = "2026-04-05",
+
+	Notes = "Mode Menu"
+}
+
+-- Tenta carregar localmente para testes
+local success, module = pcall(function()
+	return require(script.Parent:FindFirstChild("Mod_UI")) -- Teste localmente ou em StarterGui
+end)
+
+if success and module then
+	Regui = module
+else
+	-- Tenta baixar remoto
+	local HttpService = game:GetService("HttpService")
+	local ok, err = pcall(function()
+		local code = game:HttpGet("https://mod-ui.vercel.app/api/Core/Mod_UI") -- Meu Servidor Api Git UI
+		Regui = loadstring(code)()
+	end)
+
+	if not ok then
+		warn("Não foi possível carregar Mod_UI nem local nem remoto!", err)
+	end
+end
+
+assert(Regui, "Regui não foi carregado!")
+
+-- Evita múltiplas GUIs
+if PlayerGui:FindFirstChild(GuiName) then
+	Regui.Notifications(PlayerGui, {
+		Title = "Alert",
+		Text = "Neutralized Code",
+		Icon = "fa_rr_information",
+		Tempo = 10
+	})
+	return
+end
+
+
+
+
+
+-- Spy Simple /console
+local Intercept
+
+local success, response = pcall(function()
+	return game:HttpGet("https://mod-ui.vercel.app/api/Modules/Intercept")
+end)
+
+if success and response then
+	local ok, module = pcall(function()
+		return loadstring(response)()
+	end)
+
+	if ok and module then
+		Intercept = module
+	else
+		warn("Erro ao carregar Intercept:", module)
+	end
+else
+	warn("Erro ao baixar Intercept:", response)
+end
+
+-- só executa se existir
+if Intercept then
+	Intercept:Enable()
+	Intercept:SetEnabled(true)
+	Intercept:AddTemp()
+end
+
+
+
+
+
+--> Hud Do Mod 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- :) by: @Adrian75556435
+-- API de Tradução
+local success, response = pcall(function()
+	return game:HttpGet("https://mod-ui.vercel.app/api/Core/Translator_v2") -- -- Meu Site Translate_API Com logica Inversa
+end)
+-- Espera de Duplicatas
+local LOAD_DELAY = 0.5
+task.wait(LOAD_DELAY)
+-- Contagem de Janelas
+local count = 0
+for _, child in ipairs(PlayerGui:GetChildren()) do
+	if child.Name == GuiName then
+		count += 1
+	end
+end
+
+if count > 1 then
+	Regui.Notifications(PlayerGui, {
+		Title = "Alert",
+		Text = "Neutralized Code (duplicated GUI detected)",
+		Icon = "fa_rr_information",
+		Tempo = 10
+	})
+
+	return
+end
+
+if success and response then
+	local ok, Translate_Api = pcall(function()
+		return loadstring(response)()
+	end)
+
+	if ok then
+		print("✅ API de tradução carregada com sucesso!")
+		Regui.Notifications(PlayerGui, {
+			Title = "Alert",
+			Text = "✅ Auto Translate_Api v2.0",
+			Icon = "fa_ss_marker",
+			Tempo = 5
+		})
+		local gui = PlayerGui:FindFirstChild(GuiName)
+		if gui then
+			Translate_Api.AutoTranslate(gui, "All")
+		end
+	else
+		warn("⚠️ Erro ao executar código retornado:", Translate_Api)
+	end
+else
+	warn("❌ Falha ao baixar API de tradução:", response)
+end
