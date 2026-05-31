@@ -258,7 +258,7 @@ TaskScheduler:AddTask("AutoColetObj", {
 })
 
 
-local EnableAutoEquip = CreateToggle(ModFarm, "Auto TimerAutoColet", function(state)
+local EnableAutoEquip = CreateToggle(ModFarm, "Auto Collect Obj", function(state)
 	AutoSystem.AutoColetObj = state
 end)
 
