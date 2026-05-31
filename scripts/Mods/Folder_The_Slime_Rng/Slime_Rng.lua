@@ -160,9 +160,6 @@ Window = Regui.TabsWindow({
 local ModFarm     = Regui.CreateTab(Window, {Name = "Farm"})
 local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
-
-local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
-
 local MiniAdrian = Regui.CreateImage(HelpTab, {
 	Name = "Mini Adrian",
 	Transparence = 1,
