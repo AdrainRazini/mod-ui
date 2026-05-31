@@ -189,16 +189,6 @@ Window = Regui.TabsWindow({
 local ModFarm     = Regui.CreateTab(Window, {Name = "Farm"})
 local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
-local MiniAdrian = Regui.CreateImage(HelpTab, {
-	Name = "Mini Adrian",
-	Transparence = 1,
-	Alignment = "Center",
-	Id_Image = "rbxassetid://122365940403758",
-	Size_Image = UDim2.new(0, 100, 0, 100)
-})
-
-local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
-
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Test", Color = "White", Alignment = "Center"})
 
 local EnableAutoEquip = CreateToggle(ModFarm, "Auto Equip Best Pet", function(state)
@@ -268,7 +258,21 @@ CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(v
 end)
 ]]
 
-Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1) -- V_x.x.x
+
+
+
+local MiniAdrian = Regui.CreateImage(HelpTab, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://122365940403758",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
+
+local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
+
+
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",5) -- V_x.x.x
 
 
 -- :) by: @Adrian75556435
