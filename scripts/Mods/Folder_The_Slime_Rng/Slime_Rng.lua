@@ -172,7 +172,7 @@ end
 --> Hud Do Mod 
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
-local AutoSystem = { AutoEquipPet= false,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
+local AutoSystem = { AutoEquipPet= false, TimerAutoEquipPet=1,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
 local Requsts = { Best ="requestEquipBest"}
 
 -- =========================
@@ -205,6 +205,25 @@ local EnableAutoEquip = CreateToggle(ModFarm, "Auto Equip Best Pet", function(st
 	AutoSystem.AutoEquipPet = state
 end)
 
+CreateSlider(ModFarm, "Speed Auto Equip Best", AutoSystem.TimerAutoEquipPet, 1, 10, function(val)
+	AutoSystem.TimerAutoEquipPet = val
+	TaskScheduler:UpdateTaskInterval("TimerAutoEquipPet", val)
+end)
+
+
+TaskScheduler:AddTask("AutoEquipPet", {
+	Interval = 2,
+	Priority = 1,
+
+	Callback = function()
+		if AutoSystem.AutoEquipPet then
+--Intercept:Replay("requestPurchaseZone") -- Remot Event 
+local args = { [1] = Requsts.Best}
+game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("leifstout_networker@0.3.1").networker._remotes.InventoryService.RemoteFunction:InvokeServer(unpack(args))
+		end
+	end
+})
+
 --[[
 local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
 	AutoSystem.AutoZone = state
@@ -228,18 +247,6 @@ TaskScheduler:AddTask("AutoZones", {
 })
 ]]
 
-TaskScheduler:AddTask("AutoEquipPet", {
-	Interval = 2,
-	Priority = 1,
-
-	Callback = function()
-		if AutoSystem.AutoEquipPet then
---Intercept:Replay("requestPurchaseZone") -- Remot Event 
-local args = { [1] = Requsts.Best}
-game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("leifstout_networker@0.3.1").networker._remotes.InventoryService.RemoteFunction:InvokeServer(unpack(args))
-		end
-	end
-})
 
 -- Antigo Spy 
 --[[
