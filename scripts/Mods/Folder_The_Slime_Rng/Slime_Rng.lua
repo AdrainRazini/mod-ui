@@ -241,7 +241,7 @@ CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(v
 end)
 ]]
 
-Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1) -- V_x.x.x
 
 
 -- :) by: @Adrian75556435
