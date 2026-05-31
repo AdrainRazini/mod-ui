@@ -206,6 +206,11 @@ local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
 	AutoSystem.AutoZone = state
 end)
 
+CreateSlider(ModFarm, "Speed Auto Buy Zones", AutoSystem.TimerZones, 0, 1, function(val)
+	AutoSystem.TimerZones = val
+	TaskScheduler:UpdateTaskInterval("TimerZones", val)
+end)
+
 TaskScheduler:AddTask("AutoZones", {
 	Interval = AutoSystem.TimerZones,
 	Priority = 1,
@@ -217,7 +222,8 @@ TaskScheduler:AddTask("AutoZones", {
 	end
 })
 
-local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
+-- Antigo Spy 
+--[[local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
 	AutoSystem.AutoEat = state
 end)
 
@@ -233,7 +239,7 @@ end)
 CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(val)
 	Selection.MaxDistance = val
 end)
-
+]]
 
 Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
