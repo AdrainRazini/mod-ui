@@ -223,7 +223,8 @@ TaskScheduler:AddTask("AutoZones", {
 })
 
 -- Antigo Spy 
---[[local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
+--[[
+local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
 	AutoSystem.AutoEat = state
 end)
 
