@@ -136,7 +136,7 @@ end
 if Intercept then
 	Intercept:Enable()
 	Intercept:SetEnabled(true)
-	Intercept:AddTemp("Eat")
+	--Intercept:AddTemp("Eat")
 end
 
 
@@ -160,6 +160,19 @@ Window = Regui.TabsWindow({
 local ModFarm     = Regui.CreateTab(Window, {Name = "Farm"})
 local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
 
+
+local HelpTab     = Regui.CreateTab(Window, {Name = "Help"})
+
+local MiniAdrian = Regui.CreateImage(HelpTab, {
+	Name = "Mini Adrian",
+	Transparence = 1,
+	Alignment = "Center",
+	Id_Image = "rbxassetid://122365940403758",
+	Size_Image = UDim2.new(0, 100, 0, 100)
+})
+
+local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", Alignment = "Center"})
+
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Eat Test", Color = "White", Alignment = "Center"})
 
 local EnableAutoEatSelect = CreateToggle(ModFarm, "Auto Eat", function(state)
@@ -179,6 +192,8 @@ CreateSlider(ModFarm, "Max Distance", Selection.MaxDistance, 10, 100, function(v
 	Selection.MaxDistance = val
 end)
 
+
+Notify("Version: "..ModInfo.Name,ModInfo.Version,"fa_bx_code_end",1)
 
 
 -- :) by: @Adrian75556435
