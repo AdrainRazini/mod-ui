@@ -60,8 +60,6 @@ if PlayerGui:FindFirstChild(GuiName) then
 end
 
 
-
-
 -- =========================
 -- 🧠 HELPERS UI
 -- =========================
@@ -188,6 +186,7 @@ end)
 local success, response = pcall(function()
 	return game:HttpGet("https://mod-ui.vercel.app/api/Core/Translator_v2") -- -- Meu Site Translate_API Com logica Inversa
 end)
+
 -- Espera de Duplicatas
 local LOAD_DELAY = 0.5
 task.wait(LOAD_DELAY)
