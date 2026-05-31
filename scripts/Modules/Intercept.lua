@@ -26,8 +26,19 @@ end
 function Intercept:AddArgs(key, remote, ...)
     self.Cache[key] = {
         Remote = remote,
-        Args = {...}
+        Args = {...},
+        Time = os.clock()
     }
+
+    local count = 0
+    for _ in pairs(self.Cache) do
+        count += 1
+    end
+
+    if count > 500 then
+        self.Cache = {}
+        warn("Cache limpo automaticamente")
+    end
 end
 
 function Intercept:GetArgs(key)
