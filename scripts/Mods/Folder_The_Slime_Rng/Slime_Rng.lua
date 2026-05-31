@@ -172,7 +172,7 @@ end
 --> Hud Do Mod 
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
-local AutoSystem = { AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
+local AutoSystem = { AutoEquipPet= false,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
 
 
 -- =========================
@@ -201,6 +201,9 @@ local Label = Regui.CreateLabel(HelpTab, {Text = "Working...", Color = "White", 
 
 local Label = Regui.CreateLabel(ModFarm, {Text = "Auto Test", Color = "White", Alignment = "Center"})
 
+local EnableAutoEquip = CreateToggle(ModFarm, "Auto Equip Best Pet", function(state)
+	AutoSystem.AutoEquipPet = state
+end)
 
 local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
 	AutoSystem.AutoZone = state
