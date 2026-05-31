@@ -136,7 +136,7 @@ end
 if Intercept then
 	Intercept:Enable()
 	Intercept:SetEnabled(true)
-	Intercept:AddTemp()
+	Intercept:AddTemp("Eat")
 end
 
 
