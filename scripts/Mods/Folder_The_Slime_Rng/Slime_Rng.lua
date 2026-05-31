@@ -173,7 +173,7 @@ end
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
 local AutoSystem = { AutoEquipPet= false,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
-
+local Requsts = { Best ="requestEquipBest"}
 
 -- =========================
 -- 🪟 WINDOW
@@ -205,6 +205,7 @@ local EnableAutoEquip = CreateToggle(ModFarm, "Auto Equip Best Pet", function(st
 	AutoSystem.AutoEquipPet = state
 end)
 
+--[[
 local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
 	AutoSystem.AutoZone = state
 end)
@@ -214,6 +215,7 @@ CreateSlider(ModFarm, "Speed Auto Buy Zones", AutoSystem.TimerZones, 0, 1, funct
 	TaskScheduler:UpdateTaskInterval("TimerZones", val)
 end)
 
+
 TaskScheduler:AddTask("AutoZones", {
 	Interval = AutoSystem.TimerZones,
 	Priority = 1,
@@ -221,6 +223,20 @@ TaskScheduler:AddTask("AutoZones", {
 	Callback = function()
 		if AutoSystem.AutoZone then
 			Intercept:Replay("requestPurchaseZone") -- Remot Event 
+		end
+	end
+})
+]]
+
+TaskScheduler:AddTask("AutoEquipPet", {
+	Interval = 2,
+	Priority = 1,
+
+	Callback = function()
+		if AutoSystem.AutoEquipPet then
+--Intercept:Replay("requestPurchaseZone") -- Remot Event 
+local args = { [1] = Requsts.Best}
+game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("leifstout_networker@0.3.1").networker._remotes.InventoryService.RemoteFunction:InvokeServer(unpack(args))
 		end
 	end
 })
