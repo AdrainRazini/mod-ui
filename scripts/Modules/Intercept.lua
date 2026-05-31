@@ -120,7 +120,7 @@ end
 -- =========================
 -- REPLAY
 -- =========================
-function Intercept:Replay(key)
+function Intercept:Replay(key, oldargs)
     local data = self:GetArgs(key)
     if not data then return end
 
