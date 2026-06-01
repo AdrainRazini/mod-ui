@@ -173,7 +173,7 @@ end
 
 local Selection = { CurrentTarget = nil,MaxDistance = 50, Highlights = setmetatable({}, {__mode="k"})}
 local AutoSystem = {AutoColetObj = false,TimerAutoColet = 1, AutoEquipPet= false, TimerAutoEquipPet=1,AutoZone = false, TimerZones = 1, AutoEat = false, TimerEat = 0.5, AutoAim = false, AutoAbility = false , AbilityTimer = 1}
-local Requsts = { Best ="requestEquipBest"}
+local Requsts = { Best ="requestEquipBest", BuyZone = "requestPurchaseZone", Collect = "requestCollect"}
 
 -- =========================
 -- 🪟 WINDOW
@@ -257,7 +257,7 @@ TaskScheduler:AddTask("AutoColetObj", {
 	end
 })
 
-
+-- Auto Colet Obj
 local EnableAutoEquip = CreateToggle(ModFarm, "Auto Collect Obj", function(state)
 	AutoSystem.AutoColetObj = state
 end)
@@ -267,8 +267,7 @@ CreateSlider(ModFarm, "Speed Auto Colet", AutoSystem.TimerAutoColet, 1, 10, func
 	TaskScheduler:UpdateTaskInterval("TimerAutoColet", val)
 end)
 
-
---[[
+-- Buy Zones
 local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
 	AutoSystem.AutoZone = state
 end)
@@ -278,18 +277,19 @@ CreateSlider(ModFarm, "Speed Auto Buy Zones", AutoSystem.TimerZones, 0, 1, funct
 	TaskScheduler:UpdateTaskInterval("TimerZones", val)
 end)
 
-
+-- Loops
 TaskScheduler:AddTask("AutoZones", {
 	Interval = AutoSystem.TimerZones,
 	Priority = 1,
 
 	Callback = function()
 		if AutoSystem.AutoZone then
-			Intercept:Replay("requestPurchaseZone") -- Remot Event 
+			--Intercept:Replay("requestPurchaseZone") -- Remot Event
+	local args = {[1] = "requestPurchaseZone"}
+    game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("leifstout_networker@0.3.1").networker._remotes.ZonesService.RemoteFunction:InvokeServer(unpack(args)) 
 		end
 	end
 })
-]]
 
 
 -- Antigo Spy 
