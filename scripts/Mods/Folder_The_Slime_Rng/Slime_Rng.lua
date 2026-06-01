@@ -272,7 +272,7 @@ local EnableAutoZones = CreateToggle(ModFarm, "Auto Buy Zones", function(state)
 	AutoSystem.AutoZone = state
 end)
 
-CreateSlider(ModFarm, "Speed Auto Buy Zones", AutoSystem.TimerZones, 0, 1, function(val)
+CreateSlider(ModFarm, "Speed Auto Buy Zones", AutoSystem.TimerZones, 1, 5, function(val)
 	AutoSystem.TimerZones = val
 	TaskScheduler:UpdateTaskInterval("TimerZones", val)
 end)
