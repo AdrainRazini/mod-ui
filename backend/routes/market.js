@@ -4,13 +4,25 @@ import { Router } from "express";
 
 const router = Router();
 
-const API =
-    "https://economy.roblox.com/v2/assets/:id/details";
+const API = "https://economy.roblox.com/v2/assets/:id/details";
 
-// GET /market/:assetId
+// Cache em memória
+const cache = new Map();
+const CACHE_TIME = 1000 * 60 * 10; // 10 minutos
+
 router.get("/:assetId", async (req, res) => {
 
     const { assetId } = req.params;
+
+    // Verifica cache
+    const cached = cache.get(assetId);
+
+    if (cached && cached.expires > Date.now()) {
+        return res.json({
+            ...cached.data,
+            cached: true
+        });
+    }
 
     try {
 
@@ -34,10 +46,18 @@ router.get("/:assetId", async (req, res) => {
 
         const data = await response.json();
 
-        res.json({
+        const result = {
             success: true,
             data
+        };
+
+        // Salva no cache
+        cache.set(assetId, {
+            expires: Date.now() + CACHE_TIME,
+            data: result
         });
+
+        res.json(result);
 
     } catch (err) {
 
