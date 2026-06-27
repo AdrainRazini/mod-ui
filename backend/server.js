@@ -13,6 +13,9 @@ import appsRoutes from "../backend/routes/apps.js";
 import apiRoutes from "../backend/routes/api.js";
 import resolverRoutes from "../backend/routes/resolver.js";
 
+// New MarketPlace
+import resolverplace from "../backend/routes/market.js" // :3 
+
 // Services
 import {
   getCollection,
@@ -94,6 +97,9 @@ app.use("/config", configRoutes);
 app.use("/apps", appsRoutes);
 app.use("/api", apiRoutes);
 app.use("/resolver", resolverRoutes);
+
+app.use("/market",resolverplace) // new v_1
+
 // app.use("/features", featureRoutes);
 
 app.get("/favicon.ico", (req, res) => res.status(204).end());
