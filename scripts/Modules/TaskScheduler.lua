@@ -1,5 +1,7 @@
---[[ @TaskScheduler .. v 1.0]]
+--[[ @TaskScheduler .. v 1.1]]
 -- Sistema de gerenciamento de tarefas
+-- By: @Adrian75556435 
+
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
