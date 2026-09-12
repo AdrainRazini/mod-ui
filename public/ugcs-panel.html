@@ -1,195 +1,1277 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>UGCS_DATA</title>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
+            padding: 30px;
+
             font-family: Arial, sans-serif;
-            background: #111;
+
+            background: #0d0d0d;
             color: #fff;
-            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: auto;
         }
 
         h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 25px;
+        }
+
+        .panel {
+            background: #151515;
+            border: 1px solid #292929;
+            border-radius: 12px;
+            padding: 20px;
             margin-bottom: 20px;
         }
 
-        #ugcs-list {
+        textarea {
+            width: 100%;
+            min-height: 500px;
+
+            resize: vertical;
+
+            background: #080808;
+            color: #ddd;
+
+            border: 1px solid #333;
+            border-radius: 8px;
+
+            padding: 15px;
+
+            font-family: Consolas, monospace;
+            font-size: 13px;
+
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #666;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: 0;
+            border-radius: 7px;
+
+            padding: 12px 18px;
+
+            cursor: pointer;
+
+            background: #2b2b2b;
+            color: #fff;
+
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #3a3a3a;
+        }
+
+        .save {
+            background: #238636;
+        }
+
+        .save:hover {
+            background: #2ea043;
+        }
+
+        .danger {
+            background: #8b2020;
+        }
+
+        #status {
+            margin: 15px 0;
+            color: #aaa;
+        }
+
+        #ugc-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+
+            grid-template-columns:
+                repeat(auto-fill, minmax(300px, 1fr));
+
             gap: 15px;
         }
 
         .ugc {
-            background: #1c1c1c;
-            border: 1px solid #333;
+            background: #191919;
+
+            border: 1px solid #303030;
+
             border-radius: 10px;
-            padding: 15px;
+
+            padding: 16px;
         }
 
         .ugc h3 {
             margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 5px 0;
+
+            border-bottom: 1px solid #242424;
+        }
+
+        .row:last-child {
+            border-bottom: 0;
+        }
+
+        .label {
+            color: #888;
         }
 
         .active {
             color: #4ade80;
+            font-weight: bold;
         }
 
         .inactive {
             color: #f87171;
+            font-weight: bold;
+        }
+
+        .admin-info {
+            padding: 12px;
+
+            background: #111;
+
+            border-radius: 8px;
+
+            color: #aaa;
+
+            margin-bottom: 15px;
+        }
+
+        .hidden {
+            display: none;
         }
 
         pre {
+            margin-top: 15px;
+
+            max-height: 300px;
+
+            overflow: auto;
+
             background: #080808;
-            padding: 10px;
-            border-radius: 6px;
-            overflow-x: auto;
-            font-size: 12px;
+
+            padding: 12px;
+
+            border-radius: 7px;
+
+            font-size: 11px;
         }
+
     </style>
 </head>
 
 <body>
 
+<div class="container">
+
     <h1>UGCS_DATA</h1>
 
-    <div id="status">Carregando...</div>
-
-    <div id="ugcs-list"></div>
-
-    <script type="module">
-
-        import { auth, db } from "./js/Auth.js";
-
-        import {
-            onAuthStateChanged
-        } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
-
-        import {
-            doc,
-            getDoc
-        } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+    <div class="subtitle">
+        Gerenciador de catálogo de UGCs
+    </div>
 
 
-        async function carregarUGCs() {
+    <!-- STATUS -->
 
-            const status = document.getElementById("status");
-            const lista = document.getElementById("ugcs-list");
+    <div id="status">
+        Verificando autenticação...
+    </div>
 
-            try {
 
-                const ugcsRef = doc(db, "arrays", "ugcs");
+    <!-- ADMIN -->
 
-                const ugcsSnap = await getDoc(ugcsRef);
+    <div id="admin-panel" class="hidden">
 
-                if (!ugcsSnap.exists()) {
+        <div class="panel">
 
-                    status.innerText = "Array de UGCs não encontrado.";
-                    return;
+            <div class="admin-info">
+                Painel administrativo.
+                Cole abaixo o seu <b>local List = { ... }</b>.
+            </div>
+
+
+            <textarea
+                id="lua-input"
+                placeholder="Cole aqui o seu local List = { ... }"
+            ></textarea>
+
+
+            <div class="buttons">
+
+                <button onclick="carregarLua()">
+                    Carregar Lista
+                </button>
+
+                <button
+                    class="save"
+                    onclick="salvarFirebase()"
+                >
+                    Salvar no Firebase
+                </button>
+
+                <button onclick="carregarFirebase()">
+                    Recarregar Firebase
+                </button>
+
+                <button
+                    class="danger"
+                    onclick="limparPreview()"
+                >
+                    Limpar
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- PREVIEW -->
+
+        <div class="panel">
+
+            <h2>Lista</h2>
+
+            <div id="preview-status">
+                Nenhuma lista carregada.
+            </div>
+
+            <div id="ugc-list"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+    import {
+        auth,
+        db
+    } from "./js/Auth.js";
+
+
+    import {
+        onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+
+    import {
+        doc,
+        getDoc,
+        setDoc,
+        serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+
+    let currentList = null;
+
+
+    /*
+    ============================================================
+    UTILIDADES
+    ============================================================
+    */
+
+
+    function removerComentarios(lua) {
+
+        // Remove comentários -- até o final da linha
+        return lua.replace(
+            /--.*$/gm,
+            ""
+        );
+    }
+
+
+    function converterExpiracao(valor) {
+
+        /*
+            os.time() + (60 * 60 * 24 * 30)
+
+            vira:
+
+            agora + 30 dias
+        */
+
+        if (
+            typeof valor === "string" &&
+            valor.includes("os.time()")
+        ) {
+
+            const numeros =
+                valor.match(/\d+/g);
+
+            if (!numeros) {
+
+                return Math.floor(
+                    Date.now() / 1000
+                );
+            }
+
+            let segundos = 0;
+
+            /*
+                Exemplo:
+
+                60 * 60 * 24 * 30
+            */
+
+            for (const numero of numeros) {
+
+                if (
+                    !valor.includes("os.time()") &&
+                    segundos === 0
+                ) {
+                    segundos = Number(numero);
                 }
+            }
 
-                const documento = ugcsSnap.data();
+            /*
+                Forma mais segura:
+                pega tudo depois de os.time()
+            */
 
-                console.log("Documento:", documento);
+            const expressao =
+                valor
+                    .replace("os.time()", "")
+                    .replace("+", "")
+                    .trim();
 
-                const List = documento.data || {};
+            if (expressao) {
 
-                console.log("List:", List);
+                try {
 
-                const nomes = Object.keys(List);
+                    const tempo =
+                        Function(
+                            `"use strict"; return (${expressao})`
+                        )();
 
-                status.innerText =
-                    `${nomes.length} UGCs carregados`;
+                    return Math.floor(
+                        Date.now() / 1000
+                    ) + Number(tempo);
 
-                lista.innerHTML = "";
+                } catch {
 
-                for (const nome of nomes) {
-
-                    const ugc = List[nome];
-
-                    const card = document.createElement("div");
-
-                    card.className = "ugc";
-
-                    card.innerHTML = `
-
-                        <h3>${nome}</h3>
-
-                        <p>
-                            <strong>ID:</strong>
-                            ${ugc.IdUGC ?? "-"}
-                        </p>
-
-                        <p>
-                            <strong>Cash:</strong>
-                            ${Number(ugc.Price?.Cash ?? 0).toLocaleString("pt-BR")}
-                        </p>
-
-                        <p>
-                            <strong>Tokens:</strong>
-                            ${Number(ugc.Price?.Tokens ?? 0).toLocaleString("pt-BR")}
-                        </p>
-
-                        <p>
-                            <strong>Level:</strong>
-                            ${ugc.RequiredLevel ?? 0}
-                        </p>
-
-                        <p>
-                            <strong>Status:</strong>
-
-                            <span class="${ugc.Active ? "active" : "inactive"}">
-                                ${ugc.Active ? "Ativo" : "Inativo"}
-                            </span>
-                        </p>
-
-                        <p>
-                            <strong>Market:</strong>
-                            ${ugc.MarketType ?? "-"}
-                        </p>
-
-                        <p>
-                            <strong>Stock:</strong>
-                            ${ugc.MaxStock ?? "∞"}
-                        </p>
-
-                        <pre>${JSON.stringify(ugc, null, 2)}</pre>
-                    `;
-
-                    lista.appendChild(card);
+                    return Math.floor(
+                        Date.now() / 1000
+                    );
                 }
+            }
 
-            } catch (error) {
+            return Math.floor(
+                Date.now() / 1000
+            );
+        }
 
-                console.error("Erro ao carregar UGCs:", error);
+        return valor;
+    }
 
-                status.innerText =
-                    "Erro ao carregar os UGCs.";
 
+    /*
+    ============================================================
+    PARSER LUA
+    ============================================================
+    */
+
+    function parseLuaTable(lua) {
+
+        lua = removerComentarios(lua);
+
+
+        /*
+            Localiza o primeiro {
+        */
+
+        const inicio =
+            lua.indexOf("{");
+
+        if (inicio === -1) {
+
+            throw new Error(
+                "Não encontrei a tabela { do List."
+            );
+        }
+
+
+        /*
+            Parser simples para o formato
+            usado no seu catálogo.
+        */
+
+        let pos = inicio;
+
+
+        function ignorarEspacos() {
+
+            while (
+                pos < lua.length &&
+                /\s/.test(lua[pos])
+            ) {
+                pos++;
             }
         }
 
 
-        onAuthStateChanged(auth, async (user) => {
+        function lerString() {
+
+            ignorarEspacos();
+
+            const quote =
+                lua[pos];
+
+            pos++;
+
+            let resultado = "";
+
+            while (
+                pos < lua.length
+            ) {
+
+                const char =
+                    lua[pos];
+
+                if (char === "\\") {
+
+                    resultado +=
+                        lua[pos + 1];
+
+                    pos += 2;
+
+                    continue;
+                }
+
+                if (char === quote) {
+
+                    pos++;
+
+                    break;
+                }
+
+                resultado += char;
+
+                pos++;
+            }
+
+            return resultado;
+        }
+
+
+        function lerNumeroOuExpressao() {
+
+            ignorarEspacos();
+
+            const inicioValor =
+                pos;
+
+
+            while (
+                pos < lua.length &&
+                !/[,\n}]/.test(lua[pos])
+            ) {
+                pos++;
+            }
+
+
+            return lua
+                .slice(
+                    inicioValor,
+                    pos
+                )
+                .trim();
+        }
+
+
+        function lerIdentificador() {
+
+            ignorarEspacos();
+
+            const inicioValor =
+                pos;
+
+            while (
+                pos < lua.length &&
+                /[A-Za-z0-9_]/.test(lua[pos])
+            ) {
+                pos++;
+            }
+
+            return lua.slice(
+                inicioValor,
+                pos
+            );
+        }
+
+
+        function lerTabela() {
+
+            ignorarEspacos();
+
+
+            if (lua[pos] !== "{") {
+
+                throw new Error(
+                    "Esperava { na posição " + pos
+                );
+            }
+
+
+            pos++;
+
+
+            const objeto = {};
+
+
+            while (
+                pos < lua.length
+            ) {
+
+                ignorarEspacos();
+
+
+                if (lua[pos] === "}") {
+
+                    pos++;
+
+                    break;
+                }
+
+
+                /*
+                    Chave:
+
+                    ["Nome"]
+                */
+
+                let chave;
+
+
+                if (
+                    lua[pos] === "["
+                ) {
+
+                    pos++;
+
+                    ignorarEspacos();
+
+                    chave =
+                        lerString();
+
+                    ignorarEspacos();
+
+                    if (lua[pos] === "]") {
+                        pos++;
+                    }
+
+                }
+
+                /*
+                    Chave normal
+                */
+
+                else {
+
+                    chave =
+                        lerIdentificador();
+                }
+
+
+                ignorarEspacos();
+
+
+                if (lua[pos] !== "=") {
+
+                    throw new Error(
+                        `Esperava = depois da chave "${chave}"`
+                    );
+                }
+
+
+                pos++;
+
+
+                ignorarEspacos();
+
+
+                /*
+                    Valor é tabela
+                */
+
+                if (
+                    lua[pos] === "{"
+                ) {
+
+                    objeto[chave] =
+                        lerTabela();
+
+                }
+
+
+                /*
+                    Valor string
+                */
+
+                else if (
+                    lua[pos] === '"' ||
+                    lua[pos] === "'"
+                ) {
+
+                    objeto[chave] =
+                        lerString();
+
+                }
+
+
+                /*
+                    Valor boolean
+                */
+
+                else {
+
+                    const valor =
+                        lerNumeroOuExpressao();
+
+
+                    if (
+                        valor === "true"
+                    ) {
+
+                        objeto[chave] = true;
+
+                    }
+
+                    else if (
+                        valor === "false"
+                    ) {
+
+                        objeto[chave] = false;
+
+                    }
+
+                    else if (
+                        valor === "nil"
+                    ) {
+
+                        objeto[chave] = null;
+
+                    }
+
+                    else if (
+                        valor.includes("os.time()")
+                    ) {
+
+                        objeto[chave] =
+                            converterExpiracao(valor);
+
+                    }
+
+                    else if (
+                        /^-?\d+(\.\d+)?$/.test(valor)
+                    ) {
+
+                        objeto[chave] =
+                            Number(valor);
+
+                    }
+
+                    else {
+
+                        objeto[chave] =
+                            valor;
+                    }
+
+                }
+
+
+                ignorarEspacos();
+
+
+                if (lua[pos] === ",") {
+
+                    pos++;
+
+                }
+
+            }
+
+
+            return objeto;
+        }
+
+
+        return lerTabela();
+    }
+
+
+    /*
+    ============================================================
+    RENDER
+    ============================================================
+    */
+
+    function mostrarLista(List) {
+
+        currentList = List;
+
+
+        const container =
+            document.getElementById(
+                "ugc-list"
+            );
+
+
+        const status =
+            document.getElementById(
+                "preview-status"
+            );
+
+
+        container.innerHTML = "";
+
+
+        const nomes =
+            Object.keys(List);
+
+
+        status.innerText =
+            `${nomes.length} UGCs carregados.`;
+
+
+        for (
+            const nome of nomes
+        ) {
+
+            const ugc =
+                List[nome];
+
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "ugc";
+
+
+            const active =
+                ugc.Active === true;
+
+
+            card.innerHTML = `
+
+                <h3>
+                    ${nome}
+                </h3>
+
+                <div class="row">
+                    <span class="label">
+                        ID
+                    </span>
+
+                    <span>
+                        ${ugc.IdUGC ?? "-"}
+                    </span>
+                </div>
+
+
+                <div class="row">
+                    <span class="label">
+                        Cash
+                    </span>
+
+                    <span>
+                        ${Number(
+                            ugc.Price?.Cash ?? 0
+                        ).toLocaleString("pt-BR")}
+                    </span>
+                </div>
+
+
+                <div class="row">
+                    <span class="label">
+                        Tokens
+                    </span>
+
+                    <span>
+                        ${Number(
+                            ugc.Price?.Tokens ?? 0
+                        ).toLocaleString("pt-BR")}
+                    </span>
+                </div>
+
+
+                <div class="row">
+                    <span class="label">
+                        Level
+                    </span>
+
+                    <span>
+                        ${ugc.RequiredLevel ?? 0}
+                    </span>
+                </div>
+
+
+                <div class="row">
+                    <span class="label">
+                        Status
+                    </span>
+
+                    <span class="${
+                        active
+                            ? "active"
+                            : "inactive"
+                    }">
+
+                        ${
+                            active
+                                ? "ATIVO"
+                                : "INATIVO"
+                        }
+
+                    </span>
+                </div>
+
+
+                <div class="row">
+                    <span class="label">
+                        Market
+                    </span>
+
+                    <span>
+                        ${ugc.MarketType ?? "-"}
+                    </span>
+                </div>
+
+
+                <div class="row">
+                    <span class="label">
+                        Stock
+                    </span>
+
+                    <span>
+                        ${ugc.MaxStock ?? "∞"}
+                    </span>
+                </div>
+
+
+                <pre>${escapeHtml(
+                    JSON.stringify(
+                        ugc,
+                        null,
+                        2
+                    )
+                )}</pre>
+
+            `;
+
+
+            container.appendChild(card);
+        }
+
+    }
+
+
+    function escapeHtml(text) {
+
+        return text
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    /*
+    ============================================================
+    CARREGAR LUA
+    ============================================================
+    */
+
+    window.carregarLua = function () {
+
+        const input =
+            document.getElementById(
+                "lua-input"
+            );
+
+
+        const status =
+            document.getElementById(
+                "preview-status"
+            );
+
+
+        try {
+
+            const List =
+                parseLuaTable(
+                    input.value
+                );
+
+
+            mostrarLista(List);
+
+
+            status.innerText =
+                `${Object.keys(List).length} UGCs encontrados no Lua.`;
+
+            console.log(
+                "List convertido:",
+                List
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            status.innerText =
+                "Erro ao interpretar o Lua: " +
+                error.message;
+
+        }
+
+    };
+
+
+    /*
+    ============================================================
+    SALVAR FIREBASE
+    ============================================================
+    */
+
+    window.salvarFirebase = async function () {
+
+        const user =
+            auth.currentUser;
+
+
+        if (!user) {
+
+            alert(
+                "Você precisa estar autenticado."
+            );
+
+            return;
+        }
+
+
+        if (!currentList) {
+
+            alert(
+                "Carregue uma lista primeiro."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            const ref =
+                doc(
+                    db,
+                    "arrays",
+                    "ugcs"
+                );
+
+
+            await setDoc(
+                ref,
+                {
+
+                    ownerId:
+                        user.uid,
+
+                    name:
+                        "UGCS_DATA",
+
+                    version:
+                        1,
+
+                    updatedAt:
+                        serverTimestamp(),
+
+                    data:
+                        currentList
+
+                }
+            );
+
+
+            document.getElementById(
+                "preview-status"
+            ).innerText =
+                `${Object.keys(currentList).length} UGCs salvos no Firebase.`;
+
+
+            console.log(
+                "UGCs salvos:",
+                currentList
+            );
+
+
+            alert(
+                "UGCS_DATA salvo com sucesso!"
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao salvar:",
+                error
+            );
+
+
+            alert(
+                "Erro ao salvar no Firebase: " +
+                error.message
+            );
+
+        }
+
+    };
+
+
+    /*
+    ============================================================
+    CARREGAR FIREBASE
+    ============================================================
+    */
+
+    window.carregarFirebase = async function () {
+
+        try {
+
+            const ref =
+                doc(
+                    db,
+                    "arrays",
+                    "ugcs"
+                );
+
+
+            const snap =
+                await getDoc(ref);
+
+
+            if (!snap.exists()) {
+
+                alert(
+                    "Documento arrays/ugcs não existe."
+                );
+
+                return;
+            }
+
+
+            const documento =
+                snap.data();
+
+
+            const List =
+                documento.data || {};
+
+
+            mostrarLista(List);
+
+
+            console.log(
+                "Firebase:",
+                documento
+            );
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Erro ao carregar Firebase."
+            );
+
+        }
+
+    };
+
+
+    /*
+    ============================================================
+    LIMPAR
+    ============================================================
+    */
+
+    window.limparPreview = function () {
+
+        currentList = null;
+
+
+        document.getElementById(
+            "ugc-list"
+        ).innerHTML = "";
+
+
+        document.getElementById(
+            "preview-status"
+        ).innerText =
+            "Nenhuma lista carregada.";
+
+    };
+
+
+    /*
+    ============================================================
+    AUTENTICAÇÃO + ADMIN
+    ============================================================
+    */
+
+    onAuthStateChanged(
+        auth,
+        async (user) => {
+
+            const status =
+                document.getElementById(
+                    "status"
+                );
+
+
+            const panel =
+                document.getElementById(
+                    "admin-panel"
+                );
+
 
             if (!user) {
 
-                document.getElementById("status").innerText =
+                status.innerText =
                     "Usuário não autenticado.";
 
                 return;
             }
 
-            console.log("Usuário:", user.uid);
 
-            await carregarUGCs();
+            try {
 
-        });
+                const userRef =
+                    doc(
+                        db,
+                        "users",
+                        user.uid
+                    );
 
-    </script>
+
+                const userSnap =
+                    await getDoc(
+                        userRef
+                    );
+
+
+                if (!userSnap.exists()) {
+
+                    status.innerText =
+                        "Perfil do usuário não encontrado.";
+
+                    return;
+                }
+
+
+                const userData =
+                    userSnap.data();
+
+
+                const role =
+                    userData.role || "user";
+
+
+                if (
+                    role !== "admin"
+                ) {
+
+                    status.innerText =
+                        "Acesso negado. Área administrativa.";
+
+                    return;
+                }
+
+
+                status.innerText =
+                    `Admin autenticado: ${
+                        user.displayName ||
+                        user.email ||
+                        user.uid
+                    }`;
+
+
+                panel.classList.remove(
+                    "hidden"
+                );
+
+
+                /*
+                    Carrega automaticamente
+                    o documento existente.
+                */
+
+                await carregarFirebase();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                status.innerText =
+                    "Erro ao verificar permissão.";
+
+            }
+
+        }
+    );
+
+</script>
 
 </body>
 </html>
+
