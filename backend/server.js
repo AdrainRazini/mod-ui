@@ -13,6 +13,8 @@ import appsRoutes from "../backend/routes/apps.js";
 import apiRoutes from "../backend/routes/api.js";
 import resolverRoutes from "../backend/routes/resolver.js";
 
+import ugcs from "../backend/routes/ugcs.js";
+
 // New MarketPlace
 import resolverplace from "../backend/routes/market.js" // :3 
 
@@ -99,6 +101,8 @@ app.use("/api", apiRoutes);
 app.use("/resolver", resolverRoutes);
 
 app.use("/market",resolverplace) // new v_1
+
+app.use("/ugcs",ugcs) // new v_1
 
 // app.use("/features", featureRoutes);
 
