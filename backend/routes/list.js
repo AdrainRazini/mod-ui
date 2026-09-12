@@ -3,35 +3,32 @@ import { db } from "../firebase.js";
 
 import {
     collection,
-    getDocs,
-    doc,
-    getDoc
+    getDocs
 } from "firebase/firestore";
 
 const router = Router();
 
-router.get("/:name", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
-        const { name } = req.params;
 
-        const publicRef = doc(db, "Publics", name);
-        const publicSnap = await getDoc(publicRef);
+        const snapshot = await getDocs(
+            collection(db, "Publics")
+        );
 
-        if (!publicSnap.exists()) {
-            return res.status(404).json({
-                success: false,
-                message: "Public não encontrado"
-            });
-        }
+        const publics = snapshot.docs.map((document) => ({
+            id: document.id,
+            ...document.data()
+        }));
 
         return res.json({
             success: true,
-            id: publicSnap.id,
-            data: publicSnap.data()
+            total: publics.length,
+            data: publics
         });
 
     } catch (error) {
-        console.error("Erro ao buscar Public:", error);
+
+        console.error("Erro ao buscar Publics:", error);
 
         return res.status(500).json({
             success: false,
