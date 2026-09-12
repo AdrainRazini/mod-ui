@@ -1,29 +1,7 @@
-// backend/routes/list.js
-
 import { Router } from "express";
 import { db } from "../firebase.js";
 
 const router = Router();
-
-/*
-    GET /api/list/:name
-
-    Exemplo:
-    GET /api/list/ugcs
-
-    Firestore:
-    arrays/
-      └── ugcs
-           ├── name
-           ├── ownerId
-           ├── updatedAt
-           ├── version
-           └── data
-                ├── Animated 8-bit Pop Cat
-                ├── Black Hat
-                ├── Blue Dragon
-                └── ...
-*/
 
 router.get("/:name", async (req, res) => {
     try {
@@ -36,10 +14,16 @@ router.get("/:name", async (req, res) => {
             });
         }
 
-        const docRef = db.collection("arrays").doc(name);
-        const snapshot = await docRef.get();
+        console.log(`[LIST] Buscando arrays/${name}`);
+
+        const snapshot = await db
+            .collection("arrays")
+            .doc(name)
+            .get();
 
         if (!snapshot.exists) {
+            console.log(`[LIST] Documento não encontrado: arrays/${name}`);
+
             return res.status(404).json({
                 success: false,
                 error: "Documento não encontrado",
@@ -49,23 +33,26 @@ router.get("/:name", async (req, res) => {
 
         const document = snapshot.data();
 
-        return res.json({
+        console.log(`[LIST] Documento encontrado: arrays/${name}`);
+
+        return res.status(200).json({
             success: true,
-            data: document.data || {},
-            meta: {
-                name: document.name || name,
-                version: document.version ?? null,
-                ownerId: document.ownerId ?? null,
-                updatedAt: document.updatedAt ?? null
-            }
+            name: document.name || name,
+            version: document.version ?? 1,
+            data: document.data || {}
         });
 
     } catch (error) {
-        console.error("[LIST API]", error);
+
+        console.error("=================================");
+        console.error("[LIST API ERROR]");
+        console.error("Message:", error?.message);
+        console.error("Stack:", error?.stack);
+        console.error("=================================");
 
         return res.status(500).json({
             success: false,
-            error: "Erro interno ao buscar documento"
+            error: error?.message || "Erro interno ao buscar documento"
         });
     }
 });
