@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -310,6 +309,24 @@
 
     /*
     ============================================================
+    CONFIGURAÇÃO DA API
+    ============================================================
+    */
+
+    const API_BASE_URL =
+        "https://mod-ui.vercel.app/market";
+
+    /*
+        A API não pode ficar esperando indefinidamente.
+
+        Cada UGC terá no máximo 5 segundos.
+    */
+
+    const API_TIMEOUT = 5000;
+
+
+    /*
+    ============================================================
     UTILIDADES
     ============================================================
     */
@@ -318,6 +335,7 @@
     function removerComentarios(lua) {
 
         // Remove comentários -- até o final da linha
+
         return lua.replace(
             /--.*$/gm,
             ""
@@ -325,87 +343,718 @@
     }
 
 
+    /*
+    ============================================================
+    EXPRESSÃO MATEMÁTICA SEGURA
+    ============================================================
+    */
+
+    function calcularExpressaoTempo(expressao) {
+
+        /*
+            Aceita somente:
+
+            números
+            +
+            -
+            *
+            /
+            espaços
+            parênteses
+            ponto decimal
+
+            Exemplos:
+
+            60 * 60 * 24 * 30
+            60 * 60 * 24
+            (60 * 60) + 30
+        */
+
+
+        const limpa =
+            expressao
+                .replace(/\s/g, "");
+
+
+        if (
+            !/^[0-9+\-*/().]+$/.test(limpa)
+        ) {
+
+            throw new Error(
+                "Expressão de tempo inválida."
+            );
+        }
+
+
+        /*
+            Parser matemático simples.
+
+            Não utiliza eval()
+            nem Function().
+        */
+
+        let pos = 0;
+
+
+        function parseNumero() {
+
+            const inicio =
+                pos;
+
+
+            while (
+                pos < limpa.length &&
+                /[0-9.]/.test(limpa[pos])
+            ) {
+                pos++;
+            }
+
+
+            const valor =
+                Number(
+                    limpa.slice(
+                        inicio,
+                        pos
+                    )
+                );
+
+
+            if (
+                !Number.isFinite(valor)
+            ) {
+
+                throw new Error(
+                    "Número inválido na expressão."
+                );
+            }
+
+
+            return valor;
+        }
+
+
+        function parseFator() {
+
+            if (
+                limpa[pos] === "("
+            ) {
+
+                pos++;
+
+                const valor =
+                    parseSoma();
+
+
+                if (
+                    limpa[pos] !== ")"
+                ) {
+
+                    throw new Error(
+                        "Parêntese inválido."
+                    );
+                }
+
+
+                pos++;
+
+                return valor;
+            }
+
+
+            if (
+                limpa[pos] === "-"
+            ) {
+
+                pos++;
+
+                return -parseFator();
+            }
+
+
+            return parseNumero();
+        }
+
+
+        function parseMultiplicacao() {
+
+            let valor =
+                parseFator();
+
+
+            while (
+                limpa[pos] === "*" ||
+                limpa[pos] === "/"
+            ) {
+
+                const operador =
+                    limpa[pos];
+
+                pos++;
+
+
+                const proximo =
+                    parseFator();
+
+
+                if (
+                    operador === "*"
+                ) {
+
+                    valor *= proximo;
+
+                } else {
+
+                    valor /= proximo;
+                }
+            }
+
+
+            return valor;
+        }
+
+
+        function parseSoma() {
+
+            let valor =
+                parseMultiplicacao();
+
+
+            while (
+                limpa[pos] === "+" ||
+                limpa[pos] === "-"
+            ) {
+
+                const operador =
+                    limpa[pos];
+
+                pos++;
+
+
+                const proximo =
+                    parseMultiplicacao();
+
+
+                if (
+                    operador === "+"
+                ) {
+
+                    valor += proximo;
+
+                } else {
+
+                    valor -= proximo;
+                }
+            }
+
+
+            return valor;
+        }
+
+
+        const resultado =
+            parseSoma();
+
+
+        if (
+            pos !== limpa.length
+        ) {
+
+            throw new Error(
+                "Expressão matemática inválida."
+            );
+        }
+
+
+        if (
+            !Number.isFinite(resultado)
+        ) {
+
+            throw new Error(
+                "Resultado matemático inválido."
+            );
+        }
+
+
+        return resultado;
+    }
+
+
+    /*
+    ============================================================
+    EXPIRAÇÃO LUA
+    ============================================================
+    */
+
     function converterExpiracao(valor) {
 
         /*
+            Exemplo:
+
             os.time() + (60 * 60 * 24 * 30)
 
             vira:
 
-            agora + 30 dias
+            timestamp atual + 30 dias
         */
 
+
         if (
-            typeof valor === "string" &&
-            valor.includes("os.time()")
+            typeof valor !== "string" ||
+            !valor.includes("os.time()")
         ) {
 
-            const numeros =
-                valor.match(/\d+/g);
+            return valor;
+        }
 
-            if (!numeros) {
 
-                return Math.floor(
-                    Date.now() / 1000
-                );
-            }
+        const expressao =
+            valor
+                .replace(
+                    "os.time()",
+                    ""
+                )
+                .replace(
+                    "+",
+                    ""
+                )
+                .trim();
 
-            let segundos = 0;
 
-            /*
-                Exemplo:
-
-                60 * 60 * 24 * 30
-            */
-
-            for (const numero of numeros) {
-
-                if (
-                    !valor.includes("os.time()") &&
-                    segundos === 0
-                ) {
-                    segundos = Number(numero);
-                }
-            }
-
-            /*
-                Forma mais segura:
-                pega tudo depois de os.time()
-            */
-
-            const expressao =
-                valor
-                    .replace("os.time()", "")
-                    .replace("+", "")
-                    .trim();
-
-            if (expressao) {
-
-                try {
-
-                    const tempo =
-                        Function(
-                            `"use strict"; return (${expressao})`
-                        )();
-
-                    return Math.floor(
-                        Date.now() / 1000
-                    ) + Number(tempo);
-
-                } catch {
-
-                    return Math.floor(
-                        Date.now() / 1000
-                    );
-                }
-            }
+        if (!expressao) {
 
             return Math.floor(
                 Date.now() / 1000
             );
         }
 
-        return valor;
+
+        try {
+
+            const segundos =
+                calcularExpressaoTempo(
+                    expressao
+                );
+
+
+            return Math.floor(
+                Date.now() / 1000
+            ) + Math.floor(segundos);
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao converter Expiration:",
+                error
+            );
+
+
+            return Math.floor(
+                Date.now() / 1000
+            );
+        }
+    }
+
+
+    /*
+    ============================================================
+    API ROBLOX
+    ============================================================
+    */
+
+    async function buscarUGC(IdUGC) {
+
+        const controller =
+            new AbortController();
+
+
+        const timeout =
+            setTimeout(() => {
+
+                controller.abort();
+
+            }, API_TIMEOUT);
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE_URL}/${IdUGC}`,
+                    {
+                        method: "GET",
+
+                        signal:
+                            controller.signal,
+
+                        headers: {
+                            "Accept":
+                                "application/json"
+                        }
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    `HTTP ${response.status}`
+                );
+            }
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                !result ||
+                result.success !== true ||
+                !result.data
+            ) {
+
+                throw new Error(
+                    "API retornou dados inválidos."
+                );
+            }
+
+
+            return result.data;
+
+
+        } catch (error) {
+
+            if (
+                error.name === "AbortError"
+            ) {
+
+                throw new Error(
+                    `Timeout: API demorou mais de ${API_TIMEOUT / 1000}s.`
+                );
+            }
+
+
+            throw error;
+
+
+        } finally {
+
+            clearTimeout(timeout);
+        }
+    }
+
+
+    /*
+    ============================================================
+    NORMALIZAR DADOS ROBLOX
+    ============================================================
+    */
+
+    function extrairDadosRoblox(roblox) {
+
+        const collectible =
+            roblox.CollectiblesItemDetails ||
+            {};
+
+
+        return {
+
+            Name:
+                roblox.Name ?? null,
+
+            Description:
+                roblox.Description ?? null,
+
+            AssetId:
+                roblox.AssetId ?? null,
+
+            TargetId:
+                roblox.TargetId ?? null,
+
+            ProductId:
+                roblox.ProductId ?? null,
+
+            AssetTypeId:
+                roblox.AssetTypeId ?? null,
+
+
+            Creator:
+                roblox.Creator ?? null,
+
+
+            Created:
+                roblox.Created ?? null,
+
+            Updated:
+                roblox.Updated ?? null,
+
+
+            PriceInRobux:
+                roblox.PriceInRobux ?? null,
+
+
+            PriceInTickets:
+                roblox.PriceInTickets ?? null,
+
+
+            Sales:
+                roblox.Sales ?? null,
+
+
+            IsNew:
+                roblox.IsNew ?? false,
+
+            IsForSale:
+                roblox.IsForSale ?? false,
+
+            IsPublicDomain:
+                roblox.IsPublicDomain ?? false,
+
+            IsLimited:
+                roblox.IsLimited ?? false,
+
+            IsLimitedUnique:
+                roblox.IsLimitedUnique ?? false,
+
+
+            Remaining:
+                roblox.Remaining ?? null,
+
+
+            MinimumMembershipLevel:
+                roblox.MinimumMembershipLevel ?? 0,
+
+
+            ContentRatingTypeId:
+                roblox.ContentRatingTypeId ?? 0,
+
+
+            SaleAvailabilityLocations:
+                roblox.SaleAvailabilityLocations ?? null,
+
+
+            SaleLocation:
+                roblox.SaleLocation ?? null,
+
+
+            CollectibleItemId:
+                roblox.CollectibleItemId ?? null,
+
+            CollectibleProductId:
+                roblox.CollectibleProductId ?? null,
+
+
+            CollectiblesItemDetails: {
+
+                CollectibleLowestResalePrice:
+                    collectible.CollectibleLowestResalePrice ?? null,
+
+                CollectibleLowestAvailableResaleProductId:
+                    collectible.CollectibleLowestAvailableResaleProductId ?? null,
+
+                CollectibleLowestAvailableResaleItemInstanceId:
+                    collectible.CollectibleLowestAvailableResaleItemInstanceId ?? null,
+
+                CollectibleQuantityLimitPerUser:
+                    collectible.CollectibleQuantityLimitPerUser ?? null,
+
+                IsForSale:
+                    collectible.IsForSale ?? false,
+
+                TotalQuantity:
+                    collectible.TotalQuantity ?? null,
+
+                IsLimited:
+                    collectible.IsLimited ?? false
+            },
+
+
+            TimedOptions:
+                roblox.TimedOptions ?? null
+        };
+    }
+
+
+    /*
+    ============================================================
+    VALIDAR LISTA COM ROBLOX
+    ============================================================
+    */
+
+    async function validarListaComRoblox(List) {
+
+        const entries =
+            Object.entries(List);
+
+
+        if (
+            entries.length === 0
+        ) {
+
+            throw new Error(
+                "A lista está vazia."
+            );
+        }
+
+
+        /*
+            Faz todas as consultas ao mesmo tempo.
+
+            Isso é importante porque a API possui
+            limite de aproximadamente 5 segundos.
+        */
+
+        const resultados =
+            await Promise.allSettled(
+
+                entries.map(
+                    async ([nome, item]) => {
+
+                        if (
+                            !item ||
+                            !item.IdUGC
+                        ) {
+
+                            throw new Error(
+                                `${nome}: IdUGC não informado.`
+                            );
+                        }
+
+
+                        const IdUGC =
+                            Number(item.IdUGC);
+
+
+                        if (
+                            !Number.isInteger(IdUGC) ||
+                            IdUGC <= 0
+                        ) {
+
+                            throw new Error(
+                                `${nome}: IdUGC inválido.`
+                            );
+                        }
+
+
+                        const roblox =
+                            await buscarUGC(
+                                IdUGC
+                            );
+
+
+                        return {
+
+                            nome,
+
+                            item,
+
+                            roblox:
+                                extrairDadosRoblox(
+                                    roblox
+                                )
+                        };
+                    }
+                )
+            );
+
+
+        const erros = [];
+
+
+        const atualizada = {};
+
+
+        resultados.forEach(
+            (resultado, index) => {
+
+                const [
+                    nome,
+                    item
+                ] = entries[index];
+
+
+                if (
+                    resultado.status ===
+                    "rejected"
+                ) {
+
+                    erros.push({
+
+                        nome,
+
+                        IdUGC:
+                            item?.IdUGC ??
+                            null,
+
+                        erro:
+                            resultado
+                                .reason
+                                ?.message ||
+                            "Erro desconhecido."
+                    });
+
+
+                    return;
+                }
+
+
+                const roblox =
+                    resultado.value.roblox;
+
+
+                atualizada[nome] = {
+
+                    ...item,
+
+
+                    /*
+                        Mantém os dados
+                        configurados pelo jogo.
+
+                        Adiciona os dados
+                        vindos do Roblox.
+                    */
+
+                    Roblox: roblox
+                };
+            }
+        );
+
+
+        /*
+            Se um único UGC falhar,
+            não permitimos salvar.
+
+            Isso evita salvar uma lista
+            parcialmente validada.
+        */
+
+        if (
+            erros.length > 0
+        ) {
+
+            const detalhes =
+                erros
+                    .map(
+                        erro =>
+                            `${erro.nome} (${erro.IdUGC}): ${erro.erro}`
+                    )
+                    .join("\n");
+
+
+            throw new Error(
+                `Não foi possível validar ${erros.length} UGC(s):\n\n${detalhes}`
+            );
+        }
+
+
+        return {
+
+            List:
+                atualizada,
+
+            erros: []
+        };
     }
 
 
@@ -417,7 +1066,8 @@
 
     function parseLuaTable(lua) {
 
-        lua = removerComentarios(lua);
+        lua =
+            removerComentarios(lua);
 
 
         /*
@@ -427,7 +1077,10 @@
         const inicio =
             lua.indexOf("{");
 
-        if (inicio === -1) {
+
+        if (
+            inicio === -1
+        ) {
 
             throw new Error(
                 "Não encontrei a tabela { do List."
@@ -440,7 +1093,8 @@
             usado no seu catálogo.
         */
 
-        let pos = inicio;
+        let pos =
+            inicio;
 
 
         function ignorarEspacos() {
@@ -449,6 +1103,7 @@
                 pos < lua.length &&
                 /\s/.test(lua[pos])
             ) {
+
                 pos++;
             }
         }
@@ -458,12 +1113,17 @@
 
             ignorarEspacos();
 
+
             const quote =
                 lua[pos];
 
+
             pos++;
 
-            let resultado = "";
+
+            let resultado =
+                "";
+
 
             while (
                 pos < lua.length
@@ -472,27 +1132,39 @@
                 const char =
                     lua[pos];
 
-                if (char === "\\") {
+
+                if (
+                    char === "\\"
+                ) {
 
                     resultado +=
                         lua[pos + 1];
 
+
                     pos += 2;
+
 
                     continue;
                 }
 
-                if (char === quote) {
+
+                if (
+                    char === quote
+                ) {
 
                     pos++;
 
                     break;
                 }
 
-                resultado += char;
+
+                resultado +=
+                    char;
+
 
                 pos++;
             }
+
 
             return resultado;
         }
@@ -502,14 +1174,53 @@
 
             ignorarEspacos();
 
+
             const inicioValor =
                 pos;
 
 
+            let parenteses =
+                0;
+
+
             while (
-                pos < lua.length &&
-                !/[,\n}]/.test(lua[pos])
+                pos < lua.length
             ) {
+
+                const char =
+                    lua[pos];
+
+
+                if (
+                    char === "("
+                ) {
+
+                    parenteses++;
+
+                }
+
+
+                if (
+                    char === ")"
+                ) {
+
+                    parenteses--;
+                }
+
+
+                if (
+                    parenteses === 0 &&
+                    (
+                        char === "," ||
+                        char === "\n" ||
+                        char === "}"
+                    )
+                ) {
+
+                    break;
+                }
+
+
                 pos++;
             }
 
@@ -527,15 +1238,21 @@
 
             ignorarEspacos();
 
+
             const inicioValor =
                 pos;
 
+
             while (
                 pos < lua.length &&
-                /[A-Za-z0-9_]/.test(lua[pos])
+                /[A-Za-z0-9_]/.test(
+                    lua[pos]
+                )
             ) {
+
                 pos++;
             }
+
 
             return lua.slice(
                 inicioValor,
@@ -549,10 +1266,13 @@
             ignorarEspacos();
 
 
-            if (lua[pos] !== "{") {
+            if (
+                lua[pos] !== "{"
+            ) {
 
                 throw new Error(
-                    "Esperava { na posição " + pos
+                    "Esperava { na posição " +
+                    pos
                 );
             }
 
@@ -560,7 +1280,8 @@
             pos++;
 
 
-            const objeto = {};
+            const objeto =
+                {};
 
 
             while (
@@ -570,7 +1291,9 @@
                 ignorarEspacos();
 
 
-                if (lua[pos] === "}") {
+                if (
+                    lua[pos] === "}"
+                ) {
 
                     pos++;
 
@@ -593,18 +1316,25 @@
 
                     pos++;
 
+
                     ignorarEspacos();
+
 
                     chave =
                         lerString();
 
+
                     ignorarEspacos();
 
-                    if (lua[pos] === "]") {
+
+                    if (
+                        lua[pos] === "]"
+                    ) {
+
                         pos++;
                     }
-
                 }
+
 
                 /*
                     Chave normal
@@ -617,10 +1347,22 @@
                 }
 
 
+                if (
+                    !chave
+                ) {
+
+                    throw new Error(
+                        `Chave inválida na posição ${pos}.`
+                    );
+                }
+
+
                 ignorarEspacos();
 
 
-                if (lua[pos] !== "=") {
+                if (
+                    lua[pos] !== "="
+                ) {
 
                     throw new Error(
                         `Esperava = depois da chave "${chave}"`
@@ -644,7 +1386,6 @@
 
                     objeto[chave] =
                         lerTabela();
-
                 }
 
 
@@ -659,12 +1400,12 @@
 
                     objeto[chave] =
                         lerString();
-
                 }
 
 
                 /*
-                    Valor boolean
+                    Valor boolean,
+                    número ou expressão
                 */
 
                 else {
@@ -677,62 +1418,69 @@
                         valor === "true"
                     ) {
 
-                        objeto[chave] = true;
-
+                        objeto[chave] =
+                            true;
                     }
+
 
                     else if (
                         valor === "false"
                     ) {
 
-                        objeto[chave] = false;
-
+                        objeto[chave] =
+                            false;
                     }
+
 
                     else if (
                         valor === "nil"
                     ) {
 
-                        objeto[chave] = null;
-
+                        objeto[chave] =
+                            null;
                     }
 
+
                     else if (
-                        valor.includes("os.time()")
+                        valor.includes(
+                            "os.time()"
+                        )
                     ) {
 
                         objeto[chave] =
-                            converterExpiracao(valor);
-
+                            converterExpiracao(
+                                valor
+                            );
                     }
 
+
                     else if (
-                        /^-?\d+(\.\d+)?$/.test(valor)
+                        /^-?\d+(\.\d+)?$/
+                            .test(valor)
                     ) {
 
                         objeto[chave] =
                             Number(valor);
-
                     }
+
 
                     else {
 
                         objeto[chave] =
                             valor;
                     }
-
                 }
 
 
                 ignorarEspacos();
 
 
-                if (lua[pos] === ",") {
+                if (
+                    lua[pos] === ","
+                ) {
 
                     pos++;
-
                 }
-
             }
 
 
@@ -752,7 +1500,8 @@
 
     function mostrarLista(List) {
 
-        currentList = List;
+        currentList =
+            List;
 
 
         const container =
@@ -767,7 +1516,8 @@
             );
 
 
-        container.innerHTML = "";
+        container.innerHTML =
+            "";
 
 
         const nomes =
@@ -787,7 +1537,9 @@
 
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             card.className =
@@ -798,10 +1550,14 @@
                 ugc.Active === true;
 
 
+            const roblox =
+                ugc.Roblox || null;
+
+
             card.innerHTML = `
 
                 <h3>
-                    ${nome}
+                    ${escapeHtml(nome)}
                 </h3>
 
                 <div class="row">
@@ -815,6 +1571,93 @@
                 </div>
 
 
+                ${
+                    roblox
+                        ? `
+
+                        <div class="row">
+                            <span class="label">
+                                Roblox
+                            </span>
+
+                            <span>
+                                ${escapeHtml(
+                                    roblox.Name ??
+                                    "-"
+                                )}
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <span class="label">
+                                Creator
+                            </span>
+
+                            <span>
+                                ${escapeHtml(
+                                    roblox.Creator?.Name ??
+                                    "-"
+                                )}
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <span class="label">
+                                Roblox Sale
+                            </span>
+
+                            <span class="${
+                                roblox.IsForSale
+                                    ? "active"
+                                    : "inactive"
+                            }">
+                                ${
+                                    roblox.IsForSale
+                                        ? "À VENDA"
+                                        : "NÃO À VENDA"
+                                }
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <span class="label">
+                                Limited
+                            </span>
+
+                            <span>
+                                ${
+                                    roblox.IsLimited
+                                        ? "SIM"
+                                        : (
+                                            roblox.IsLimitedUnique
+                                                ? "UNIQUE"
+                                                : "NÃO"
+                                        )
+                                }
+                            </span>
+                        </div>
+
+                        <div class="row">
+                            <span class="label">
+                                Roblox Stock
+                            </span>
+
+                            <span>
+                                ${
+                                    roblox
+                                        .CollectiblesItemDetails
+                                        ?.TotalQuantity
+                                    ?? roblox.Remaining
+                                    ?? "-"
+                                }
+                            </span>
+                        </div>
+
+                        `
+                        : ""
+                }
+
+
                 <div class="row">
                     <span class="label">
                         Cash
@@ -823,7 +1666,9 @@
                     <span>
                         ${Number(
                             ugc.Price?.Cash ?? 0
-                        ).toLocaleString("pt-BR")}
+                        ).toLocaleString(
+                            "pt-BR"
+                        )}
                     </span>
                 </div>
 
@@ -836,7 +1681,9 @@
                     <span>
                         ${Number(
                             ugc.Price?.Tokens ?? 0
-                        ).toLocaleString("pt-BR")}
+                        ).toLocaleString(
+                            "pt-BR"
+                        )}
                     </span>
                 </div>
 
@@ -906,20 +1753,36 @@
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
         }
-
     }
 
 
     function escapeHtml(text) {
 
-        return text
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
+        return String(text)
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
     }
 
 
@@ -929,51 +1792,66 @@
     ============================================================
     */
 
-    window.carregarLua = function () {
+    window.carregarLua =
+        function () {
 
-        const input =
-            document.getElementById(
-                "lua-input"
-            );
-
-
-        const status =
-            document.getElementById(
-                "preview-status"
-            );
-
-
-        try {
-
-            const List =
-                parseLuaTable(
-                    input.value
+            const input =
+                document.getElementById(
+                    "lua-input"
                 );
 
 
-            mostrarLista(List);
+            const status =
+                document.getElementById(
+                    "preview-status"
+                );
 
 
-            status.innerText =
-                `${Object.keys(List).length} UGCs encontrados no Lua.`;
+            try {
 
-            console.log(
-                "List convertido:",
-                List
-            );
+                if (
+                    !input.value.trim()
+                ) {
+
+                    throw new Error(
+                        "Cole uma lista Lua primeiro."
+                    );
+                }
 
 
-        } catch (error) {
+                const List =
+                    parseLuaTable(
+                        input.value
+                    );
 
-            console.error(error);
 
-            status.innerText =
-                "Erro ao interpretar o Lua: " +
-                error.message;
+                mostrarLista(
+                    List
+                );
 
-        }
 
-    };
+                status.innerText =
+                    `${Object.keys(List).length} UGCs encontrados no Lua.`;
+
+
+                console.log(
+                    "List convertido:",
+                    List
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                status.innerText =
+                    "Erro ao interpretar o Lua: " +
+                    error.message;
+            }
+        };
 
 
     /*
@@ -982,98 +1860,174 @@
     ============================================================
     */
 
-    window.salvarFirebase = async function () {
+    window.salvarFirebase =
+        async function () {
 
-        const user =
-            auth.currentUser;
-
-
-        if (!user) {
-
-            alert(
-                "Você precisa estar autenticado."
-            );
-
-            return;
-        }
+            const user =
+                auth.currentUser;
 
 
-        if (!currentList) {
+            if (
+                !user
+            ) {
 
-            alert(
-                "Carregue uma lista primeiro."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            const ref =
-                doc(
-                    db,
-                    "arrays",
-                    "ugcs"
+                alert(
+                    "Você precisa estar autenticado."
                 );
 
 
-            await setDoc(
-                ref,
-                {
+                return;
+            }
 
-                    ownerId:
-                        user.uid,
 
-                    name:
-                        "UGCS_DATA",
+            if (
+                !currentList
+            ) {
 
-                    version:
-                        1,
+                alert(
+                    "Carregue uma lista primeiro."
+                );
 
-                    updatedAt:
-                        serverTimestamp(),
 
-                    data:
+                return;
+            }
+
+
+            const status =
+                document.getElementById(
+                    "preview-status"
+                );
+
+
+            try {
+
+                /*
+                    ====================================================
+                    ETAPA 1
+                    Validar lista com a API
+                    ====================================================
+                */
+
+                status.innerText =
+                    `Validando ${Object.keys(currentList).length} UGCs no Roblox...`;
+
+
+                console.log(
+                    "Iniciando validação dos UGCs..."
+                );
+
+
+                const resultado =
+                    await validarListaComRoblox(
                         currentList
-
-                }
-            );
+                    );
 
 
-            document.getElementById(
-                "preview-status"
-            ).innerText =
-                `${Object.keys(currentList).length} UGCs salvos no Firebase.`;
+                /*
+                    ====================================================
+                    ETAPA 2
+                    Atualizar preview com os dados Roblox
+                    ====================================================
+                */
+
+                currentList =
+                    resultado.List;
 
 
-            console.log(
-                "UGCs salvos:",
-                currentList
-            );
+                mostrarLista(
+                    currentList
+                );
 
 
-            alert(
-                "UGCS_DATA salvo com sucesso!"
-            );
+                status.innerText =
+                    "UGCs validados com sucesso. Salvando no Firebase...";
 
 
-        } catch (error) {
+                /*
+                    ====================================================
+                    ETAPA 3
+                    Salvar
+                    ====================================================
+                */
 
-            console.error(
-                "Erro ao salvar:",
-                error
-            );
+                const ref =
+                    doc(
+                        db,
+                        "arrays",
+                        "ugcs"
+                    );
 
 
-            alert(
-                "Erro ao salvar no Firebase: " +
-                error.message
-            );
+                await setDoc(
+                    ref,
+                    {
 
-        }
+                        ownerId:
+                            user.uid,
 
-    };
+                        name:
+                            "UGCS_DATA",
+
+                        version:
+                            1,
+
+                        updatedAt:
+                            serverTimestamp(),
+
+                        data:
+                            currentList
+
+                    }
+                );
+
+
+                /*
+                    ====================================================
+                    SUCESSO
+                    ====================================================
+                */
+
+                status.innerText =
+                    `${Object.keys(currentList).length} UGCs validados e salvos no Firebase.`;
+
+
+                console.log(
+                    "UGCs validados e salvos:",
+                    currentList
+                );
+
+
+                alert(
+                    "UGCS_DATA validado e salvo com sucesso!"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao validar/salvar:",
+                    error
+                );
+
+
+                /*
+                    Importante:
+
+                    currentList NÃO é salvo se a API
+                    retornar erro ou ultrapassar o timeout.
+                */
+
+                status.innerText =
+                    "Falha na validação: " +
+                    error.message;
+
+
+                alert(
+                    "A lista NÃO foi salva.\n\n" +
+                    error.message
+                );
+            }
+        };
 
 
     /*
@@ -1082,60 +2036,69 @@
     ============================================================
     */
 
-    window.carregarFirebase = async function () {
+    window.carregarFirebase =
+        async function () {
 
-        try {
+            try {
 
-            const ref =
-                doc(
-                    db,
-                    "arrays",
-                    "ugcs"
+                const ref =
+                    doc(
+                        db,
+                        "arrays",
+                        "ugcs"
+                    );
+
+
+                const snap =
+                    await getDoc(
+                        ref
+                    );
+
+
+                if (
+                    !snap.exists()
+                ) {
+
+                    alert(
+                        "Documento arrays/ugcs não existe."
+                    );
+
+
+                    return;
+                }
+
+
+                const documento =
+                    snap.data();
+
+
+                const List =
+                    documento.data || {};
+
+
+                mostrarLista(
+                    List
                 );
 
 
-            const snap =
-                await getDoc(ref);
+                console.log(
+                    "Firebase:",
+                    documento
+                );
 
 
-            if (!snap.exists()) {
+            } catch (error) {
+
+                console.error(
+                    error
+                );
+
 
                 alert(
-                    "Documento arrays/ugcs não existe."
+                    "Erro ao carregar Firebase."
                 );
-
-                return;
             }
-
-
-            const documento =
-                snap.data();
-
-
-            const List =
-                documento.data || {};
-
-
-            mostrarLista(List);
-
-
-            console.log(
-                "Firebase:",
-                documento
-            );
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Erro ao carregar Firebase."
-            );
-
-        }
-
-    };
+        };
 
 
     /*
@@ -1144,22 +2107,24 @@
     ============================================================
     */
 
-    window.limparPreview = function () {
+    window.limparPreview =
+        function () {
 
-        currentList = null;
-
-
-        document.getElementById(
-            "ugc-list"
-        ).innerHTML = "";
+            currentList =
+                null;
 
 
-        document.getElementById(
-            "preview-status"
-        ).innerText =
-            "Nenhuma lista carregada.";
+            document.getElementById(
+                "ugc-list"
+            ).innerHTML =
+                "";
 
-    };
+
+            document.getElementById(
+                "preview-status"
+            ).innerText =
+                "Nenhuma lista carregada.";
+        };
 
 
     /*
@@ -1184,10 +2149,13 @@
                 );
 
 
-            if (!user) {
+            if (
+                !user
+            ) {
 
                 status.innerText =
                     "Usuário não autenticado.";
+
 
                 return;
             }
@@ -1209,10 +2177,13 @@
                     );
 
 
-                if (!userSnap.exists()) {
+                if (
+                    !userSnap.exists()
+                ) {
 
                     status.innerText =
                         "Perfil do usuário não encontrado.";
+
 
                     return;
                 }
@@ -1223,7 +2194,8 @@
 
 
                 const role =
-                    userData.role || "user";
+                    userData.role ||
+                    "user";
 
 
                 if (
@@ -1232,6 +2204,7 @@
 
                     status.innerText =
                         "Acesso negado. Área administrativa.";
+
 
                     return;
                 }
@@ -1260,13 +2233,14 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    error
+                );
+
 
                 status.innerText =
                     "Erro ao verificar permissão.";
-
             }
-
         }
     );
 
@@ -1274,4 +2248,3 @@
 
 </body>
 </html>
-
