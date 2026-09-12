@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGCS_DATA</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #fff;
+            padding: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #ugcs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .ugc {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .ugc h3 {
+            margin-top: 0;
+        }
+
+        .active {
+            color: #4ade80;
+        }
+
+        .inactive {
+            color: #f87171;
+        }
+
+        pre {
+            background: #080808;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>UGCS_DATA</h1>
+
+    <div id="status">Carregando...</div>
+
+    <div id="ugcs-list"></div>
+
+    <script type="module">
+
+        import { auth, db } from "./js/Auth.js";
+
+        import {
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+        import {
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+
+        async function carregarUGCs() {
+
+            const status = document.getElementById("status");
+            const lista = document.getElementById("ugcs-list");
+
+            try {
+
+                const ugcsRef = doc(db, "arrays", "ugcs");
+
+                const ugcsSnap = await getDoc(ugcsRef);
+
+                if (!ugcsSnap.exists()) {
+
+                    status.innerText = "Array de UGCs não encontrado.";
+                    return;
+                }
+
+                const documento = ugcsSnap.data();
+
+                console.log("Documento:", documento);
+
+                const List = documento.data || {};
+
+                console.log("List:", List);
+
+                const nomes = Object.keys(List);
+
+                status.innerText =
+                    `${nomes.length} UGCs carregados`;
+
+                lista.innerHTML = "";
+
+                for (const nome of nomes) {
+
+                    const ugc = List[nome];
+
+                    const card = document.createElement("div");
+
+                    card.className = "ugc";
+
+                    card.innerHTML = `
+
+                        <h3>${nome}</h3>
+
+                        <p>
+                            <strong>ID:</strong>
+                            ${ugc.IdUGC ?? "-"}
+                        </p>
+
+                        <p>
+                            <strong>Cash:</strong>
+                            ${Number(ugc.Price?.Cash ?? 0).toLocaleString("pt-BR")}
+                        </p>
+
+                        <p>
+                            <strong>Tokens:</strong>
+                            ${Number(ugc.Price?.Tokens ?? 0).toLocaleString("pt-BR")}
+                        </p>
+
+                        <p>
+                            <strong>Level:</strong>
+                            ${ugc.RequiredLevel ?? 0}
+                        </p>
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            <span class="${ugc.Active ? "active" : "inactive"}">
+                                ${ugc.Active ? "Ativo" : "Inativo"}
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>Market:</strong>
+                            ${ugc.MarketType ?? "-"}
+                        </p>
+
+                        <p>
+                            <strong>Stock:</strong>
+                            ${ugc.MaxStock ?? "∞"}
+                        </p>
+
+                        <pre>${JSON.stringify(ugc, null, 2)}</pre>
+                    `;
+
+                    lista.appendChild(card);
+                }
+
+            } catch (error) {
+
+                console.error("Erro ao carregar UGCs:", error);
+
+                status.innerText =
+                    "Erro ao carregar os UGCs.";
+
+            }
+        }
+
+
+        onAuthStateChanged(auth, async (user) => {
+
+            if (!user) {
+
+                document.getElementById("status").innerText =
+                    "Usuário não autenticado.";
+
+                return;
+            }
+
+            console.log("Usuário:", user.uid);
+
+            await carregarUGCs();
+
+        });
+
+    </script>
+
+</body>
+</html>
