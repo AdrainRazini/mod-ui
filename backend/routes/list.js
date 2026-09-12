@@ -1,19 +1,14 @@
+
 import { Router } from "express";
 import { db } from "../firebase.js";
-
-import {
-    collection,
-    getDocs
-} from "firebase/firestore";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-
-        const snapshot = await getDocs(
-            collection(db, "Publics")
-        );
+        const snapshot = await db
+            .collection("Publics")
+            .get();
 
         const publics = snapshot.docs.map((document) => ({
             id: document.id,
@@ -27,7 +22,6 @@ router.get("/", async (req, res) => {
         });
 
     } catch (error) {
-
         console.error("Erro ao buscar Publics:", error);
 
         return res.status(500).json({
