@@ -1,47 +1,41 @@
 import { Router } from "express";
 import { db } from "../firebase.js";
 
+import {
+    collection,
+    getDocs,
+    doc,
+    getDoc
+} from "firebase/firestore";
+
 const router = Router();
 
 router.get("/:name", async (req, res) => {
     try {
         const { name } = req.params;
 
-        if (!name) {
-            return res.status(400).json({
-                success: false,
-                error: "Nome do documento não informado"
-            });
-        }
+        const publicRef = doc(db, "Publics", name);
+        const publicSnap = await getDoc(publicRef);
 
-        const snapshot = await db
-            .collection("arrays")
-            .doc(name)
-            .get();
-
-        if (!snapshot.exists) {
+        if (!publicSnap.exists()) {
             return res.status(404).json({
                 success: false,
-                error: "Documento não encontrado",
-                document: name
+                message: "Public não encontrado"
             });
         }
-
-        const document = snapshot.data();
 
         return res.json({
             success: true,
-            name: document.name || name,
-            version: document.version ?? 1,
-            data: document.data || {}
+            id: publicSnap.id,
+            data: publicSnap.data()
         });
 
     } catch (error) {
-        console.error("[LIST API]", error);
+        console.error("Erro ao buscar Public:", error);
 
         return res.status(500).json({
             success: false,
-            error: error.message
+            message: "Erro interno do servidor"
         });
     }
 });
