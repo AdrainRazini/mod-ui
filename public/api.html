@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ADN — API</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #06080d;
+            --panel: #0c111a;
+            --panel2: #101722;
+            --border: #1c2939;
+
+            --text: #edf4ff;
+            --muted: #8290a6;
+
+            --blue: #438cff;
+            --cyan: #35d9ff;
+            --green: #3ee58a;
+            --yellow: #ffd166;
+            --red: #ff5268;
+
+            --radius: 14px;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 85% 0%,
+                    rgba(67, 140, 255, .12),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 0% 100%,
+                    rgba(53, 217, 255, .06),
+                    transparent 28%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            background:
+                rgba(6, 8, 13, .86);
+
+            backdrop-filter: blur(14px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--blue),
+                    var(--cyan)
+                );
+
+            font-weight: 900;
+
+            box-shadow:
+                0 0 25px
+                rgba(53, 217, 255, .18);
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .brand span {
+            display: block;
+
+            margin-top: 2px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #777;
+        }
+
+        .dot.online {
+            background: var(--green);
+
+            box-shadow:
+                0 0 12px
+                rgba(62, 229, 138, .65);
+        }
+
+        .dot.error {
+            background: var(--red);
+
+            box-shadow:
+                0 0 12px
+                rgba(255, 82, 104, .65);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+            width: min(1200px, 92%);
+
+            margin: 42px auto 80px;
+        }
+
+        .hero {
+            margin-bottom: 32px;
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size: 34px;
+
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            max-width: 750px;
+
+            margin: 9px 0 0;
+
+            color: var(--muted);
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           SECTION
+        ========================= */
+
+        .section {
+            margin-top: 35px;
+        }
+
+        .section-title {
+            margin-bottom: 15px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+
+            font-size: 18px;
+        }
+
+        .section-title p {
+            margin: 5px 0 0;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        /* =========================
+           API CARD
+        ========================= */
+
+        .api-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(310px, 1fr)
+                );
+
+            gap: 16px;
+        }
+
+        .api-card {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(16, 23, 34, .96),
+                    rgba(12, 17, 26, .96)
+                );
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            padding: 20px;
+
+            transition:
+                transform .18s ease,
+                border-color .18s ease;
+        }
+
+        .api-card:hover {
+            transform: translateY(-2px);
+
+            border-color:
+                rgba(67, 140, 255, .45);
+        }
+
+        .api-top {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 15px;
+        }
+
+        .api-name {
+            font-size: 16px;
+
+            font-weight: 800;
+        }
+
+        .method {
+            padding: 5px 8px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            font-weight: 900;
+
+            letter-spacing: .5px;
+        }
+
+        .get {
+            background:
+                rgba(62, 229, 138, .1);
+
+            color: var(--green);
+        }
+
+        .post {
+            background:
+                rgba(255, 209, 102, .1);
+
+            color: var(--yellow);
+        }
+
+        .path {
+            display: block;
+
+            padding: 10px 12px;
+
+            margin-bottom: 14px;
+
+            background: #06090e;
+
+            border:
+                1px solid
+                rgba(28, 41, 57, .9);
+
+            border-radius: 8px;
+
+            color: var(--cyan);
+
+            font-family:
+                Consolas,
+                monospace;
+
+            font-size: 12px;
+
+            overflow-x: auto;
+        }
+
+        .description {
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .tag {
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 4px 8px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(67, 140, 255, .08);
+
+            border:
+                1px solid
+                rgba(67, 140, 255, .16);
+
+            color: #a9caff;
+
+            font-size: 10px;
+        }
+
+        /* =========================
+           LIVE API
+        ========================= */
+
+        .live-card {
+            background:
+                #0a0f17;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            padding: 20px;
+        }
+
+        .live-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-bottom: 15px;
+        }
+
+        .live-header h2 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 9px 14px;
+
+            border:
+                1px solid
+                rgba(67, 140, 255, .4);
+
+            border-radius: 8px;
+
+            background:
+                rgba(67, 140, 255, .1);
+
+            color: #dceaff;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background:
+                rgba(67, 140, 255, .18);
+        }
+
+        pre {
+            margin: 0;
+
+            padding: 18px;
+
+            min-height: 120px;
+
+            max-height: 450px;
+
+            overflow: auto;
+
+            background: #05070b;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 10px;
+
+            color: #b9d7ff;
+
+            font-family:
+                Consolas,
+                monospace;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================
+           NOTICE
+        ========================= */
+
+        .notice {
+            margin-top: 18px;
+
+            padding: 15px 17px;
+
+            border:
+                1px solid
+                rgba(255, 209, 102, .2);
+
+            border-radius: 10px;
+
+            background:
+                rgba(255, 209, 102, .05);
+
+            color: #d8c78f;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            margin-top: 50px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid var(--border);
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 0 18px;
+            }
+
+            main {
+                width: 92%;
+                margin-top: 28px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .status {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="brand">
+
+        <div class="logo">
+            A
+        </div>
+
+        <div>
+            <strong>ADN</strong>
+            <span>Mod_UI API</span>
+        </div>
+
+    </div>
+
+    <div class="status">
+
+        <span
+            id="statusDot"
+            class="dot">
+        </span>
+
+        <span id="statusText">
+            Verificando backend...
+        </span>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <h1>API Explorer</h1>
+
+        <p>
+            Catálogo dos serviços e endpoints
+            disponibilizados pelo Mod_UI Backend.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         CORE
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>Core</h2>
+
+            <p>
+                Serviços fundamentais do Mod_UI.
+            </p>
+
+        </div>
+
+        <div class="api-grid">
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Health
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /health
+                </code>
+
+                <p class="description">
+                    Verifica se o backend está
+                    funcionando e retorna informações
+                    básicas do serviço.
+                </p>
+
+                <span class="tag">
+                    SYSTEM
+                </span>
+
+            </article>
+
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Resolver
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /resolver
+                </code>
+
+                <p class="description">
+                    Retorna informações sobre o
+                    backend, versão, ambiente,
+                    endpoints e sistema de cache.
+                </p>
+
+                <span class="tag">
+                    CORE
+                </span>
+
+            </article>
+
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Apps
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /apps
+                </code>
+
+                <p class="description">
+                    Lista as aplicações registradas
+                    e seu estado atual.
+                </p>
+
+                <span class="tag">
+                    APPLICATIONS
+                </span>
+
+            </article>
+
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Config
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /config/latest
+                </code>
+
+                <p class="description">
+                    Endpoint destinado à configuração
+                    atual do sistema.
+                </p>
+
+                <span class="tag">
+                    CONFIG
+                </span>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         MODULES
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>Modules</h2>
+
+            <p>
+                Serviços específicos disponíveis
+                no backend.
+            </p>
+
+        </div>
+
+        <div class="api-grid">
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Loader
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /loader
+                </code>
+
+                <p class="description">
+                    Fornece o recurso Loader registrado
+                    no backend.
+                </p>
+
+                <span class="tag">
+                    MODULE
+                </span>
+
+            </article>
+
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Market
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /market/:assetId
+                </code>
+
+                <p class="description">
+                    Consulta informações de um asset
+                    através do serviço de economia
+                    utilizado pelo backend.
+                </p>
+
+                <span class="tag">
+                    ROBLOX DATA
+                </span>
+
+            </article>
+
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        UGC
+                    </span>
+
+                    <span class="method get">
+                        GET
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /ugcs/:assetId
+                </code>
+
+                <p class="description">
+                    Serviço destinado à consulta de
+                    informações de assets UGC.
+                </p>
+
+                <span class="tag">
+                    UGC
+                </span>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESOLVER
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>Resolver</h2>
+
+            <p>
+                Interface do serviço Resolver.
+            </p>
+
+        </div>
+
+        <div class="api-grid">
+
+            <article class="api-card">
+
+                <div class="api-top">
+
+                    <span class="api-name">
+                        Resolver Exec
+                    </span>
+
+                    <span class="method post">
+                        POST
+                    </span>
+
+                </div>
+
+                <code class="path">
+                    /resolver/exec
+                </code>
+
+                <p class="description">
+                    Endpoint interno do sistema para
+                    processamento de solicitações de
+                    módulos.
+                </p>
+
+                <span class="tag">
+                    INTERNAL
+                </span>
+
+            </article>
+
+        </div>
+
+        <div class="notice">
+            O endpoint de execução é mantido como
+            recurso de backend. Esta interface apenas
+            documenta sua existência e não executa
+            scripts ou módulos remotamente.
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         LIVE RESOLVER
+    ========================== -->
+
+    <section class="section">
+
+        <div class="section-title">
+
+            <h2>Live API</h2>
+
+            <p>
+                Dados atualmente retornados pelo
+                endpoint Resolver.
+            </p>
+
+        </div>
+
+        <div class="live-card">
+
+            <div class="live-header">
+
+                <h2>
+                    /resolver
+                </h2>
+
+                <button
+                    onclick="carregarResolver()">
+                    Atualizar
+                </button>
+
+            </div>
+
+            <pre id="resolverJson">
+Carregando...
+            </pre>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+        ADN · Mod_UI Backend · API Explorer
+    </footer>
+
+</main>
+
+
+<script>
+
+const BASE_URL =
+    "https://mod-ui.vercel.app";
+
+
+async function carregarResolver() {
+
+    const output =
+        document.getElementById(
+            "resolverJson"
+        );
+
+    const dot =
+        document.getElementById(
+            "statusDot"
+        );
+
+    const status =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    output.textContent =
+        "Consultando /resolver...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${BASE_URL}/resolver`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Accept":
+                            "application/json"
+                    },
+
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        output.textContent =
+            JSON.stringify(
+                data,
+                null,
+                2
+            );
+
+
+        dot.className =
+            "dot online";
+
+
+        status.textContent =
+            "Backend online";
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        output.textContent =
+            JSON.stringify(
+                {
+                    success: false,
+                    error: error.message
+                },
+                null,
+                2
+            );
+
+
+        dot.className =
+            "dot error";
+
+
+        status.textContent =
+            "Backend indisponível";
+
+    }
+
+}
+
+
+carregarResolver();
+
+</script>
+
+</body>
+
+</html>
