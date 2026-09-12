@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ADN — Mod_UI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #06080d;
+            --panel: #0c111a;
+            --panel-2: #101722;
+            --border: #1b2636;
+
+            --text: #edf4ff;
+            --muted: #8190a6;
+
+            --blue: #438cff;
+            --cyan: #35d9ff;
+            --green: #3ee58a;
+            --red: #ff5268;
+
+            --radius: 14px;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(67, 140, 255, 0.10),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at bottom left,
+                    rgba(53, 217, 255, 0.06),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            height: 72px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+            border-bottom: 1px solid var(--border);
+
+            background: rgba(6, 8, 13, 0.85);
+
+            backdrop-filter: blur(12px);
+
+            position: sticky;
+            top: 0;
+
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--blue),
+                    var(--cyan)
+                );
+
+            color: white;
+
+            font-weight: 900;
+
+            box-shadow:
+                0 0 25px rgba(53, 217, 255, 0.2);
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 16px;
+        }
+
+        .brand-text span {
+            display: block;
+
+            margin-top: 2px;
+
+            font-size: 11px;
+
+            color: var(--muted);
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            font-size: 13px;
+
+            color: var(--muted);
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            background: #777;
+        }
+
+        .status-dot.online {
+            background: var(--green);
+
+            box-shadow:
+                0 0 12px rgba(62, 229, 138, 0.7);
+        }
+
+        .status-dot.error {
+            background: var(--red);
+
+            box-shadow:
+                0 0 12px rgba(255, 82, 104, 0.7);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+            width: min(1250px, 92%);
+
+            margin: 40px auto 80px;
+        }
+
+        .hero {
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            margin: 0;
+
+            font-size: 34px;
+
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            margin: 9px 0 0;
+
+            max-width: 720px;
+
+            color: var(--muted);
+
+            line-height: 1.6;
+        }
+
+        /* =========================
+           GRID
+        ========================= */
+
+        .grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(280px, 1fr)
+                );
+
+            gap: 18px;
+        }
+
+        .card {
+            background:
+                linear-gradient(
+                    180deg,
+                    rgba(16, 23, 34, 0.95),
+                    rgba(12, 17, 26, 0.95)
+                );
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            padding: 20px;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        .card h2 {
+            margin: 0 0 18px;
+
+            font-size: 16px;
+        }
+
+        .card-subtitle {
+            margin-top: -10px;
+            margin-bottom: 17px;
+
+            font-size: 12px;
+
+            color: var(--muted);
+        }
+
+        /* =========================
+           INFO ROW
+        ========================= */
+
+        .row {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: flex-start;
+
+            gap: 15px;
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px solid
+                rgba(27, 38, 54, 0.8);
+        }
+
+        .row:last-child {
+            border-bottom: 0;
+        }
+
+        .label {
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+        .value {
+            color: var(--text);
+
+            font-size: 13px;
+
+            text-align: right;
+
+            word-break: break-word;
+        }
+
+        .endpoint {
+            color: var(--cyan);
+        }
+
+        .success {
+            color: var(--green);
+        }
+
+        /* =========================
+           APP
+        ========================= */
+
+        .app {
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 14px 0;
+
+            border-bottom:
+                1px solid
+                rgba(27, 38, 54, 0.8);
+        }
+
+        .app:last-child {
+            border-bottom: 0;
+        }
+
+        .app-info strong {
+            display: block;
+
+            font-size: 14px;
+        }
+
+        .app-info span {
+            display: block;
+
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+        }
+
+        .badge {
+            height: fit-content;
+
+            padding: 5px 9px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(62, 229, 138, 0.1);
+
+            border:
+                1px solid
+                rgba(62, 229, 138, 0.2);
+
+            color: var(--green);
+
+            font-size: 11px;
+        }
+
+        .badge.off {
+            color: var(--red);
+
+            background:
+                rgba(255, 82, 104, 0.1);
+
+            border-color:
+                rgba(255, 82, 104, 0.2);
+        }
+
+        /* =========================
+           JSON
+        ========================= */
+
+        .json-section {
+            margin-top: 25px;
+        }
+
+        pre {
+            margin: 0;
+
+            padding: 20px;
+
+            max-height: 500px;
+
+            overflow: auto;
+
+            background: #05070b;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: var(--radius);
+
+            color: #b9d7ff;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 18px;
+        }
+
+        button {
+            padding: 10px 16px;
+
+            border: 1px solid #245aa8;
+
+            border-radius: 9px;
+
+            background:
+                rgba(67, 140, 255, 0.12);
+
+            color: #dceaff;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        button:hover {
+            background:
+                rgba(67, 140, 255, 0.2);
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 0 18px;
+            }
+
+            main {
+                width: 92%;
+                margin-top: 28px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
+            }
+
+            .status {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="brand">
+
+        <div class="logo">
+            A
+        </div>
+
+        <div class="brand-text">
+            <strong>ADN</strong>
+            <span>Mod_UI System</span>
+        </div>
+
+    </div>
+
+    <div class="status">
+
+        <span
+            id="statusDot"
+            class="status-dot">
+        </span>
+
+        <span id="statusText">
+            Connecting...
+        </span>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <h1>ADN System</h1>
+
+        <p>
+            Painel de informações do ecossistema
+            ADN conectado ao Mod_UI Backend.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         SERVER / BASE
+    ========================== -->
+
+    <div class="grid">
+
+        <section class="card">
+
+            <h2>Backend</h2>
+
+            <div class="row">
+                <span class="label">
+                    Nome
+                </span>
+
+                <span
+                    id="serverName"
+                    class="value">
+                    -
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Versão
+                </span>
+
+                <span
+                    id="serverVersion"
+                    class="value">
+                    -
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Ambiente
+                </span>
+
+                <span
+                    id="environment"
+                    class="value">
+                    -
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Status
+                </span>
+
+                <span
+                    id="backendStatus"
+                    class="value">
+                    -
+                </span>
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             BASE
+        ========================== -->
+
+        <section class="card">
+
+            <h2>Base</h2>
+
+            <div class="row">
+
+                <span class="label">
+                    Root
+                </span>
+
+                <span
+                    id="root"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    API
+                </span>
+
+                <span
+                    id="api"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    Resolver
+                </span>
+
+                <span
+                    id="resolverEndpoint"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CACHE
+        ========================== -->
+
+        <section class="card">
+
+            <h2>Cache</h2>
+
+            <div class="row">
+
+                <span class="label">
+                    Sistema
+                </span>
+
+                <span
+                    id="cacheEnabled"
+                    class="value">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    CDN
+                </span>
+
+                <span
+                    id="cacheCdn"
+                    class="value">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    HTTP
+                </span>
+
+                <span
+                    id="httpStrategy"
+                    class="value">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    Max Age
+                </span>
+
+                <span
+                    id="maxAge"
+                    class="value">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    Memory
+                </span>
+
+                <span
+                    id="memoryStrategy"
+                    class="value">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    TTL
+                </span>
+
+                <span
+                    id="memoryTTL"
+                    class="value">
+                    -
+                </span>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ENDPOINTS
+        ========================== -->
+
+        <section class="card">
+
+            <h2>Endpoints</h2>
+
+            <div class="row">
+
+                <span class="label">
+                    Health
+                </span>
+
+                <span
+                    id="health"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    Apps
+                </span>
+
+                <span
+                    id="appsEndpoint"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    Config
+                </span>
+
+                <span
+                    id="configEndpoint"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <span class="label">
+                    Resolver
+                </span>
+
+                <span
+                    id="resolverEndpoint2"
+                    class="value endpoint">
+                    -
+                </span>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================
+         APPS
+    ========================== -->
+
+    <section
+        class="card"
+        style="margin-top: 18px;">
+
+        <h2>Apps</h2>
+
+        <div class="card-subtitle">
+            Aplicações registradas no Mod_UI Backend.
+        </div>
+
+        <div id="appsList">
+            Carregando...
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         CONFIG
+    ========================== -->
+
+    <section
+        class="card"
+        style="margin-top: 18px;">
+
+        <h2>Configuração</h2>
+
+        <div class="card-subtitle">
+            Resposta atual de /config/latest.
+        </div>
+
+        <pre id="configJson">
+Carregando...
+        </pre>
+
+    </section>
+
+
+    <!-- =========================
+         RAW JSON
+    ========================== -->
+
+    <section class="json-section">
+
+        <h2>Resolver JSON</h2>
+
+        <pre id="resolverJson">
+Carregando...
+        </pre>
+
+        <div class="actions">
+
+            <button onclick="carregarTudo()">
+                Recarregar
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+const BASE_URL =
+    "https://mod-ui.vercel.app";
+
+
+const ENDPOINTS = {
+
+    resolver:
+        `${BASE_URL}/resolver`,
+
+    apps:
+        `${BASE_URL}/apps`,
+
+    config:
+        `${BASE_URL}/config/latest`
+
+};
+
+
+/* =========================
+   FETCH
+========================= */
+
+async function fetchJSON(url) {
+
+    const response =
+        await fetch(url, {
+            method: "GET",
+
+            headers: {
+                "Accept": "application/json"
+            },
+
+            cache: "no-store"
+        });
+
+    if (!response.ok) {
+
+        throw new Error(
+            `HTTP ${response.status}`
+        );
+
+    }
+
+    return response.json();
+
+}
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function text(id, value) {
+
+    const element =
+        document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent =
+        value ?? "-";
+
+}
+
+
+function booleanText(value) {
+
+    if (value === true)
+        return "Ativo";
+
+    if (value === false)
+        return "Desativado";
+
+    return "-";
+
+}
+
+
+/* =========================
+   RESOLVER
+========================= */
+
+async function carregarResolver() {
+
+    const data =
+        await fetchJSON(
+            ENDPOINTS.resolver
+        );
+
+
+    /*
+     * SERVER
+     */
+
+    text(
+        "serverName",
+        data.name
+    );
+
+    text(
+        "serverVersion",
+        data.version
+    );
+
+    text(
+        "environment",
+        data.environment
+    );
+
+
+    text(
+        "backendStatus",
+        "Online"
+    );
+
+
+    /*
+     * BASE
+     */
+
+    text(
+        "root",
+        data.base?.root
+    );
+
+    text(
+        "api",
+        data.base?.api
+    );
+
+    text(
+        "resolverEndpoint",
+        data.endpoints?.resolver
+    );
+
+
+    /*
+     * CACHE
+     */
+
+    text(
+        "cacheEnabled",
+        booleanText(
+            data.cache?.enabled
+        )
+    );
+
+    text(
+        "cacheCdn",
+        booleanText(
+            data.cache?.cdn
+        )
+    );
+
+    text(
+        "httpStrategy",
+        data.cache?.http?.strategy
+    );
+
+    text(
+        "maxAge",
+        data.cache?.http?.maxAge
+    );
+
+    text(
+        "memoryStrategy",
+        data.cache?.memory?.strategy
+    );
+
+    text(
+        "memoryTTL",
+        data.cache?.memory?.defaultTTL
+    );
+
+
+    /*
+     * ENDPOINTS
+     */
+
+    text(
+        "health",
+        data.endpoints?.health
+    );
+
+    text(
+        "appsEndpoint",
+        data.endpoints?.apps
+    );
+
+    text(
+        "configEndpoint",
+        data.endpoints?.config
+    );
+
+    text(
+        "resolverEndpoint2",
+        data.endpoints?.resolver
+    );
+
+
+    /*
+     * RAW JSON
+     */
+
+    document.getElementById(
+        "resolverJson"
+    ).textContent =
+        JSON.stringify(
+            data,
+            null,
+            2
+        );
+
+
+    return data;
+
+}
+
+
+/* =========================
+   APPS
+========================= */
+
+async function carregarApps() {
+
+    const data =
+        await fetchJSON(
+            ENDPOINTS.apps
+        );
+
+
+    const container =
+        document.getElementById(
+            "appsList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if (
+        !Array.isArray(data.apps) ||
+        data.apps.length === 0
+    ) {
+
+        container.innerHTML =
+            `<div class="card-subtitle">
+                Nenhuma aplicação registrada.
+             </div>`;
+
+        return data;
+
+    }
+
+
+    for (const app of data.apps) {
+
+        const element =
+            document.createElement("div");
+
+        element.className =
+            "app";
+
+
+        const enabled =
+            app.enabled === true;
+
+
+        element.innerHTML = `
+
+            <div class="app-info">
+
+                <strong>
+                    ${escapeHTML(
+                        app.name || app.id
+                    )}
+                </strong>
+
+                <span>
+                    ${escapeHTML(
+                        app.id || "-"
+                    )}
+                    ·
+                    v${escapeHTML(
+                        app.version || "-"
+                    )}
+                </span>
+
+            </div>
+
+            <span class="badge ${enabled ? "" : "off"}">
+
+                ${enabled
+                    ? "Enabled"
+                    : "Disabled"}
+
+            </span>
+
+        `;
+
+
+        container.appendChild(
+            element
+        );
+
+    }
+
+
+    return data;
+
+}
+
+
+/* =========================
+   CONFIG
+========================= */
+
+async function carregarConfig() {
+
+    const data =
+        await fetchJSON(
+            ENDPOINTS.config
+        );
+
+
+    document.getElementById(
+        "configJson"
+    ).textContent =
+        JSON.stringify(
+            data,
+            null,
+            2
+        );
+
+
+    return data;
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function setStatus(
+    online,
+    message
+) {
+
+    const dot =
+        document.getElementById(
+            "statusDot"
+        );
+
+    const status =
+        document.getElementById(
+            "statusText"
+        );
+
+
+    dot.className =
+        "status-dot " +
+        (
+            online
+                ? "online"
+                : "error"
+        );
+
+
+    status.textContent =
+        message;
+
+}
+
+
+/* =========================
+   LOAD ALL
+========================= */
+
+async function carregarTudo() {
+
+    setStatus(
+        true,
+        "Connecting..."
+    );
+
+
+    try {
+
+        await Promise.all([
+
+            carregarResolver(),
+
+            carregarApps(),
+
+            carregarConfig()
+
+        ]);
+
+
+        setStatus(
+            true,
+            "Mod_UI Backend online"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "[ADN]",
+            error
+        );
+
+
+        setStatus(
+            false,
+            "Backend indisponível"
+        );
+
+
+        document.getElementById(
+            "resolverJson"
+        ).textContent =
+            JSON.stringify(
+                {
+                    success: false,
+                    error: error.message
+                },
+                null,
+                2
+            );
+
+    }
+
+}
+
+
+/* =========================
+   INIT
+========================= */
+
+carregarTudo();
+
+</script>
+
+</body>
+</html>
