@@ -16,11 +16,32 @@ const serviceAccount = JSON.parse(
 );
 
 // inicializar apenas 1x
+//if (!admin.apps.length) {admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });}
+
 if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+    if (!process.env.FIREBASE_PROJECT_ID) {
+        throw new Error("FIREBASE_PROJECT_ID não configurado");
+    }
+
+    if (!process.env.FIREBASE_CLIENT_EMAIL) {
+        throw new Error("FIREBASE_CLIENT_EMAIL não configurado");
+    }
+
+    if (!privateKey) {
+        throw new Error("FIREBASE_PRIVATE_KEY não configurado");
+    }
+
+    admin.initializeApp({
+        credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            privateKey
+        })
+    });
 }
+
 
 // Firestore
 const db = admin.firestore();
