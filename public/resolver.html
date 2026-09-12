@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mod_UI Resolver API</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #080b12;
+            color: #e8f1ff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .container {
+            width: min(1100px, 92%);
+            margin: 40px auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin-top: 8px;
+            color: #8491a7;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 18px;
+            margin-bottom: 20px;
+
+            background: #0d121c;
+            border: 1px solid #1d293a;
+            border-radius: 12px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #777;
+        }
+
+        .dot.online {
+            background: #39e58c;
+            box-shadow: 0 0 12px #39e58c;
+        }
+
+        .dot.error {
+            background: #ff4d67;
+            box-shadow: 0 0 12px #ff4d67;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        .card {
+            background: #0d121c;
+            border: 1px solid #1d293a;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 17px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #182231;
+        }
+
+        .item:last-child {
+            border-bottom: 0;
+        }
+
+        .label {
+            color: #8290a6;
+        }
+
+        .value {
+            color: #f1f6ff;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        .endpoint {
+            color: #6eb6ff;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+
+            background: #06090f;
+            border: 1px solid #1d293a;
+            border-radius: 14px;
+
+            color: #b9d7ff;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 11px 18px;
+
+            border: 0;
+            border-radius: 9px;
+
+            background: #1677ff;
+            color: white;
+
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #2584ff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Mod_UI Resolver API</h1>
+        <p>Informações retornadas por /resolver</p>
+    </div>
+
+    <div class="status">
+        <span id="statusDot" class="dot"></span>
+        <span id="statusText">Carregando API...</span>
+    </div>
+
+    <div class="grid">
+
+        <!-- BASE -->
+        <div class="card">
+            <h2>Base</h2>
+
+            <div class="item">
+                <span class="label">Root</span>
+                <span id="root" class="value endpoint">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">API</span>
+                <span id="api" class="value endpoint">-</span>
+            </div>
+        </div>
+
+        <!-- SERVER -->
+        <div class="card">
+            <h2>Servidor</h2>
+
+            <div class="item">
+                <span class="label">Nome</span>
+                <span id="name" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Versão</span>
+                <span id="version" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Ambiente</span>
+                <span id="environment" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Timestamp</span>
+                <span id="timestamp" class="value">-</span>
+            </div>
+        </div>
+
+        <!-- CACHE -->
+        <div class="card">
+            <h2>Cache</h2>
+
+            <div class="item">
+                <span class="label">Enabled</span>
+                <span id="cacheEnabled" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">CDN</span>
+                <span id="cacheCdn" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">HTTP Strategy</span>
+                <span id="cacheStrategy" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Max Age</span>
+                <span id="maxAge" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Stale While Revalidate</span>
+                <span id="stale" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Memory Strategy</span>
+                <span id="memoryStrategy" class="value">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Default TTL</span>
+                <span id="defaultTTL" class="value">-</span>
+            </div>
+        </div>
+
+        <!-- ENDPOINTS -->
+        <div class="card">
+            <h2>Endpoints</h2>
+
+            <div class="item">
+                <span class="label">Health</span>
+                <span id="health" class="value endpoint">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Apps</span>
+                <span id="apps" class="value endpoint">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Config</span>
+                <span id="config" class="value endpoint">-</span>
+            </div>
+
+            <div class="item">
+                <span class="label">Resolver</span>
+                <span id="resolver" class="value endpoint">-</span>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 style="margin-top: 30px;">JSON da API</h2>
+
+    <pre id="json">Carregando...</pre>
+
+    <button onclick="carregarAPI()">
+        Recarregar API
+    </button>
+
+</div>
+
+<script>
+
+const API_URL = "https://mod-ui.vercel.app/resolver";
+
+async function carregarAPI() {
+
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    const json = document.getElementById("json");
+
+    statusDot.className = "dot";
+    statusText.textContent = "Consultando API...";
+
+    try {
+
+        const response = await fetch(API_URL, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+        }
+
+        const data = await response.json();
+
+        /*
+         * SERVER
+         */
+
+        document.getElementById("name").textContent =
+            data.name ?? "-";
+
+        document.getElementById("version").textContent =
+            data.version ?? "-";
+
+        document.getElementById("environment").textContent =
+            data.environment ?? "-";
+
+        document.getElementById("timestamp").textContent =
+            data.timestamp
+                ? new Date(data.timestamp).toLocaleString("pt-BR")
+                : "-";
+
+
+        /*
+         * BASE
+         */
+
+        document.getElementById("root").textContent =
+            data.base?.root ?? "-";
+
+        document.getElementById("api").textContent =
+            data.base?.api ?? "-";
+
+
+        /*
+         * ENDPOINTS
+         */
+
+        document.getElementById("health").textContent =
+            data.endpoints?.health ?? "-";
+
+        document.getElementById("apps").textContent =
+            data.endpoints?.apps ?? "-";
+
+        document.getElementById("config").textContent =
+            data.endpoints?.config ?? "-";
+
+        document.getElementById("resolver").textContent =
+            data.endpoints?.resolver ?? "-";
+
+
+        /*
+         * CACHE
+         */
+
+        document.getElementById("cacheEnabled").textContent =
+            data.cache?.enabled ? "Sim" : "Não";
+
+        document.getElementById("cacheCdn").textContent =
+            data.cache?.cdn ? "Sim" : "Não";
+
+        document.getElementById("cacheStrategy").textContent =
+            data.cache?.http?.strategy ?? "-";
+
+        document.getElementById("maxAge").textContent =
+            data.cache?.http?.maxAge ?? "-";
+
+        document.getElementById("stale").textContent =
+            data.cache?.http?.staleWhileRevalidate ?? "-";
+
+        document.getElementById("memoryStrategy").textContent =
+            data.cache?.memory?.strategy ?? "-";
+
+        document.getElementById("defaultTTL").textContent =
+            data.cache?.memory?.defaultTTL ?? "-";
+
+
+        /*
+         * JSON COMPLETO
+         */
+
+        json.textContent =
+            JSON.stringify(data, null, 2);
+
+
+        /*
+         * STATUS
+         */
+
+        statusDot.className = "dot online";
+
+        statusText.textContent =
+            "API online";
+
+    } catch (error) {
+
+        console.error(error);
+
+        statusDot.className = "dot error";
+
+        statusText.textContent =
+            "Erro ao consultar API";
+
+        json.textContent =
+            JSON.stringify({
+                success: false,
+                error: error.message
+            }, null, 2);
+    }
+}
+
+
+carregarAPI();
+
+</script>
+
+</body>
+</html>
