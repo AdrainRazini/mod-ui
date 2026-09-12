@@ -1,72 +1,1366 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrameWork</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>Mod_UI — Framework</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/menu.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <link
+    rel="icon"
+    sizes="192x192"
+    href="https://static.wixstatic.com/media/c4bee6_f6158e93a0c04c8f9eeaba387e610940%7Emv2.png/v1/fill/w_192%2Ch_192%2Clg_1%2Cusm_0.66_1.00_0.01/c4bee6_f6158e93a0c04c8f9eeaba387e610940%7Emv2.png"
+    type="image/png"
+  >
+
+  <style>
+
+    /* =========================================================
+       ROOT
+    ========================================================= */
+
+    :root {
+      --bg: #070b14;
+      --bg-secondary: #0c1220;
+      --panel: rgba(15, 22, 38, 0.78);
+
+      --primary: #2575fc;
+      --primary-light: #4da3ff;
+
+      --purple: #7c3aed;
+      --cyan: #22d3ee;
+
+      --text: #f4f7fb;
+      --text-secondary: #94a3b8;
+      --border: rgba(255,255,255,.08);
+
+      --success: #22c55e;
+      --danger: #ef4444;
+
+      --radius: 16px;
+      --radius-large: 24px;
+
+      --shadow:
+        0 20px 60px rgba(0,0,0,.35);
+
+      --gradient:
+        linear-gradient(
+          135deg,
+          #6a11cb 0%,
+          #2575fc 55%,
+          #22d3ee 100%
+        );
+    }
+
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+
+      font-family:
+        Inter,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+
+      background:
+        radial-gradient(
+          circle at 10% 10%,
+          rgba(37,117,252,.18),
+          transparent 35%
+        ),
+
+        radial-gradient(
+          circle at 90% 20%,
+          rgba(124,58,237,.16),
+          transparent 30%
+        ),
+
+        radial-gradient(
+          circle at 50% 100%,
+          rgba(34,211,238,.08),
+          transparent 35%
+        ),
+
+        var(--bg);
+    }
+
+    button,
+    a {
+      font-family: inherit;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+
+    /* =========================================================
+       BACKGROUND EFFECT
+    ========================================================= */
+
+    .background-grid {
+      position: fixed;
+      inset: 0;
+
+      pointer-events: none;
+
+      background-image:
+        linear-gradient(
+          rgba(255,255,255,.025) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.025) 1px,
+          transparent 1px
+        );
+
+      background-size: 40px 40px;
+
+      mask-image:
+        linear-gradient(
+          to bottom,
+          black,
+          transparent
+        );
+
+      z-index: -1;
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    header {
+      position: sticky;
+      top: 0;
+
+      z-index: 100;
+
+      backdrop-filter: blur(18px);
+
+      background:
+        rgba(7,11,20,.72);
+
+      border-bottom:
+        1px solid var(--border);
+    }
+
+    .navbar {
+      width: min(1200px, 94%);
+
+      margin: auto;
+
+      min-height: 70px;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+
+      gap: 11px;
+
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 11px;
+
+      background: var(--gradient);
+
+      box-shadow:
+        0 0 25px rgba(37,117,252,.3);
+    }
+
+    .brand span {
+      color: white;
+    }
+
+    .brand strong {
+      color: var(--primary-light);
+    }
+
+
+    /* =========================================================
+       NAVIGATION
+    ========================================================= */
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .nav-links a {
+      padding: 9px 13px;
+
+      border-radius: 10px;
+
+      color: var(--text-secondary);
+
+      font-size: .9rem;
+
+      transition: .2s ease;
+    }
+
+    .nav-links a:hover {
+      color: white;
+
+      background:
+        rgba(255,255,255,.05);
+    }
+
+
+    /* =========================================================
+       USER
+    ========================================================= */
+
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .login-btn,
+    .user-btn {
+      border: 1px solid var(--border);
+
+      background:
+        rgba(255,255,255,.04);
+
+      color: white;
+
+      padding: 10px 15px;
+
+      border-radius: 11px;
+
+      cursor: pointer;
+
+      transition: .2s ease;
+    }
+
+    .login-btn:hover,
+    .user-btn:hover {
+      background:
+        rgba(37,117,252,.16);
+
+      border-color:
+        rgba(77,163,255,.35);
+    }
+
+    .user-btn {
+      display: none;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+
+      border-radius: 50%;
+
+      object-fit: cover;
+
+      border:
+        2px solid var(--primary);
+    }
+
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .hero {
+      width: min(1200px, 94%);
+
+      margin: auto;
+
+      min-height: 570px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 90px 0 70px;
+
+      position: relative;
+    }
+
+    .hero-content {
+      max-width: 760px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 8px 13px;
+
+      border-radius: 999px;
+
+      background:
+        rgba(37,117,252,.1);
+
+      border:
+        1px solid rgba(77,163,255,.2);
+
+      color: #8fc5ff;
+
+      font-size: .82rem;
+
+      margin-bottom: 22px;
+    }
+
+    .badge i {
+      font-size: .7rem;
+    }
+
+    .hero h1 {
+      font-size:
+        clamp(3rem, 7vw, 5.8rem);
+
+      line-height: .98;
+
+      letter-spacing: -4px;
+
+      margin-bottom: 25px;
+    }
+
+    .gradient-text {
+      background: var(--gradient);
+
+      -webkit-background-clip: text;
+      background-clip: text;
+
+      color: transparent;
+    }
+
+    .hero p {
+      max-width: 650px;
+
+      color: var(--text-secondary);
+
+      font-size: 1.08rem;
+
+      line-height: 1.7;
+
+      margin-bottom: 32px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 12px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 9px;
+
+      padding: 13px 19px;
+
+      border-radius: 12px;
+
+      cursor: pointer;
+
+      font-weight: 600;
+
+      transition: .25s ease;
+    }
+
+    .primary-btn {
+      color: white;
+
+      border: none;
+
+      background: var(--gradient);
+
+      box-shadow:
+        0 10px 35px rgba(37,117,252,.22);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+
+      box-shadow:
+        0 14px 40px rgba(37,117,252,.32);
+    }
+
+    .secondary-btn {
+      color: white;
+
+      border:
+        1px solid var(--border);
+
+      background:
+        rgba(255,255,255,.04);
+    }
+
+    .secondary-btn:hover {
+      background:
+        rgba(255,255,255,.08);
+
+      transform: translateY(-2px);
+    }
+
+
+    /* =========================================================
+       HERO GLOW
+    ========================================================= */
+
+    .hero-glow {
+      position: absolute;
+
+      right: 4%;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      width: 260px;
+      height: 260px;
+
+      border-radius: 50%;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(106,17,203,.4),
+          rgba(37,117,252,.3),
+          rgba(34,211,238,.25)
+        );
+
+      filter: blur(80px);
+
+      opacity: .65;
+
+      pointer-events: none;
+    }
+
+
+    /* =========================================================
+       SECTION
+    ========================================================= */
+
+    .section {
+      width: min(1200px, 94%);
+
+      margin: auto;
+
+      padding: 70px 0;
+    }
+
+    .section-header {
+      margin-bottom: 28px;
+    }
+
+    .section-header span {
+      color: var(--primary-light);
+
+      font-size: .8rem;
+
+      text-transform: uppercase;
+
+      letter-spacing: 2px;
+
+      font-weight: 700;
+    }
+
+    .section-header h2 {
+      font-size: 2rem;
+
+      margin-top: 7px;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+
+      margin-top: 8px;
+    }
+
+
+    /* =========================================================
+       TOOLS
+    ========================================================= */
+
+    .tools-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 16px;
+    }
+
+    .tool-card {
+      position: relative;
+
+      padding: 25px;
+
+      min-height: 190px;
+
+      border-radius: var(--radius);
+
+      border:
+        1px solid var(--border);
+
+      background:
+        linear-gradient(
+          145deg,
+          rgba(255,255,255,.055),
+          rgba(255,255,255,.018)
+        );
+
+      backdrop-filter: blur(12px);
+
+      transition: .25s ease;
+
+      overflow: hidden;
+    }
+
+    .tool-card::after {
+      content: "";
+
+      position: absolute;
+
+      width: 120px;
+      height: 120px;
+
+      right: -50px;
+      bottom: -50px;
+
+      border-radius: 50%;
+
+      background:
+        rgba(37,117,252,.12);
+
+      filter: blur(20px);
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+
+      border-color:
+        rgba(77,163,255,.25);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .tool-icon {
+      width: 45px;
+      height: 45px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 12px;
+
+      background:
+        rgba(37,117,252,.12);
+
+      color:
+        var(--primary-light);
+
+      margin-bottom: 18px;
+    }
+
+    .tool-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .tool-card p {
+      color: var(--text-secondary);
+
+      font-size: .9rem;
+
+      line-height: 1.6;
+    }
+
+    .tool-card .arrow {
+      position: absolute;
+
+      right: 20px;
+      top: 20px;
+
+      color:
+        var(--text-secondary);
+
+      transition: .2s ease;
+    }
+
+    .tool-card:hover .arrow {
+      color: white;
+
+      transform:
+        translate(3px,-3px);
+    }
+
+
+    /* =========================================================
+       STATUS
+    ========================================================= */
+
+    .status-section {
+      width: min(1200px, 94%);
+
+      margin: auto;
+
+      padding-bottom: 80px;
+    }
+
+    .status-card {
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 20px;
+
+      padding: 22px 25px;
+
+      border-radius: var(--radius);
+
+      border:
+        1px solid var(--border);
+
+      background:
+        rgba(255,255,255,.025);
+    }
+
+    .status-info {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+
+      border-radius: 50%;
+
+      background: var(--success);
+
+      box-shadow:
+        0 0 15px rgba(34,197,94,.6);
+    }
+
+    .status-info small {
+      color: var(--text-secondary);
+    }
+
+    .version {
+      color: var(--text-secondary);
+
+      font-size: .85rem;
+    }
+
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    footer {
+      border-top:
+        1px solid var(--border);
+
+      padding: 25px 0;
+
+      color:
+        var(--text-secondary);
+
+      font-size: .85rem;
+    }
+
+    .footer-inner {
+      width: min(1200px, 94%);
+
+      margin: auto;
+
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 15px;
+    }
+
+
+    /* =========================================================
+       MOBILE
+    ========================================================= */
+
+    @media (max-width: 800px) {
+
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        min-height: auto;
+
+        padding-top: 70px;
+      }
+
+      .hero h1 {
+        letter-spacing: -2px;
+      }
+
+      .hero-glow {
+        display: none;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-card {
+        flex-direction: column;
+
+        align-items: flex-start;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+
+  </style>
 </head>
+
 <body>
-    <header>
-        <h1>FrameWork Preview</h1>
-    </header>
 
-<div class="hud">
-    <div class="hud-title">MemeHub</div>
+<div class="background-grid"></div>
 
-    <div class="hud-actions">
-<button class="hud-btn">
-    <i class="fa-solid fa-upload"></i> Upload
-</button>
 
-<button class="hud-btn" id="loginBtn">
-    <i class="fa-solid fa-right-to-bracket"></i> Login
-</button>
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+  <nav class="navbar">
+
+    <a href="index.html" class="brand">
+
+      <div class="brand-icon">
+        <i class="fa-solid fa-cube"></i>
+      </div>
+
+      <span>
+        Mod_<strong>UI</strong>
+      </span>
+
+    </a>
+
+
+    <div class="nav-links">
+
+      <a href="#tools">
+        Ferramentas
+      </a>
+
+      <a href="#status">
+        Status
+      </a>
 
     </div>
 
-    <div class="user-panel">
-        <div class="user-avatar"></div>
-        <div class="user-name">Adrian</div>
+
+    <div class="user-area">
+
+      <button
+        class="login-btn"
+        id="loginBtn"
+      >
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Login
+      </button>
+
+
+      <button
+        class="user-btn"
+        id="userBtn"
+      >
+
+        <img
+          id="headerAvatar"
+          class="user-avatar"
+          src="image/anonimo.png"
+          alt="Usuário"
+        >
+
+        <span id="headerUserName">
+          Usuário
+        </span>
+
+      </button>
+
     </div>
-</div>
 
-<!-- GALERIA (já tem) -->
+  </nav>
 
-<div class="toolbar">
-<div class="tool-btn"><i class="fa-solid fa-plus"></i></div>
-<div class="tool-btn"><i class="fa-solid fa-fire"></i></div>
-<div class="tool-btn"><i class="fa-solid fa-gear"></i></div>
-</div>
+</header>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-    <div class="modal-close" onclick="closeModal()">✖</div>
 
-    <div class="modal-box">
-        <img id="modalImg" src="">
-        <div class="modal-content">
-            <h3 id="modalTitle"></h3>
-            <p id="modalDesc"></p>
-        </div>
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<main>
+
+<section class="hero">
+
+  <div class="hero-content">
+
+    <div class="badge">
+      <i class="fa-solid fa-circle"></i>
+      Framework Online
     </div>
-</div>
 
-    <main class="meme-gallery">
-        <img src="./image/Skel.jpg" alt="Esqueleto de Guerra meme" class="meme-Card" onclick="openModal('./image/Skel.jpg','Mod Menu','Using reverse engineering with source code.')" >
-        <img src="./image/gato-do-cafe.jpg" alt="Gato Do Café meme" class="meme-Card" onclick="openModal('./image/gato-do-cafe.jpg','Working...','Call me if it s urgent.')">
-        <img src="./image/Adn-Neon.png" alt="Logo" class="meme-Card" onclick="openModal('./image/Adn-Neon.png','...','fn(...)')">
-    </main>
-<script>
-document.getElementById("loginBtn").addEventListener("click", () => {
-    window.location.href = "login.html";
-});
+
+    <h1>
+      Ferramentas para
+      <span class="gradient-text">
+        criar mais.
+      </span>
+    </h1>
+
+
+    <p>
+      O Mod_UI reúne ferramentas, APIs e sistemas
+      desenvolvidos para facilitar o desenvolvimento,
+      gerenciamento de assets e projetos digitais.
+    </p>
+
+
+    <div class="hero-actions">
+
+      <a
+        href="#tools"
+        class="primary-btn"
+      >
+        <i class="fa-solid fa-rocket"></i>
+        Explorar ferramentas
+      </a>
+
+
+      <button
+        class="secondary-btn"
+        id="heroLoginBtn"
+      >
+        <i class="fa-solid fa-user"></i>
+        Entrar na conta
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="hero-glow"></div>
+
+</section>
+
+
+
+<!-- =========================================================
+     TOOLS
+========================================================= -->
+
+<section
+  class="section"
+  id="tools"
+>
+
+  <div class="section-header">
+
+    <span>
+      Framework
+    </span>
+
+    <h2>
+      Ferramentas
+    </h2>
+
+    <p>
+      Sistemas disponíveis dentro do ecossistema Mod_UI.
+    </p>
+
+  </div>
+
+
+  <div class="tools-grid">
+
+
+    <!-- UGC -->
+
+    <a
+      href="ugcs.html"
+      class="tool-card"
+    >
+
+      <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+
+      <div class="tool-icon">
+        <i class="fa-solid fa-shirt"></i>
+      </div>
+
+      <h3>
+        UGC Manager
+      </h3>
+
+      <p>
+        Consulte, organize e gerencie informações
+        de UGCs e assets do Roblox.
+      </p>
+
+    </a>
+
+
+
+    <!-- MARKET -->
+
+    <a
+      href="market.html"
+      class="tool-card"
+    >
+
+      <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+
+      <div class="tool-icon">
+        <i class="fa-solid fa-store"></i>
+      </div>
+
+      <h3>
+        Marketplace
+      </h3>
+
+      <p>
+        Ferramentas para consulta e gerenciamento
+        de assets do Marketplace.
+      </p>
+
+    </a>
+
+
+
+    <!-- RESOLVER -->
+
+    <a
+      href="resolver.html"
+      class="tool-card"
+    >
+
+      <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+
+      <div class="tool-icon">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </div>
+
+      <h3>
+        Resolver
+      </h3>
+
+      <p>
+        Sistema para resolução e consulta
+        de informações através das APIs.
+      </p>
+
+    </a>
+
+
+
+    <!-- API -->
+
+    <a
+      href="api.html"
+      class="tool-card"
+    >
+
+      <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+
+      <div class="tool-icon">
+        <i class="fa-solid fa-code"></i>
+      </div>
+
+      <h3>
+        API
+      </h3>
+
+      <p>
+        Acesse os recursos e endpoints
+        disponíveis no backend.
+      </p>
+
+    </a>
+
+
+
+    <!-- ADN -->
+
+    <a
+      href="adn.html"
+      class="tool-card"
+    >
+
+      <i class="fa-solid fa-arrow-up-right-from-square arrow"></i>
+
+      <div class="tool-icon">
+        <i class="fa-solid fa-brain"></i>
+      </div>
+
+      <h3>
+        ADN Tools
+      </h3>
+
+      <p>
+        Ferramentas desenvolvidas dentro
+        do ecossistema ADN.
+      </p>
+
+    </a>
+
+
+
+    <!-- ADMIN -->
+
+    <div
+      class="tool-card"
+      id="adminCard"
+      style="display:none;"
+    >
+
+      <div class="tool-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+
+      <h3>
+        Administração
+      </h3>
+
+      <p>
+        Área administrativa para gerenciamento
+        do sistema e usuários.
+      </p>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================================================
+     STATUS
+========================================================= -->
+
+<section
+  class="status-section"
+  id="status"
+>
+
+  <div class="status-card">
+
+    <div class="status-info">
+
+      <div class="status-dot"></div>
+
+      <div>
+
+        <strong>
+          Mod_UI
+        </strong>
+
+        <br>
+
+        <small>
+          Sistema operacional
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <div class="version">
+      Framework v1.0
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+  <div class="footer-inner">
+
+    <span>
+      © 2026 Mod_UI
+    </span>
+
+    <span>
+      Desenvolvido para o ecossistema ADN
+    </span>
+
+  </div>
+
+</footer>
+
+
+
+<!-- =========================================================
+     FIREBASE
+========================================================= -->
+
+<script type="module">
+
+  import {
+    auth,
+    db
+  } from "./js/Auth.js";
+
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+
+
+  import {
+    doc,
+    getDoc
+  } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+
+  const loginBtn =
+    document.getElementById("loginBtn");
+
+
+  const heroLoginBtn =
+    document.getElementById("heroLoginBtn");
+
+
+  const userBtn =
+    document.getElementById("userBtn");
+
+
+  const headerAvatar =
+    document.getElementById("headerAvatar");
+
+
+  const headerUserName =
+    document.getElementById("headerUserName");
+
+
+  const adminCard =
+    document.getElementById("adminCard");
+
+
+
+  /* =========================================================
+     LOGIN
+  ========================================================= */
+
+  function abrirLogin() {
+
+    window.location.href =
+      "login.html";
+
+  }
+
+
+  loginBtn.addEventListener(
+    "click",
+    abrirLogin
+  );
+
+
+  heroLoginBtn.addEventListener(
+    "click",
+    abrirLogin
+  );
+
+
+
+  /* =========================================================
+     AUTH
+  ========================================================= */
+
+  onAuthStateChanged(
+    auth,
+    async (user) => {
+
+      if (!user) {
+
+        loginBtn.style.display =
+          "inline-flex";
+
+        userBtn.style.display =
+          "none";
+
+        adminCard.style.display =
+          "none";
+
+        return;
+      }
+
+
+      /* ================================
+         USER LOGGED
+      ================================= */
+
+      loginBtn.style.display =
+        "none";
+
+      userBtn.style.display =
+        "inline-flex";
+
+
+      headerUserName.textContent =
+        user.displayName ||
+        "Usuário";
+
+
+      headerAvatar.src =
+        user.photoURL ||
+        "image/anonimo.png";
+
+
+
+      /* ================================
+         USER CLICK
+      ================================= */
+
+      userBtn.onclick = () => {
+
+        window.location.href =
+          "dashboard.html";
+
+      };
+
+
+
+      /* ================================
+         CHECK ROLE
+      ================================= */
+
+      try {
+
+        const userRef =
+          doc(
+            db,
+            "users",
+            user.uid
+          );
+
+
+        const userSnap =
+          await getDoc(userRef);
+
+
+        if (!userSnap.exists()) {
+          return;
+        }
+
+
+        const data =
+          userSnap.data();
+
+
+        const role =
+          String(
+            data.role || "user"
+          ).toLowerCase();
+
+
+        if (role === "admin") {
+
+          adminCard.style.display =
+            "block";
+
+
+          adminCard.onclick = () => {
+
+            window.location.href =
+              "users.html";
+
+          };
+
+          adminCard.style.cursor =
+            "pointer";
+
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Erro ao verificar usuário:",
+          error
+        );
+
+      }
+
+    }
+  );
+
 </script>
-    <!-- JS -->
-    <script src="./js/script.js"></script>
+
 </body>
 </html>
