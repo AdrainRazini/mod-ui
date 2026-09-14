@@ -306,6 +306,13 @@
                     Limpar
                 </button>
 
+                                <button
+                    class="danger"
+                    onclick="extrairLuaAtual()"
+                >
+                    extrairLuaAtual
+                </button>
+
             </div>
 
         </div>
@@ -2308,6 +2315,228 @@ function extrairDadosRoblox(roblox, Thumbnail = null) {
             ).innerText =
                 "Nenhuma lista carregada.";
         };
+
+        window.extrairLuaAtual = async function () {
+
+    try {
+
+        const lua =
+            extrairLuaAtual(currentList);
+
+        console.log(
+            "Lua atual:",
+            lua
+        );
+
+
+        /*
+        ========================================================
+        MOSTRAR NO TEXTAREA
+        ========================================================
+        */
+
+        const output =
+            document.getElementById(
+                "lua-output"
+            );
+
+        if (output) {
+
+            output.value = lua;
+
+            /*
+                Mantém o resultado visível
+                mesmo se a cópia automática falhar.
+            */
+
+            output.focus();
+            output.select();
+        }
+
+
+        /*
+        ========================================================
+        TENTAR CLIPBOARD API
+        ========================================================
+        */
+
+        if (
+            navigator.clipboard &&
+            typeof navigator.clipboard.writeText === "function"
+        ) {
+
+            try {
+
+                await navigator.clipboard.writeText(lua);
+
+                console.log(
+                    "Lua copiado usando Clipboard API."
+                );
+
+                alert(
+                    "Lua copiado com sucesso!"
+                );
+
+                return lua;
+
+            } catch (clipboardError) {
+
+                console.warn(
+                    "Clipboard API falhou. Usando fallback...",
+                    clipboardError
+                );
+            }
+        }
+
+
+        /*
+        ========================================================
+        FALLBACK PARA NAVEGADORES SEM CLIPBOARD API
+        ========================================================
+        */
+
+        const textarea =
+            document.createElement(
+                "textarea"
+            );
+
+        textarea.value = lua;
+
+        /*
+            Evita que o textarea apareça
+            visualmente na página.
+        */
+
+        textarea.style.position =
+            "fixed";
+
+        textarea.style.left =
+            "-999999px";
+
+        textarea.style.top =
+            "0";
+
+        textarea.style.opacity =
+            "0";
+
+        textarea.setAttribute(
+            "readonly",
+            ""
+        );
+
+        document.body.appendChild(
+            textarea
+        );
+
+
+        /*
+        ========================================================
+        SELECIONAR TEXTO
+        ========================================================
+        */
+
+        textarea.focus();
+        textarea.select();
+
+        /*
+            Para alguns navegadores,
+            especialmente versões antigas,
+            isso melhora a seleção.
+        */
+
+        textarea.setSelectionRange(
+            0,
+            textarea.value.length
+        );
+
+
+        /*
+        ========================================================
+        EXECUTAR CÓPIA ANTIGA
+        ========================================================
+        */
+
+        let sucesso = false;
+
+        try {
+
+            sucesso =
+                document.execCommand(
+                    "copy"
+                );
+
+        } catch (copyError) {
+
+            console.warn(
+                "execCommand(copy) falhou:",
+                copyError
+            );
+
+            sucesso = false;
+        }
+
+
+        /*
+        ========================================================
+        LIMPAR FALLBACK
+        ========================================================
+        */
+
+        document.body.removeChild(
+            textarea
+        );
+
+
+        /*
+        ========================================================
+        RESULTADO
+        ========================================================
+        */
+
+        if (sucesso) {
+
+            console.log(
+                "Lua copiado usando fallback."
+            );
+
+            alert(
+                "Lua copiado com sucesso!"
+            );
+
+        } else {
+
+            /*
+                A cópia automática falhou,
+                mas o Lua continua selecionado
+                no textarea principal.
+            */
+
+            alert(
+                "Não foi possível copiar automaticamente.\n\n" +
+                "O Lua foi gerado no campo de saída. " +
+                "Selecione e copie manualmente."
+            );
+        }
+
+
+        return lua;
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao exportar Lua:",
+            error
+        );
+
+        alert(
+            "Erro ao extrair Lua:\n\n" +
+            error.message
+        );
+
+        return null;
+    }
+};
 
 
     /*
