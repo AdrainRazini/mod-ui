@@ -1,3 +1,4 @@
+// backend/routes/ugcs.js
 
 import { Router } from "express";
 import { db } from "../firebase.js";
@@ -7,22 +8,25 @@ const router = Router();
 router.get("/", async (req, res) => {
     try {
         const snapshot = await db
-            .collection("Publics")
+            .collection("arrays")
+            .doc("ugcs")
             .get();
 
-        const publics = snapshot.docs.map((document) => ({
-            id: document.id,
-            ...document.data()
-        }));
+        if (!snapshot.exists) {
+            return res.status(404).json({
+                success: false,
+                message: "Array de UGCs não encontrado"
+            });
+        }
 
         return res.json({
             success: true,
-            total: publics.length,
-            data: publics
+            id: snapshot.id,
+            data: snapshot.data()
         });
 
     } catch (error) {
-        console.error("Erro ao buscar Publics:", error);
+        console.error("Erro ao buscar arrays/ugcs:", error);
 
         return res.status(500).json({
             success: false,
