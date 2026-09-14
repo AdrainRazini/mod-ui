@@ -1,14 +1,28 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import admin from "firebase-admin";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.FIREBASE_APP_ID,
-};
+// resolver dirname (ESM)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// caminho do JSON
+const serviceAccountPath = path.join(__dirname, "./serviceAccountKey.json");
+
+// ler arquivo manualmente
+const serviceAccount = JSON.parse(
+  fs.readFileSync(serviceAccountPath, "utf-8")
+);
+
+// inicializar apenas 1x
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
+// Firestore
+const db = admin.firestore();
+
+export { admin, db };
