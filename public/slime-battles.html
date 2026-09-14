@@ -1495,69 +1495,149 @@ function criarCard(item) {
 }
 
 
-/* =========================================================
-   THUMBNAILS
-========================================================= */
+/* ============================================================
+   API — THUMBNAIL
+============================================================ */
+
+async function buscarThumbnailRoblox(assetId) {
+
+    if (!assetId) {
+        return null;
+    }
+
+    try {
+
+        const response =
+            await fetchComTimeout(
+                `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
+            );
+
+        if (!response.ok) {
+            return null;
+        }
+
+        const json =
+            await response.json();
+
+        if (
+            json &&
+            json.success &&
+            json.imageUrl
+        ) {
+
+            return json.imageUrl;
+
+        }
+
+    } catch (error) {
+
+        if (
+            error?.name !== "AbortError"
+        ) {
+
+            console.warn(
+                "[Slime Battles UGC] Erro ao carregar thumbnail:",
+                assetId,
+                error
+            );
+
+        }
+
+    }
+
+    return null;
+}
+
+
+/* ============================================================
+   CARREGAR THUMBNAILS DOS CARDS
+============================================================ */
 
 async function carregarThumbnails() {
 
-    const images =
+    const imagens =
         document.querySelectorAll(
             ".thumbnail img"
         );
 
 
-    for (const img of images) {
+    for (const img of imagens) {
 
-        const id =
+        const assetId =
             img.dataset.id;
+
+
+        if (!assetId) {
+            continue;
+        }
 
 
         try {
 
-            const response =
-                await fetch(
-                    `${THUMBNAIL_API}${id}`,
-                    {
-                        cache: "force-cache"
-                    }
+            const imageUrl =
+                await buscarThumbnailRoblox(
+                    assetId
                 );
 
 
-            if (!response.ok) {
-                throw new Error("Thumbnail error");
-            }
-
-
-            const data =
-                await response.json();
-
-
-            const url =
-                data.thumbnail ||
-                data.image ||
-                data.url;
-
-
-            if (!url) {
-                throw new Error("Sem thumbnail");
-            }
-
-
-            img.src = url;
-
-            img.onload = () => {
-
-                img.classList.add("loaded");
+            if (!imageUrl) {
 
                 const loading =
                     document.getElementById(
-                        `loading-${id}`
+                        `loading-${assetId}`
                     );
 
                 if (loading) {
+
+                    loading.textContent =
+                        "Imagem indisponível";
+
+                }
+
+                continue;
+
+            }
+
+
+            img.src = imageUrl;
+
+
+            img.onload = () => {
+
+                img.classList.add(
+                    "loaded"
+                );
+
+
+                const loading =
+                    document.getElementById(
+                        `loading-${assetId}`
+                    );
+
+
+                if (loading) {
+
                     loading.style.display =
                         "none";
+
+                }
+
+            };
+
+
+            img.onerror = () => {
+
+                const loading =
+                    document.getElementById(
+                        `loading-${assetId}`
+                    );
+
+
+                if (loading) {
+
+                    loading.textContent =
+                        "Erro na imagem";
+
                 }
 
             };
@@ -1565,24 +1645,17 @@ async function carregarThumbnails() {
 
         } catch (error) {
 
-            const loading =
-                document.getElementById(
-                    `loading-${id}`
-                );
-
-            if (loading) {
-
-                loading.textContent =
-                    "Sem imagem";
-
-            }
+            console.warn(
+                "[Slime Battles UGC] Thumbnail:",
+                assetId,
+                error
+            );
 
         }
 
     }
 
 }
-
 
 /* =========================================================
    MODAL
