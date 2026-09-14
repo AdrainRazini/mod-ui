@@ -1,22 +1,12 @@
-
 import { Router } from "express";
-
-import {
-    doc,
-    getDoc
-} from "firebase/firestore";
-
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        // Acessa diretamente:
-        // arrays/ugcs
-
         const ref = doc(db, "arrays", "ugcs");
-
         const snapshot = await getDoc(ref);
 
         if (!snapshot.exists()) {
@@ -37,10 +27,10 @@ router.get("/", async (req, res) => {
 
         return res.status(500).json({
             success: false,
-            message: "Erro interno do servidor"
+            message: "Erro interno do servidor",
+            error: error.message
         });
     }
 });
 
 export default router;
-
