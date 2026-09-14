@@ -1,47 +1,28 @@
+
 import { Router } from "express";
+import { db } from "../firebase.js";
 
 const router = Router();
 
-const PROJECT_ID = process.env.FIREBASE_PROJECT_ID;
-
 router.get("/", async (req, res) => {
     try {
-        const url =
-            `https://firestore.googleapis.com/v1/` +
-            `projects/${PROJECT_ID}/databases/(default)/documents/arrays`;
+        const snapshot = await db
+            .collection("Publics")
+            .get();
 
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            const error = await response.text();
-
-            console.error("Firestore:", error);
-
-            return res.status(response.status).json({
-                success: false,
-                message: "Erro ao acessar Firestore"
-            });
-        }
-
-        const result = await response.json();
-
-        const arrays = (result.documents || []).map(doc => {
-            const id = doc.name.split("/").pop();
-
-            return {
-                id,
-                fields: doc.fields || {}
-            };
-        });
+        const publics = snapshot.docs.map((document) => ({
+            id: document.id,
+            ...document.data()
+        }));
 
         return res.json({
             success: true,
-            total: arrays.length,
-            data: arrays
+            total: publics.length,
+            data: publics
         });
 
     } catch (error) {
-        console.error("Erro ao buscar arrays:", error);
+        console.error("Erro ao buscar Publics:", error);
 
         return res.status(500).json({
             success: false,
