@@ -1,43 +1,3 @@
-
-import admin from "firebase-admin";
-
-if (!admin.apps.length) {
-    const projectId = process.env.FIREBASE_PROJECT_ID;
-    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-    const privateKey = process.env.FIREBASE_PRIVATE_KEY
-        ?.replace(/\\n/g, "\n");
-
-    if (!projectId) {
-        throw new Error("FIREBASE_PROJECT_ID não configurado");
-    }
-
-    if (!clientEmail) {
-        throw new Error("FIREBASE_CLIENT_EMAIL não configurado");
-    }
-
-    if (!privateKey) {
-        throw new Error("FIREBASE_PRIVATE_KEY não configurado");
-    }
-
-    admin.initializeApp({
-        credential: admin.credential.cert({
-            projectId,
-            clientEmail,
-            privateKey
-        }),
-
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET
-    });
-}
-
-const db = admin.firestore();
-
-export {
-    admin,
-    db
-};
-
-/** 
 import admin from "firebase-admin";
 import fs from "fs";
 import path from "path";
@@ -66,5 +26,3 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 export { admin, db };
-
-*/
