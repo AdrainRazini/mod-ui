@@ -1,0 +1,1915 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ADN Market — UGCs</title>
+
+    <style>
+        :root {
+            --bg: #07090d;
+            --panel: #0d1118;
+            --panel-2: #111722;
+            --border: #1d2735;
+            --text: #f2f5f8;
+            --muted: #8995a5;
+            --primary: #00e5ff;
+            --primary-dark: #009db3;
+            --success: #48e28a;
+            --danger: #ff5f6d;
+            --shadow: 0 15px 45px rgba(0, 0, 0, .35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top right, rgba(0, 229, 255, .07), transparent 30%),
+                radial-gradient(circle at bottom left, rgba(125, 70, 255, .06), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* HEADER */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+
+            min-height: 70px;
+            padding: 12px 5%;
+
+            background: rgba(7, 9, 13, .88);
+            backdrop-filter: blur(16px);
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border-radius: 10px;
+
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #716cff
+            );
+
+            color: #001015;
+            font-weight: 900;
+        }
+
+        .brand span {
+            color: var(--primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-status {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* HERO */
+
+        .hero {
+            max-width: 1400px;
+            margin: 0 auto;
+
+            padding: 55px 5% 30px;
+        }
+
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 54px);
+            line-height: 1;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 strong {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 700px;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        /* CONTROLS */
+
+        .controls {
+            max-width: 1400px;
+            margin: 0 auto;
+
+            padding: 10px 5% 30px;
+
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 240px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 46px;
+
+            padding: 0 16px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            outline: none;
+
+            background: var(--panel);
+            color: var(--text);
+
+            transition: .2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 229, 255, .08);
+        }
+
+        .filter-button {
+            height: 46px;
+            padding: 0 18px;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            background: var(--panel);
+            color: var(--text);
+
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .filter-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* MAIN */
+
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 5% 70px;
+        }
+
+        .market-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 20px;
+
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        #item-count {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* GRID */
+
+        #ugc-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fill, minmax(210px, 1fr));
+
+            gap: 18px;
+        }
+
+        /* CARD */
+
+        .ugc-card {
+            overflow: hidden;
+
+            border: 1px solid var(--border);
+            border-radius: 14px;
+
+            background: linear-gradient(
+                180deg,
+                var(--panel-2),
+                var(--panel)
+            );
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform .2s,
+                border-color .2s,
+                box-shadow .2s;
+        }
+
+        .ugc-card:hover {
+            transform: translateY(-4px);
+
+            border-color: rgba(0, 229, 255, .45);
+
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, .45),
+                0 0 25px rgba(0, 229, 255, .05);
+        }
+
+        .ugc-thumbnail {
+            position: relative;
+
+            aspect-ratio: 1 / 1;
+
+            overflow: hidden;
+
+            background: #090d13;
+        }
+
+        .ugc-thumbnail img {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            transition: transform .3s;
+        }
+
+        .ugc-card:hover .ugc-thumbnail img {
+            transform: scale(1.04);
+        }
+
+        .thumbnail-placeholder {
+            width: 100%;
+            height: 100%;
+
+            display: grid;
+            place-items: center;
+
+            color: #536071;
+            font-size: 13px;
+        }
+
+        .price {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+
+            padding: 6px 9px;
+
+            border-radius: 7px;
+
+            background: rgba(0, 0, 0, .75);
+
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+
+            backdrop-filter: blur(8px);
+        }
+
+        .card-content {
+            padding: 14px;
+        }
+
+        .ugc-name {
+            min-height: 42px;
+
+            margin-bottom: 8px;
+
+            color: var(--text);
+
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+
+            overflow: hidden;
+        }
+
+        .ugc-id {
+            margin-bottom: 12px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+
+            gap: 8px;
+        }
+
+        .roblox-button {
+            min-height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            background: var(--primary);
+            color: #001015;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            transition: .2s;
+        }
+
+        .roblox-button:hover {
+            background: #52edff;
+            transform: translateY(-1px);
+        }
+
+        .details-button {
+            min-height: 38px;
+
+            border: 1px solid var(--border);
+            border-radius: 8px;
+
+            background: transparent;
+            color: var(--muted);
+
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .details-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* STATUS */
+
+        .status {
+            min-height: 260px;
+
+            display: grid;
+            place-items: center;
+
+            text-align: center;
+
+            color: var(--muted);
+        }
+
+        .status-content {
+            max-width: 450px;
+        }
+
+        .status-title {
+            margin-bottom: 8px;
+
+            color: var(--text);
+
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .status-text {
+            line-height: 1.6;
+        }
+
+        .loading-spinner {
+            width: 34px;
+            height: 34px;
+
+            margin: 0 auto 15px;
+
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+
+            border-radius: 50%;
+
+            animation: spin .8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* MODAL */
+
+        .modal {
+            position: fixed;
+            inset: 0;
+
+            z-index: 100;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background: rgba(0, 0, 0, .72);
+
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-box {
+            width: min(560px, 100%);
+            max-height: 90vh;
+
+            overflow-y: auto;
+
+            padding: 22px;
+
+            border: 1px solid var(--border);
+            border-radius: 16px;
+
+            background: var(--panel);
+
+            box-shadow: 0 30px 100px rgba(0, 0, 0, .6);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+
+            margin-bottom: 18px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .close-modal {
+            width: 34px;
+            height: 34px;
+
+            border: 1px solid var(--border);
+            border-radius: 8px;
+
+            background: transparent;
+            color: var(--muted);
+
+            cursor: pointer;
+
+            font-size: 20px;
+        }
+
+        .close-modal:hover {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .modal-thumbnail {
+            width: 180px;
+            height: 180px;
+
+            margin: 0 auto 20px;
+
+            overflow: hidden;
+
+            border-radius: 12px;
+
+            background: #090d13;
+        }
+
+        .modal-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .details {
+            display: grid;
+            gap: 9px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+
+            padding: 10px 0;
+
+            border-bottom: 1px solid var(--border);
+
+            font-size: 13px;
+        }
+
+        .detail-label {
+            color: var(--muted);
+        }
+
+        .detail-value {
+            max-width: 65%;
+
+            color: var(--text);
+
+            text-align: right;
+            word-break: break-word;
+        }
+
+        /* FOOTER */
+
+        footer {
+            padding: 30px 5%;
+
+            border-top: 1px solid var(--border);
+
+            text-align: center;
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        footer strong {
+            color: var(--primary);
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            header {
+                padding: 10px 4%;
+            }
+
+            .header-status {
+                display: none;
+            }
+
+            .hero {
+                padding: 40px 4% 25px;
+            }
+
+            .controls {
+                padding-left: 4%;
+                padding-right: 4%;
+            }
+
+            main {
+                padding-left: 4%;
+                padding-right: 4%;
+            }
+
+            #ugc-list {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                gap: 10px;
+            }
+
+            .card-content {
+                padding: 10px;
+            }
+
+            .ugc-name {
+                font-size: 13px;
+            }
+
+            .roblox-button,
+            .details-button {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            #ugc-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a href="/" class="brand">
+        <div class="brand-logo">A</div>
+
+        <div>
+            ADN <span>MARKET</span>
+        </div>
+    </a>
+
+    <div class="header-right">
+        <div id="header-status" class="header-status">
+            Mercado público
+        </div>
+    </div>
+</header>
+
+
+<section class="hero">
+
+    <h1>
+        Roblox <strong>UGC Market</strong>
+    </h1>
+
+    <p>
+        Explore os UGCs disponíveis no catálogo. Todos os itens
+        apresentados aqui são carregados diretamente da coleção
+        pública cadastrada no ADN Market.
+    </p>
+
+</section>
+
+
+<section class="controls">
+
+    <div class="search-box">
+        <input
+            id="search-input"
+            type="search"
+            placeholder="Pesquisar UGC por nome ou ID..."
+            autocomplete="off"
+        >
+    </div>
+
+    <button
+        id="clear-search"
+        class="filter-button"
+        type="button"
+    >
+        Limpar
+    </button>
+
+</section>
+
+
+<main>
+
+    <div class="market-info">
+
+        <div>
+            <span id="item-count">0</span>
+            UGCs encontrados
+        </div>
+
+        <div id="preview-status">
+            Carregando...
+        </div>
+
+    </div>
+
+
+    <div id="market-status" class="status">
+
+        <div class="status-content">
+
+            <div class="loading-spinner"></div>
+
+            <div class="status-title">
+                Carregando mercado
+            </div>
+
+            <div class="status-text">
+                Buscando os UGCs cadastrados...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div id="ugc-list"></div>
+
+</main>
+
+
+<footer>
+    Powered by <strong>ADN Market</strong>
+</footer>
+
+
+<!-- MODAL -->
+
+<div
+    id="details-modal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <h2 id="modal-title">
+                Detalhes do UGC
+            </h2>
+
+            <button
+                id="close-modal"
+                class="close-modal"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="modal-thumbnail">
+
+            <img
+                id="modal-image"
+                src=""
+                alt="UGC"
+            >
+
+        </div>
+
+
+        <div
+            id="modal-details"
+            class="details"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+    /*
+     * ============================================================
+     * FIREBASE
+     * ============================================================
+     *
+     * O Auth.js continua sendo utilizado para obter a instância
+     * do Firestore.
+     *
+     * NÃO utilizamos onAuthStateChanged.
+     *
+     * Portanto:
+     *
+     * visitante deslogado -> pode acessar
+     * visitante logado    -> pode acessar
+     * admin               -> pode acessar
+     *
+     * A permissão real é controlada pelas Firestore Rules.
+     */
+
+    import {
+        db
+    } from "./js/Auth.js";
+
+
+    import {
+        doc,
+        getDoc
+    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+
+
+    /*
+     * ============================================================
+     * CONFIGURAÇÃO
+     * ============================================================
+     */
+
+    const FIRESTORE_COLLECTION = "arrays";
+    const FIRESTORE_DOCUMENT = "ugcs";
+
+    const API_BASE_URL = "https://mod-ui.vercel.app";
+
+    const API_TIMEOUT = 8000;
+
+
+    /*
+     * ============================================================
+     * ESTADO
+     * ============================================================
+     */
+
+    let currentList = {};
+
+    let allItems = [];
+
+
+    /*
+     * ============================================================
+     * ELEMENTOS
+     * ============================================================
+     */
+
+    const ugcList =
+        document.getElementById("ugc-list");
+
+    const marketStatus =
+        document.getElementById("market-status");
+
+    const previewStatus =
+        document.getElementById("preview-status");
+
+    const itemCount =
+        document.getElementById("item-count");
+
+    const searchInput =
+        document.getElementById("search-input");
+
+    const clearSearch =
+        document.getElementById("clear-search");
+
+    const modal =
+        document.getElementById("details-modal");
+
+    const modalTitle =
+        document.getElementById("modal-title");
+
+    const modalImage =
+        document.getElementById("modal-image");
+
+    const modalDetails =
+        document.getElementById("modal-details");
+
+    const closeModal =
+        document.getElementById("close-modal");
+
+
+    /*
+     * ============================================================
+     * HELPERS
+     * ============================================================
+     */
+
+    function escapeHtml(value) {
+
+        if (value === null || value === undefined) {
+            return "";
+        }
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    function formatValue(value) {
+
+        if (value === null || value === undefined) {
+            return "N/A";
+        }
+
+        if (typeof value === "boolean") {
+            return value ? "Sim" : "Não";
+        }
+
+        if (typeof value === "object") {
+
+            try {
+                return JSON.stringify(value);
+            } catch {
+                return "[Objeto]";
+            }
+
+        }
+
+        return String(value);
+    }
+
+
+    function encontrarId(item) {
+
+        return (
+            item?.IdUGC ??
+            item?.id ??
+            item?.Id ??
+            item?.AssetId ??
+            item?.assetId ??
+            null
+        );
+
+    }
+
+
+    function encontrarNome(item) {
+
+        return (
+            item?.Nome ??
+            item?.Name ??
+            item?.name ??
+            item?.Roblox?.Nome ??
+            item?.Roblox?.Name ??
+            "UGC sem nome"
+        );
+
+    }
+
+
+    function encontrarThumbnail(item) {
+
+        return (
+            item?.Thumbnail ??
+            item?.thumbnail ??
+            item?.Roblox?.Thumbnail ??
+            item?.Roblox?.thumbnail ??
+            null
+        );
+
+    }
+
+
+    function encontrarPreco(item) {
+
+        const roblox =
+            item?.Roblox || {};
+
+        const collectible =
+            item?.CollectiblesItemDetails ||
+            roblox?.CollectiblesItemDetails ||
+            {};
+
+        return (
+            item?.Preco ??
+            item?.Price ??
+            item?.price ??
+            collectible?.Price ??
+            collectible?.price ??
+            roblox?.Price ??
+            roblox?.price ??
+            null
+        );
+
+    }
+
+
+    /*
+     * ============================================================
+     * TIMEOUT FETCH
+     * ============================================================
+     */
+
+    async function fetchComTimeout(url, options = {}, timeout = API_TIMEOUT) {
+
+        const controller =
+            new AbortController();
+
+        const timer =
+            setTimeout(
+                () => controller.abort(),
+                timeout
+            );
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        ...options,
+                        signal: controller.signal
+                    }
+                );
+
+            return response;
+
+        } finally {
+
+            clearTimeout(timer);
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * THUMBNAIL ROBLOX
+     * ============================================================
+     */
+
+    async function buscarThumbnailRoblox(assetId) {
+
+        if (!assetId) {
+            return null;
+        }
+
+        try {
+
+            const response =
+                await fetchComTimeout(
+                    `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
+                );
+
+            if (!response.ok) {
+                return null;
+            }
+
+            const json =
+                await response.json();
+
+            if (
+                json &&
+                json.success &&
+                json.imageUrl
+            ) {
+                return json.imageUrl;
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Erro ao carregar thumbnail:",
+                assetId,
+                error
+            );
+
+        }
+
+        return null;
+
+    }
+
+
+    /*
+     * ============================================================
+     * NORMALIZAÇÃO
+     * ============================================================
+     */
+
+    function normalizarItem(item, chaveOriginal = null) {
+
+        if (!item || typeof item !== "object") {
+            return null;
+        }
+
+        const id =
+            encontrarId(item) ||
+            chaveOriginal;
+
+        const nome =
+            encontrarNome(item);
+
+        const thumbnail =
+            encontrarThumbnail(item);
+
+        const preco =
+            encontrarPreco(item);
+
+        return {
+
+            original: item,
+
+            key: chaveOriginal,
+
+            id: id,
+
+            nome: nome,
+
+            thumbnail: thumbnail,
+
+            preco: preco
+
+        };
+
+    }
+
+
+    /*
+     * ============================================================
+     * CONVERTER FIRESTORE DATA
+     * ============================================================
+     *
+     * Seu documento atual:
+     *
+     * arrays
+     *   └── ugcs
+     *       ├── ownerId
+     *       ├── name
+     *       ├── version
+     *       ├── updatedAt
+     *       └── data
+     *
+     * O campo "data" contém o List dos UGCs.
+     */
+
+    function converterLista(data) {
+
+        if (!data) {
+            return [];
+        }
+
+
+        /*
+         * Caso data seja diretamente um objeto:
+         */
+
+        if (
+            typeof data === "object" &&
+            !Array.isArray(data)
+        ) {
+
+            return Object.entries(data)
+                .map(([key, value]) =>
+                    normalizarItem(value, key)
+                )
+                .filter(Boolean);
+
+        }
+
+
+        /*
+         * Caso data seja um array:
+         */
+
+        if (Array.isArray(data)) {
+
+            return data
+                .map((item, index) =>
+                    normalizarItem(item, index)
+                )
+                .filter(Boolean);
+
+        }
+
+
+        return [];
+
+    }
+
+
+    /*
+     * ============================================================
+     * FIRESTORE
+     * ============================================================
+     */
+
+    async function carregarMercado() {
+
+        try {
+
+            marketStatus.innerHTML = `
+                <div class="status-content">
+
+                    <div class="loading-spinner"></div>
+
+                    <div class="status-title">
+                        Carregando mercado
+                    </div>
+
+                    <div class="status-text">
+                        Buscando os UGCs cadastrados...
+                    </div>
+
+                </div>
+            `;
+
+            const referencia =
+                doc(
+                    db,
+                    FIRESTORE_COLLECTION,
+                    FIRESTORE_DOCUMENT
+                );
+
+
+            const snapshot =
+                await getDoc(referencia);
+
+
+            if (!snapshot.exists()) {
+
+                throw new Error(
+                    "O documento arrays/ugcs não existe."
+                );
+
+            }
+
+
+            const documento =
+                snapshot.data();
+
+
+            /*
+             * Compatível com seu formato:
+             *
+             * documento.data
+             */
+
+            currentList =
+                documento.data || {};
+
+
+            allItems =
+                converterLista(currentList);
+
+
+            itemCount.textContent =
+                allItems.length;
+
+
+            previewStatus.textContent =
+                `${allItems.length} itens disponíveis`;
+
+
+            marketStatus.style.display =
+                "none";
+
+
+            renderizarItens(allItems);
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar mercado:",
+                error
+            );
+
+
+            marketStatus.innerHTML = `
+                <div class="status-content">
+
+                    <div class="status-title">
+                        Não foi possível carregar o mercado
+                    </div>
+
+                    <div class="status-text">
+                        ${escapeHtml(error.message)}
+                        <br><br>
+                        Verifique se o documento
+                        <strong>arrays/ugcs</strong>
+                        permite leitura pública.
+                    </div>
+
+                </div>
+            `;
+
+
+            previewStatus.textContent =
+                "Erro ao carregar";
+
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * RENDER
+     * ============================================================
+     */
+
+    function renderizarItens(items) {
+
+        ugcList.innerHTML = "";
+
+
+        if (!items.length) {
+
+            ugcList.innerHTML = `
+                <div class="status">
+                    <div class="status-content">
+
+                        <div class="status-title">
+                            Nenhum UGC encontrado
+                        </div>
+
+                        <div class="status-text">
+                            Ainda não existem itens disponíveis
+                            neste mercado.
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        itemCount.textContent =
+            items.length;
+
+
+        items.forEach(
+            (item, index) => {
+
+                const card =
+                    criarCard(item, index);
+
+                ugcList.appendChild(card);
+
+            }
+        );
+
+    }
+
+
+    /*
+     * ============================================================
+     * CARD
+     * ============================================================
+     */
+
+    function criarCard(item, index) {
+
+        const card =
+            document.createElement("article");
+
+        card.className =
+            "ugc-card";
+
+
+        const thumbnail =
+            item.thumbnail;
+
+
+        let thumbnailHtml;
+
+        if (thumbnail) {
+
+            thumbnailHtml = `
+                <img
+                    src="${escapeHtml(thumbnail)}"
+                    alt="${escapeHtml(item.nome)}"
+                    loading="lazy"
+                    onerror="this.style.display='none';"
+                >
+            `;
+
+        } else {
+
+            thumbnailHtml = `
+                <div class="thumbnail-placeholder">
+                    Carregando...
+                </div>
+            `;
+
+        }
+
+
+        const preco =
+            item.preco !== null &&
+            item.preco !== undefined
+                ? `${escapeHtml(item.preco)} Robux`
+                : "Preço não informado";
+
+
+        card.innerHTML = `
+
+            <div class="ugc-thumbnail">
+
+                ${thumbnailHtml}
+
+                <div class="price">
+                    ${preco}
+                </div>
+
+            </div>
+
+
+            <div class="card-content">
+
+                <div class="ugc-name">
+                    ${escapeHtml(item.nome)}
+                </div>
+
+                <div class="ugc-id">
+                    ID: ${escapeHtml(item.id || "N/A")}
+                </div>
+
+
+                <div class="card-actions">
+
+                    <a
+                        class="roblox-button"
+                        href="${gerarLinkRoblox(item.id)}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Ver no Roblox
+                    </a>
+
+                    <button
+                        class="details-button"
+                        type="button"
+                    >
+                        Detalhes
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        const detailsButton =
+            card.querySelector(
+                ".details-button"
+            );
+
+
+        detailsButton.addEventListener(
+            "click",
+            () => abrirDetalhes(item)
+        );
+
+
+        /*
+         * Se não tiver thumbnail no Firestore,
+         * tenta buscar pela API.
+         */
+
+        if (!thumbnail && item.id) {
+
+            carregarThumbnailCard(
+                item,
+                card
+            );
+
+        }
+
+
+        return card;
+
+    }
+
+
+    /*
+     * ============================================================
+     * THUMBNAIL DO CARD
+     * ============================================================
+     */
+
+    async function carregarThumbnailCard(item, card) {
+
+        const image =
+            await buscarThumbnailRoblox(item.id);
+
+
+        if (!image) {
+            return;
+        }
+
+
+        item.thumbnail =
+            image;
+
+
+        const container =
+            card.querySelector(
+                ".ugc-thumbnail"
+            );
+
+
+        const price =
+            container.querySelector(
+                ".price"
+            );
+
+
+        const img =
+            document.createElement("img");
+
+
+        img.src =
+            image;
+
+        img.alt =
+            item.nome;
+
+        img.loading =
+            "lazy";
+
+
+        container.insertBefore(
+            img,
+            price
+        );
+
+
+        const placeholder =
+            container.querySelector(
+                ".thumbnail-placeholder"
+            );
+
+
+        if (placeholder) {
+            placeholder.remove();
+        }
+
+    }
+
+
+    /*
+     * ============================================================
+     * LINK ROBLOX
+     * ============================================================
+     */
+
+    function gerarLinkRoblox(assetId) {
+
+        if (!assetId) {
+            return "#";
+        }
+
+        return `https://www.roblox.com/catalog/${encodeURIComponent(assetId)}`;
+
+    }
+
+
+    /*
+     * ============================================================
+     * MODAL
+     * ============================================================
+     */
+
+    function abrirDetalhes(item) {
+
+        modalTitle.textContent =
+            item.nome;
+
+
+        modalImage.src =
+            item.thumbnail || "";
+
+
+        modalImage.alt =
+            item.nome;
+
+
+        const dados =
+            item.original;
+
+
+        modalDetails.innerHTML =
+            "";
+
+
+        /*
+         * Mostra os campos principais
+         */
+
+        adicionarDetalhe(
+            "Nome",
+            item.nome
+        );
+
+
+        adicionarDetalhe(
+            "ID",
+            item.id
+        );
+
+
+        if (
+            item.preco !== null &&
+            item.preco !== undefined
+        ) {
+
+            adicionarDetalhe(
+                "Preço",
+                `${item.preco} Robux`
+            );
+
+        }
+
+
+        /*
+         * Campos extras do objeto
+         */
+
+        if (dados.Roblox) {
+
+            const roblox =
+                dados.Roblox;
+
+
+            if (
+                roblox.CreatorName ||
+                roblox.Creator
+            ) {
+
+                adicionarDetalhe(
+                    "Criador",
+                    roblox.CreatorName ||
+                    roblox.Creator
+                );
+
+            }
+
+
+            if (roblox.AssetType) {
+
+                adicionarDetalhe(
+                    "Tipo",
+                    roblox.AssetType
+                );
+
+            }
+
+
+            if (roblox.Description) {
+
+                adicionarDetalhe(
+                    "Descrição",
+                    roblox.Description
+                );
+
+            }
+
+        }
+
+
+        /*
+         * Botão Roblox
+         */
+
+        const link =
+            gerarLinkRoblox(item.id);
+
+
+        adicionarDetalhe(
+            "Roblox",
+            `<a
+                href="${link}"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="color: var(--primary);"
+            >
+                Abrir item
+            </a>`,
+            true
+        );
+
+
+        modal.classList.add(
+            "active"
+        );
+
+    }
+
+
+    function adicionarDetalhe(
+        label,
+        value,
+        html = false
+    ) {
+
+        const row =
+            document.createElement("div");
+
+        row.className =
+            "detail-row";
+
+
+        const labelElement =
+            document.createElement("div");
+
+        labelElement.className =
+            "detail-label";
+
+        labelElement.textContent =
+            label;
+
+
+        const valueElement =
+            document.createElement("div");
+
+        valueElement.className =
+            "detail-value";
+
+
+        if (html) {
+
+            valueElement.innerHTML =
+                value;
+
+        } else {
+
+            valueElement.textContent =
+                formatValue(value);
+
+        }
+
+
+        row.appendChild(
+            labelElement
+        );
+
+        row.appendChild(
+            valueElement
+        );
+
+
+        modalDetails.appendChild(
+            row
+        );
+
+    }
+
+
+    function fecharModal() {
+
+        modal.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    closeModal.addEventListener(
+        "click",
+        fecharModal
+    );
+
+
+    modal.addEventListener(
+        "click",
+        event => {
+
+            if (
+                event.target === modal
+            ) {
+                fecharModal();
+            }
+
+        }
+    );
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key === "Escape"
+            ) {
+                fecharModal();
+            }
+
+        }
+    );
+
+
+    /*
+     * ============================================================
+     * PESQUISA
+     * ============================================================
+     */
+
+    function pesquisar() {
+
+        const termo =
+            searchInput.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!termo) {
+
+            renderizarItens(
+                allItems
+            );
+
+            previewStatus.textContent =
+                `${allItems.length} itens disponíveis`;
+
+            return;
+
+        }
+
+
+        const filtrados =
+            allItems.filter(
+                item => {
+
+                    const nome =
+                        String(
+                            item.nome || ""
+                        ).toLowerCase();
+
+
+                    const id =
+                        String(
+                            item.id || ""
+                        ).toLowerCase();
+
+
+                    return (
+                        nome.includes(termo) ||
+                        id.includes(termo)
+                    );
+
+                }
+            );
+
+
+        renderizarItens(
+            filtrados
+        );
+
+
+        previewStatus.textContent =
+            `${filtrados.length} resultados`;
+
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        pesquisar
+    );
+
+
+    clearSearch.addEventListener(
+        "click",
+        () => {
+
+            searchInput.value =
+                "";
+
+            renderizarItens(
+                allItems
+            );
+
+            previewStatus.textContent =
+                `${allItems.length} itens disponíveis`;
+
+            searchInput.focus();
+
+        }
+    );
+
+
+    /*
+     * ============================================================
+     * INICIALIZAÇÃO
+     * ============================================================
+     */
+
+    carregarMercado();
+
+</script>
+
+</body>
+</html>
+
