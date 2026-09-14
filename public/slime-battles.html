@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
 
     <title>Slime Battles — UGC Market</title>
 
-      <link rel="shortcut icon" href="image/Cube.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="image/Cube.ico" type="image/x-icon">
 
     <style>
         * {
@@ -38,6 +38,7 @@
 
         body {
             font-family: Arial, Helvetica, sans-serif;
+
             background:
                 radial-gradient(
                     circle at 50% -20%,
@@ -956,6 +957,8 @@
             cursor: pointer;
 
             z-index: 5;
+
+            font-size: 20px;
         }
 
 
@@ -1073,7 +1076,7 @@
 
         <span class="status-dot"></span>
 
-        API conectada
+        API Connected
 
     </div>
 
@@ -1103,10 +1106,10 @@
 
 
         <p>
-            Explore os UGCs disponíveis no
-            Slime Battles. Veja requisitos,
-            preços, estoque, status e
-            informações de cada item.
+            Explore the UGCs available in
+            Slime Battles. View requirements,
+            prices, stock, status, and
+            detailed information for each item.
         </p>
 
     </section>
@@ -1120,7 +1123,7 @@
         <div class="stat">
 
             <div class="stat-label">
-                UGCs cadastrados
+                Registered UGCs
             </div>
 
             <div
@@ -1136,7 +1139,7 @@
         <div class="stat">
 
             <div class="stat-label">
-                Disponíveis
+                Available
             </div>
 
             <div
@@ -1178,7 +1181,7 @@
             <input
                 id="search"
                 type="text"
-                placeholder="Pesquisar por nome ou Asset ID..."
+                placeholder="Search by name or Asset ID..."
                 autocomplete="off"
             >
 
@@ -1191,7 +1194,7 @@
                 class="filter active"
                 data-filter="all"
             >
-                Todos
+                All
             </button>
 
 
@@ -1199,7 +1202,7 @@
                 class="filter"
                 data-filter="available"
             >
-                Disponíveis
+                Available
             </button>
 
 
@@ -1223,7 +1226,7 @@
                 class="filter"
                 data-filter="soldout"
             >
-                Esgotados
+                Sold Out
             </button>
 
         </div>
@@ -1237,14 +1240,14 @@
     <div class="catalog-header">
 
         <h2>
-            Catálogo
+            Catalog
         </h2>
 
         <span
             class="catalog-count"
             id="catalogCount"
         >
-            Carregando...
+            Loading...
         </span>
 
     </div>
@@ -1258,11 +1261,11 @@
         <div class="empty">
 
             <strong>
-                Carregando UGCs...
+                Loading UGCs...
             </strong>
 
-            Consultando o catálogo
-            do Slime Battles.
+            Fetching the
+            Slime Battles catalog.
 
         </div>
 
@@ -1303,7 +1306,7 @@
                     class="modal-image-loading"
                     id="modalImageLoading"
                 >
-                    Carregando imagem...
+                    Loading image...
                 </span>
 
 
@@ -1357,7 +1360,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                Ver no Roblox
+                View on Roblox
             </a>
 
 
@@ -1383,7 +1386,7 @@
 <script>
 
 /* ============================================================
-   CONFIGURAÇÃO
+   CONFIGURATION
 ============================================================ */
 
 const API_BASE_URL =
@@ -1403,7 +1406,7 @@ const MARKET_URL =
 
 
 /* ============================================================
-   ESTADO
+   STATE
 ============================================================ */
 
 let items = [];
@@ -1412,7 +1415,7 @@ let currentFilter = "all";
 
 
 /* ============================================================
-   FETCH COM TIMEOUT
+   FETCH WITH TIMEOUT
 ============================================================ */
 
 async function fetchComTimeout(
@@ -1501,7 +1504,7 @@ function formatNumber(value) {
     return Number(
         value
     ).toLocaleString(
-        "pt-BR"
+        "en-US"
     );
 
 }
@@ -1546,7 +1549,7 @@ async function buscarThumbnailRoblox(
 
 
         console.log(
-            "[Slime Battles] Buscando thumbnail:",
+            "[Slime Battles] Fetching thumbnail:",
             url
         );
 
@@ -1560,7 +1563,7 @@ async function buscarThumbnailRoblox(
         if (!response.ok) {
 
             console.warn(
-                "[Slime Battles] Erro HTTP thumbnail:",
+                "[Slime Battles] Thumbnail HTTP error:",
                 response.status,
                 assetId
             );
@@ -1575,7 +1578,7 @@ async function buscarThumbnailRoblox(
 
 
         console.log(
-            "[Slime Battles] Thumbnail:",
+            "[Slime Battles] Thumbnail response:",
             assetId,
             json
         );
@@ -1602,7 +1605,7 @@ async function buscarThumbnailRoblox(
         ) {
 
             console.warn(
-                "[Slime Battles] Erro ao carregar thumbnail:",
+                "[Slime Battles] Thumbnail error:",
                 assetId,
                 error
             );
@@ -1618,7 +1621,7 @@ async function buscarThumbnailRoblox(
 
 
 /* ============================================================
-   NORMALIZAR ITEM
+   NORMALIZE ITEM
 ============================================================ */
 
 function normalizarItem(
@@ -1694,11 +1697,11 @@ function normalizarItem(
 
         description:
             roblox.Description ||
-            "Este UGC não possui descrição.",
+            "This UGC does not have a description.",
 
         creator:
             roblox.Creator?.Name ||
-            "Desconhecido",
+            "Unknown",
 
         creatorId:
             roblox.Creator?.CreatorTargetId ??
@@ -1738,7 +1741,7 @@ function normalizarItem(
 
 
 /* ============================================================
-   CARREGAR CATÁLOGO
+   LOAD CATALOG
 ============================================================ */
 
 async function carregarUGCs() {
@@ -1756,10 +1759,10 @@ async function carregarUGCs() {
             <div class="empty">
 
                 <strong>
-                    Conectando ao catálogo...
+                    Connecting to catalog...
                 </strong>
 
-                Carregando UGCs do
+                Loading UGCs from
                 Slime Battles.
 
             </div>
@@ -1795,7 +1798,7 @@ async function carregarUGCs() {
         ) {
 
             throw new Error(
-                "Resposta inválida da API."
+                "Invalid API response."
             );
 
         }
@@ -1835,11 +1838,11 @@ async function carregarUGCs() {
             <div class="empty">
 
                 <strong>
-                    Não foi possível carregar o catálogo.
+                    Unable to load catalog.
                 </strong>
 
-                Verifique a conexão com
-                a API do Slime Battles.
+                Check your connection
+                to the Slime Battles API.
 
             </div>
 
@@ -1849,7 +1852,7 @@ async function carregarUGCs() {
         document.getElementById(
             "catalogCount"
         ).textContent =
-            "Erro";
+            "Error";
 
     }
 
@@ -1857,7 +1860,7 @@ async function carregarUGCs() {
 
 
 /* ============================================================
-   ESTATÍSTICAS
+   STATISTICS
 ============================================================ */
 
 function atualizarStats() {
@@ -1898,7 +1901,7 @@ function atualizarStats() {
 
 
 /* ============================================================
-   FILTROS
+   FILTERS
 ============================================================ */
 
 function aplicarFiltro(
@@ -1950,7 +1953,7 @@ function aplicarFiltro(
 
 
 /* ============================================================
-   RENDERIZAR
+   RENDER
 ============================================================ */
 
 function renderizar() {
@@ -2027,11 +2030,11 @@ function renderizar() {
             <div class="empty">
 
                 <strong>
-                    Nenhum UGC encontrado.
+                    No UGC found.
                 </strong>
 
-                Tente outro nome,
-                Asset ID ou filtro.
+                Try another name,
+                Asset ID, or filter.
 
             </div>
 
@@ -2056,7 +2059,7 @@ function renderizar() {
 
 
 /* ============================================================
-   CRIAR CARD
+   CREATE CARD
 ============================================================ */
 
 function criarCard(
@@ -2076,7 +2079,7 @@ function criarCard(
         badges += `
 
             <span class="badge green">
-                DISPONÍVEL
+                AVAILABLE
             </span>
 
         `;
@@ -2086,7 +2089,7 @@ function criarCard(
         badges += `
 
             <span class="badge red">
-                INDISPONÍVEL
+                UNAVAILABLE
             </span>
 
         `;
@@ -2136,8 +2139,8 @@ function criarCard(
         item.maxStock !== null
             ? `${formatNumber(
                 item.maxStock
-            )} no jogo`
-            : "Estoque variável";
+            )} in game`
+            : "Variable stock";
 
 
     return `
@@ -2161,7 +2164,7 @@ function criarCard(
                     class="loading-thumb"
                     id="loading-${item.id}"
                 >
-                    Carregando...
+                    Loading...
                 </span>
 
 
@@ -2194,7 +2197,7 @@ function criarCard(
 
                 <div class="level">
 
-                    Nível necessário:
+                    Required Level:
 
                     <strong>
                         ${formatNumber(
@@ -2286,7 +2289,7 @@ function criarCard(
 
 
 /* ============================================================
-   CARREGAR THUMBNAILS DOS CARDS
+   LOAD CARD THUMBNAILS
 ============================================================ */
 
 async function carregarThumbnails() {
@@ -2327,7 +2330,7 @@ async function carregarThumbnails() {
             if (loading) {
 
                 loading.textContent =
-                    "Imagem indisponível";
+                    "Image unavailable";
 
             }
 
@@ -2358,7 +2361,7 @@ async function carregarThumbnails() {
             function () {
 
                 console.warn(
-                    "[Slime Battles] Falha ao exibir:",
+                    "[Slime Battles] Failed to display:",
                     thumbnail
                 );
 
@@ -2369,7 +2372,7 @@ async function carregarThumbnails() {
                         "block";
 
                     loading.textContent =
-                        "Erro na imagem";
+                        "Image error";
 
                 }
 
@@ -2424,7 +2427,7 @@ async function abrirModal(
 
 
     /* ========================================================
-       INFORMAÇÕES
+       INFORMATION
     ======================================================== */
 
     document.getElementById(
@@ -2437,11 +2440,11 @@ async function abrirModal(
         "modalDescription"
     ).textContent =
         item.description ||
-        "Este UGC não possui descrição.";
+        "This UGC does not have a description.";
 
 
     /* ========================================================
-       RESET IMAGEM
+       RESET IMAGE
     ======================================================== */
 
     modalImage.removeAttribute(
@@ -2462,6 +2465,10 @@ async function abrirModal(
         "block";
 
 
+    modalLoading.textContent =
+        "Loading image...";
+
+
     /* ========================================================
        LINKS
     ======================================================== */
@@ -2479,7 +2486,7 @@ async function abrirModal(
 
 
     /* ========================================================
-       ESTOQUE
+       STOCK
     ======================================================== */
 
     const stock =
@@ -2507,7 +2514,7 @@ async function abrirModal(
 
 
     /* ========================================================
-       DETALHES
+       DETAILS
     ======================================================== */
 
     document.getElementById(
@@ -2530,7 +2537,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Nível necessário
+                Required Level
             </small>
 
             <strong>
@@ -2545,7 +2552,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Tipo de mercado
+                Market Type
             </small>
 
             <strong>
@@ -2560,7 +2567,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Status no jogo
+                Game Status
             </small>
 
             <strong>
@@ -2568,8 +2575,8 @@ async function abrirModal(
                 ${
                     item.active &&
                     item.isForSaleGame
-                        ? "Disponível"
-                        : "Indisponível"
+                        ? "Available"
+                        : "Unavailable"
                 }
 
             </strong>
@@ -2610,7 +2617,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Preço Roblox
+                Roblox Price
             </small>
 
             <strong>
@@ -2630,8 +2637,8 @@ async function abrirModal(
 
             <strong>
                 ${item.limited
-                    ? "Sim"
-                    : "Não"}
+                    ? "Yes"
+                    : "No"}
             </strong>
 
         </div>
@@ -2640,7 +2647,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Estoque do jogo
+                Game Stock
             </small>
 
             <strong>
@@ -2653,7 +2660,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Total Roblox
+                Roblox Total
             </small>
 
             <strong>
@@ -2666,7 +2673,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Restante Roblox
+                Roblox Remaining
             </small>
 
             <strong>
@@ -2679,10 +2686,11 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Vendas Roblox
+                Roblox Sales
             </small>
 
             <strong>
+
                 ${
                     item.sales !== null
                         ? formatNumber(
@@ -2690,6 +2698,7 @@ async function abrirModal(
                         )
                         : "—"
                 }
+
             </strong>
 
         </div>
@@ -2698,7 +2707,7 @@ async function abrirModal(
         <div class="detail">
 
             <small>
-                Criador
+                Creator
             </small>
 
             <strong>
@@ -2765,7 +2774,7 @@ async function abrirModal(
 
 
     /* ========================================================
-       ABRIR MODAL
+       OPEN MODAL
     ======================================================== */
 
     modal.classList.add(
@@ -2774,7 +2783,7 @@ async function abrirModal(
 
 
     /* ========================================================
-       BUSCAR THUMBNAIL
+       FETCH THUMBNAIL
     ======================================================== */
 
     const thumbnail =
@@ -2807,7 +2816,7 @@ async function abrirModal(
             function () {
 
                 modalLoading.textContent =
-                    "Erro ao exibir imagem";
+                    "Failed to display image";
 
                 modalLoading.style.display =
                     "block";
@@ -2821,7 +2830,7 @@ async function abrirModal(
     } else {
 
         modalLoading.textContent =
-            "Imagem indisponível";
+            "Image unavailable";
 
     }
 
@@ -2829,7 +2838,7 @@ async function abrirModal(
 
 
 /* ============================================================
-   FECHAR MODAL
+   CLOSE MODAL
 ============================================================ */
 
 function fecharModal() {
@@ -2844,7 +2853,7 @@ function fecharModal() {
 
 
 /* ============================================================
-   BOTÃO FECHAR
+   CLOSE BUTTON
 ============================================================ */
 
 document
@@ -2858,7 +2867,7 @@ document
 
 
 /* ============================================================
-   CLICAR FORA DO MODAL
+   CLICK OUTSIDE MODAL
 ============================================================ */
 
 document
@@ -2881,7 +2890,7 @@ document
 
 
 /* ============================================================
-   ESC
+   ESC KEY
 ============================================================ */
 
 document.addEventListener(
@@ -2959,7 +2968,7 @@ document
 
 
 /* ============================================================
-   INICIALIZAÇÃO
+   INITIALIZATION
 ============================================================ */
 
 carregarUGCs();
