@@ -1174,6 +1174,170 @@ async function carregarUGCs() {
 }
 
 
+/* ============================================================
+   API — THUMBNAIL
+============================================================ */
+
+async function buscarThumbnailRoblox(assetId) {
+
+    if (!assetId) {
+        return null;
+    }
+
+    try {
+
+        const response =
+            await fetchComTimeout(
+                `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
+            );
+
+        if (!response.ok) {
+            return null;
+        }
+
+        const json =
+            await response.json();
+
+        if (
+            json &&
+            json.success &&
+            json.imageUrl
+        ) {
+
+            return json.imageUrl;
+
+        }
+
+    } catch (error) {
+
+        if (
+            error?.name !== "AbortError"
+        ) {
+
+            console.warn(
+                "[Slime Battles UGC] Erro ao carregar thumbnail:",
+                assetId,
+                error
+            );
+
+        }
+
+    }
+
+    return null;
+}
+
+
+/* ============================================================
+   CARREGAR THUMBNAILS DOS CARDS
+============================================================ */
+
+async function carregarThumbnails() {
+
+    const imagens =
+        document.querySelectorAll(
+            ".thumbnail img"
+        );
+
+
+    for (const img of imagens) {
+
+        const assetId =
+            img.dataset.id;
+
+
+        if (!assetId) {
+            continue;
+        }
+
+
+        try {
+
+            const imageUrl =
+                await buscarThumbnailRoblox(
+                    assetId
+                );
+
+
+            if (!imageUrl) {
+
+                const loading =
+                    document.getElementById(
+                        `loading-${assetId}`
+                    );
+
+                if (loading) {
+
+                    loading.textContent =
+                        "Imagem indisponível";
+
+                }
+
+                continue;
+
+            }
+
+
+            img.src = imageUrl;
+
+
+            img.onload = () => {
+
+                img.classList.add(
+                    "loaded"
+                );
+
+
+                const loading =
+                    document.getElementById(
+                        `loading-${assetId}`
+                    );
+
+
+                if (loading) {
+
+                    loading.style.display =
+                        "none";
+
+                }
+
+            };
+
+
+            img.onerror = () => {
+
+                const loading =
+                    document.getElementById(
+                        `loading-${assetId}`
+                    );
+
+
+                if (loading) {
+
+                    loading.textContent =
+                        "Erro na imagem";
+
+                }
+
+            };
+
+
+        } catch (error) {
+
+            console.warn(
+                "[Slime Battles UGC] Thumbnail:",
+                assetId,
+                error
+            );
+
+        }
+
+    }
+
+}
+
+
+
 /* =========================================================
    STATS
 ========================================================= */
@@ -1495,173 +1659,10 @@ function criarCard(item) {
 }
 
 
-/* ============================================================
-   API — THUMBNAIL
-============================================================ */
-
-async function buscarThumbnailRoblox(assetId) {
-
-    if (!assetId) {
-        return null;
-    }
-
-    try {
-
-        const response =
-            await fetchComTimeout(
-                `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
-            );
-
-        if (!response.ok) {
-            return null;
-        }
-
-        const json =
-            await response.json();
-
-        if (
-            json &&
-            json.success &&
-            json.imageUrl
-        ) {
-
-            return json.imageUrl;
-
-        }
-
-    } catch (error) {
-
-        if (
-            error?.name !== "AbortError"
-        ) {
-
-            console.warn(
-                "[Slime Battles UGC] Erro ao carregar thumbnail:",
-                assetId,
-                error
-            );
-
-        }
-
-    }
-
-    return null;
-}
-
-
-/* ============================================================
-   CARREGAR THUMBNAILS DOS CARDS
-============================================================ */
-
-async function carregarThumbnails() {
-
-    const imagens =
-        document.querySelectorAll(
-            ".thumbnail img"
-        );
-
-
-    for (const img of imagens) {
-
-        const assetId =
-            img.dataset.id;
-
-
-        if (!assetId) {
-            continue;
-        }
-
-
-        try {
-
-            const imageUrl =
-                await buscarThumbnailRoblox(
-                    assetId
-                );
-
-
-            if (!imageUrl) {
-
-                const loading =
-                    document.getElementById(
-                        `loading-${assetId}`
-                    );
-
-                if (loading) {
-
-                    loading.textContent =
-                        "Imagem indisponível";
-
-                }
-
-                continue;
-
-            }
-
-
-            img.src = imageUrl;
-
-
-            img.onload = () => {
-
-                img.classList.add(
-                    "loaded"
-                );
-
-
-                const loading =
-                    document.getElementById(
-                        `loading-${assetId}`
-                    );
-
-
-                if (loading) {
-
-                    loading.style.display =
-                        "none";
-
-                }
-
-            };
-
-
-            img.onerror = () => {
-
-                const loading =
-                    document.getElementById(
-                        `loading-${assetId}`
-                    );
-
-
-                if (loading) {
-
-                    loading.textContent =
-                        "Erro na imagem";
-
-                }
-
-            };
-
-
-        } catch (error) {
-
-            console.warn(
-                "[Slime Battles UGC] Thumbnail:",
-                assetId,
-                error
-            );
-
-        }
-
-    }
-
-}
-
 /* =========================================================
    MODAL
 ========================================================= */
 async function abrirModal(id) {
-//function abrirModal(id) {
 
     const item =
         items.find(
@@ -1676,6 +1677,10 @@ async function abrirModal(id) {
         document.getElementById("modal");
 
 
+    /* ============================================================
+       INFORMAÇÕES BÁSICAS
+    ============================================================ */
+
     document.getElementById(
         "modalName"
     ).textContent =
@@ -1687,31 +1692,48 @@ async function abrirModal(id) {
     ).textContent =
         item.description;
 
-const modalImage =
-    document.getElementById("modalImage");
 
-modalImage.src = "";
-modalImage.style.opacity = "0";
+    /* ============================================================
+       THUMBNAIL
+    ============================================================ */
 
-
-const modalThumbnail = 
-await buscarThumbnailRoblox(item.id);
+    const modalImage =
+        document.getElementById("modalImage");
 
 
-if (modalThumbnail) {
+    // Limpa a imagem anterior
+    modalImage.src = "";
+    modalImage.style.opacity = "0";
 
-    modalImage.src =
-        modalThumbnail;
 
-    modalImage.onload = () => {
+    // Mostra o modal imediatamente
+    modal.classList.add("open");
 
-        modalImage.style.opacity = "1";
 
-    };
+    // Busca a imagem pela API
+    const modalThumbnail =
+        await buscarThumbnailRoblox(item.id);
 
-}
 
- 
+    if (modalThumbnail) {
+
+        modalImage.onload = () => {
+
+            modalImage.style.opacity = "1";
+
+        };
+
+
+        modalImage.src =
+            modalThumbnail;
+
+    }
+
+
+    /* ============================================================
+       LINKS
+    ============================================================ */
+
     const robloxLink =
         document.getElementById(
             "robloxLink"
@@ -1727,6 +1749,10 @@ if (modalThumbnail) {
     ).href =
         `${MARKET_URL}${item.id}`;
 
+
+    /* ============================================================
+       ESTOQUE
+    ============================================================ */
 
     const stock =
         item.maxStock !== null
@@ -1746,6 +1772,10 @@ if (modalThumbnail) {
             : "—";
 
 
+    /* ============================================================
+       DETALHES
+    ============================================================ */
+
     document.getElementById(
         "modalDetails"
     ).innerHTML = `
@@ -1757,16 +1787,20 @@ if (modalThumbnail) {
 
         <div class="detail">
             <small>Nível necessário</small>
-            <strong>${formatNumber(item.level)}</strong>
+            <strong>
+                ${formatNumber(item.level)}
+            </strong>
         </div>
 
         <div class="detail">
             <small>Tipo de mercado</small>
-            <strong>${escapeHtml(item.marketType)}</strong>
+            <strong>
+                ${escapeHtml(item.marketType)}
+            </strong>
         </div>
 
         <div class="detail">
-            <small>Status</small>
+            <small>Status no jogo</small>
             <strong>
                 ${
                     item.active &&
@@ -1856,11 +1890,7 @@ if (modalThumbnail) {
 
     `;
 
-
-    modal.classList.add("open");
-
 }
-
 
 function fecharModal() {
 
