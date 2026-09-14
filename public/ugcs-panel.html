@@ -1489,280 +1489,6 @@
     ============================================================
     */
 
-    function mostrarLista(List) {
-
-        currentList =
-            List;
-
-
-        const container =
-            document.getElementById(
-                "ugc-list"
-            );
-
-
-        const status =
-            document.getElementById(
-                "preview-status"
-            );
-
-
-        container.innerHTML =
-            "";
-
-
-        const nomes =
-            Object.keys(List);
-
-
-        status.innerText =
-            `${nomes.length} UGCs carregados.`;
-
-
-        for (
-            const nome of nomes
-        ) {
-
-            const ugc =
-                List[nome];
-
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-
-            card.className =
-                "ugc";
-
-
-            const active =
-                ugc.Active === true;
-
-
-            const roblox =
-                ugc.Roblox || null;
-
-
-            card.innerHTML = `
-    ${
-        roblox?.Thumbnail
-            ? `
-                <div class="ugc-image">
-                    <img
-                        src="${escapeHtml(roblox.Thumbnail)}"
-                        alt="${escapeHtml(roblox.Name || nome)}"
-                        loading="lazy"
-                    >
-                </div>
-            `
-            : ""
-    }
-
-    <h3>
-        ${escapeHtml(nome)}
-    </h3>
-
-                <div class="row">
-                    <span class="label">
-                        ID
-                    </span>
-
-                    <span>
-                        ${ugc.IdUGC ?? "-"}
-                    </span>
-                </div>
-
-
-                ${
-                    roblox
-                        ? `
-
-                        <div class="row">
-                            <span class="label">
-                                Roblox
-                            </span>
-
-                            <span>
-                                ${escapeHtml(
-                                    roblox.Name ??
-                                    "-"
-                                )}
-                            </span>
-                        </div>
-
-                        <div class="row">
-                            <span class="label">
-                                Creator
-                            </span>
-
-                            <span>
-                                ${escapeHtml(
-                                    roblox.Creator?.Name ??
-                                    "-"
-                                )}
-                            </span>
-                        </div>
-
-                        <div class="row">
-                            <span class="label">
-                                Roblox Sale
-                            </span>
-
-                            <span class="${
-                                roblox.IsForSale
-                                    ? "active"
-                                    : "inactive"
-                            }">
-                                ${
-                                    roblox.IsForSale
-                                        ? "À VENDA"
-                                        : "NÃO À VENDA"
-                                }
-                            </span>
-                        </div>
-
-                        <div class="row">
-                            <span class="label">
-                                Limited
-                            </span>
-
-                            <span>
-                                ${
-                                    roblox.IsLimited
-                                        ? "SIM"
-                                        : (
-                                            roblox.IsLimitedUnique
-                                                ? "UNIQUE"
-                                                : "NÃO"
-                                        )
-                                }
-                            </span>
-                        </div>
-
-                        <div class="row">
-                            <span class="label">
-                                Roblox Stock
-                            </span>
-
-                            <span>
-                                ${
-                                    roblox
-                                        .CollectiblesItemDetails
-                                        ?.TotalQuantity
-                                    ?? roblox.Remaining
-                                    ?? "-"
-                                }
-                            </span>
-                        </div>
-
-                        `
-                        : ""
-                }
-
-
-                <div class="row">
-                    <span class="label">
-                        Cash
-                    </span>
-
-                    <span>
-                        ${Number(
-                            ugc.Price?.Cash ?? 0
-                        ).toLocaleString(
-                            "pt-BR"
-                        )}
-                    </span>
-                </div>
-
-
-                <div class="row">
-                    <span class="label">
-                        Tokens
-                    </span>
-
-                    <span>
-                        ${Number(
-                            ugc.Price?.Tokens ?? 0
-                        ).toLocaleString(
-                            "pt-BR"
-                        )}
-                    </span>
-                </div>
-
-
-                <div class="row">
-                    <span class="label">
-                        Level
-                    </span>
-
-                    <span>
-                        ${ugc.RequiredLevel ?? 0}
-                    </span>
-                </div>
-
-
-                <div class="row">
-                    <span class="label">
-                        Status
-                    </span>
-
-                    <span class="${
-                        active
-                            ? "active"
-                            : "inactive"
-                    }">
-
-                        ${
-                            active
-                                ? "ATIVO"
-                                : "INATIVO"
-                        }
-
-                    </span>
-                </div>
-
-
-                <div class="row">
-                    <span class="label">
-                        Market
-                    </span>
-
-                    <span>
-                        ${ugc.MarketType ?? "-"}
-                    </span>
-                </div>
-
-
-                <div class="row">
-                    <span class="label">
-                        Stock
-                    </span>
-
-                    <span>
-                        ${ugc.MaxStock ?? "∞"}
-                    </span>
-                </div>
-
-
-                <pre>${escapeHtml(
-                    JSON.stringify(
-                        ugc,
-                        null,
-                        2
-                    )
-                )}</pre>
-
-            `;
-
-
-            container.appendChild(
-                card
-            );
-        }
-    }
-
 
     function escapeHtml(text) {
 
@@ -1789,6 +1515,244 @@
             );
     }
 
+
+    function mostrarLista(List) {
+
+    currentList = List;
+
+    const container =
+        document.getElementById("ugc-list");
+
+    const status =
+        document.getElementById("preview-status");
+
+    container.innerHTML = "";
+
+    const nomes =
+        Object.keys(List);
+
+    status.innerText =
+        `${nomes.length} UGCs carregados.`;
+
+    for (const nome of nomes) {
+
+        const ugc = List[nome];
+
+        const card =
+            document.createElement("div");
+
+        card.className = "ugc";
+
+        const active =
+            ugc.Active === true;
+
+        const roblox =
+            ugc.Roblox || null;
+
+        card.innerHTML = `
+
+            ${
+                roblox?.Thumbnail
+                    ? `
+                        <div class="ugc-image">
+                            <img
+                                src="${escapeHtml(roblox.Thumbnail)}"
+                                alt="${escapeHtml(
+                                    roblox.Name || nome
+                                )}"
+                                loading="lazy"
+                            >
+                        </div>
+                    `
+                    : `
+                        <div class="ugc-image no-image">
+                            <span>Sem imagem</span>
+                        </div>
+                    `
+            }
+
+            <h3>
+                ${escapeHtml(nome)}
+            </h3>
+
+            <div class="row">
+                <span class="label">
+                    ID
+                </span>
+
+                <span>
+                    ${ugc.IdUGC ?? "-"}
+                </span>
+            </div>
+
+            ${
+                roblox
+                    ? `
+
+                    <div class="row">
+                        <span class="label">
+                            Roblox
+                        </span>
+
+                        <span>
+                            ${escapeHtml(
+                                roblox.Name ?? "-"
+                            )}
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">
+                            Creator
+                        </span>
+
+                        <span>
+                            ${escapeHtml(
+                                roblox.Creator?.Name ?? "-"
+                            )}
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">
+                            Roblox Sale
+                        </span>
+
+                        <span class="${
+                            roblox.IsForSale
+                                ? "active"
+                                : "inactive"
+                        }">
+                            ${
+                                roblox.IsForSale
+                                    ? "À VENDA"
+                                    : "NÃO À VENDA"
+                            }
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">
+                            Limited
+                        </span>
+
+                        <span>
+                            ${
+                                roblox.IsLimited
+                                    ? "SIM"
+                                    : (
+                                        roblox.IsLimitedUnique
+                                            ? "UNIQUE"
+                                            : "NÃO"
+                                    )
+                            }
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <span class="label">
+                            Roblox Stock
+                        </span>
+
+                        <span>
+                            ${
+                                roblox
+                                    .CollectiblesItemDetails
+                                    ?.TotalQuantity
+                                ?? roblox.Remaining
+                                ?? "-"
+                            }
+                        </span>
+                    </div>
+
+                    `
+                    : ""
+            }
+
+            <div class="row">
+                <span class="label">
+                    Cash
+                </span>
+
+                <span>
+                    ${Number(
+                        ugc.Price?.Cash ?? 0
+                    ).toLocaleString("pt-BR")}
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Tokens
+                </span>
+
+                <span>
+                    ${Number(
+                        ugc.Price?.Tokens ?? 0
+                    ).toLocaleString("pt-BR")}
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Level
+                </span>
+
+                <span>
+                    ${ugc.RequiredLevel ?? 0}
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Status
+                </span>
+
+                <span class="${
+                    active
+                        ? "active"
+                        : "inactive"
+                }">
+                    ${
+                        active
+                            ? "ATIVO"
+                            : "INATIVO"
+                    }
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Market
+                </span>
+
+                <span>
+                    ${ugc.MarketType ?? "-"}
+                </span>
+            </div>
+
+            <div class="row">
+                <span class="label">
+                    Stock
+                </span>
+
+                <span>
+                    ${ugc.MaxStock ?? "∞"}
+                </span>
+            </div>
+
+            <pre>${escapeHtml(
+                JSON.stringify(
+                    ugc,
+                    null,
+                    2
+                )
+            )}</pre>
+        `;
+
+        container.appendChild(card);
+    }
+}
 
     /*
     ============================================================
