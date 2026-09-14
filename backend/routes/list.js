@@ -1,8 +1,8 @@
-// backend/routes/ugcs.js
+// backend/routes/list.js
 
 import { Router } from "express";
-import { db } from "../firebase.js";
-
+//import { db } from "../firebase.js"; // ADMIN
+import { db } from "../../../public/js/Auth.js"; // CLIENT
 const router = Router();
 
 router.get("/", async (req, res) => {
