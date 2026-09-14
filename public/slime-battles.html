@@ -1,0 +1,3007 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="theme-color"
+    content="#09120c"
+>
+
+<title>Slime Battles — Catálogo</title>
+
+
+<style>
+
+    :root {
+
+        --bg: #07100a;
+        --bg-2: #0a160d;
+
+        --panel: rgba(15, 28, 17, .86);
+        --panel-solid: #0d1a10;
+
+        --border: rgba(119, 255, 103, .13);
+
+        --text: #f4fff1;
+        --muted: #8fa58d;
+
+        --lime: #9cff57;
+        --lime-2: #62e638;
+
+        --green: #35d978;
+
+        --yellow: #ffe66d;
+        --red: #ff6472;
+        --blue: #61d9ff;
+
+        --shadow:
+            0 20px 70px rgba(0, 0, 0, .42);
+
+        --radius: 18px;
+    }
+
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+
+    body {
+
+        min-height: 100vh;
+
+        color: var(--text);
+
+        font-family:
+            Inter,
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        background:
+
+            radial-gradient(
+                circle at 15% 0%,
+                rgba(99, 255, 74, .13),
+                transparent 28%
+            ),
+
+            radial-gradient(
+                circle at 90% 10%,
+                rgba(177, 255, 70, .08),
+                transparent 24%
+            ),
+
+            radial-gradient(
+                circle at 50% 100%,
+                rgba(28, 128, 57, .08),
+                transparent 35%
+            ),
+
+            linear-gradient(
+                180deg,
+                var(--bg),
+                #050a06
+            );
+
+        overflow-x: hidden;
+    }
+
+
+    body::before {
+
+        content: "";
+
+        position: fixed;
+
+        inset: 0;
+
+        pointer-events: none;
+
+        opacity: .035;
+
+        background-image:
+            radial-gradient(
+                rgba(255,255,255,.7) 1px,
+                transparent 1px
+            );
+
+        background-size: 5px 5px;
+    }
+
+
+    button,
+    input {
+        font: inherit;
+    }
+
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    header {
+
+        position: sticky;
+
+        top: 0;
+
+        z-index: 100;
+
+        height: 72px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        padding: 0 5%;
+
+        background:
+            rgba(5, 12, 7, .78);
+
+        border-bottom:
+            1px solid var(--border);
+
+        backdrop-filter:
+            blur(18px);
+    }
+
+
+    .brand {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        font-weight: 900;
+
+        letter-spacing: -.3px;
+    }
+
+
+    .brand-icon {
+
+        width: 40px;
+        height: 40px;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 13px;
+
+        color: #071006;
+
+        font-size: 19px;
+
+        font-weight: 1000;
+
+        background:
+            linear-gradient(
+                135deg,
+                #c8ff70,
+                #54dc35
+            );
+
+        box-shadow:
+            0 0 30px
+            rgba(112, 255, 65, .18);
+    }
+
+
+    .brand-text {
+
+        line-height: 1.05;
+    }
+
+
+    .brand-text small {
+
+        display: block;
+
+        margin-bottom: 3px;
+
+        color: var(--muted);
+
+        font-size: 9px;
+
+        letter-spacing: 1.8px;
+
+        text-transform: uppercase;
+    }
+
+
+    .brand-text strong {
+
+        font-size: 17px;
+    }
+
+
+    .brand-text span {
+        color: var(--lime);
+    }
+
+
+    .header-link {
+
+        padding: 10px 15px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 10px;
+
+        color: var(--muted);
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        transition: .2s;
+    }
+
+
+    .header-link:hover {
+
+        color: var(--lime);
+
+        border-color:
+            rgba(156, 255, 87, .35);
+
+        background:
+            rgba(156, 255, 87, .05);
+    }
+
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+
+        position: relative;
+
+        max-width: 1380px;
+
+        margin: auto;
+
+        padding:
+            78px 5% 45px;
+    }
+
+
+    .hero::after {
+
+        content: "SLIME";
+
+        position: absolute;
+
+        right: 3%;
+
+        top: 45px;
+
+        z-index: -1;
+
+        color:
+            rgba(156, 255, 87, .025);
+
+        font-size:
+            clamp(90px, 18vw, 260px);
+
+        font-weight: 1000;
+
+        letter-spacing: -15px;
+
+        pointer-events: none;
+    }
+
+
+    .eyebrow {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        margin-bottom: 18px;
+
+        padding:
+            7px 11px;
+
+        border:
+            1px solid
+            rgba(156, 255, 87, .2);
+
+        border-radius: 999px;
+
+        background:
+            rgba(156, 255, 87, .045);
+
+        color: var(--lime);
+
+        font-size: 10px;
+
+        font-weight: 900;
+
+        letter-spacing: 1.2px;
+
+        text-transform: uppercase;
+    }
+
+
+    .live-dot {
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: var(--lime);
+
+        box-shadow:
+            0 0 10px var(--lime);
+    }
+
+
+    .hero h1 {
+
+        max-width: 850px;
+
+        font-size:
+            clamp(42px, 7vw, 82px);
+
+        line-height: .93;
+
+        letter-spacing: -4px;
+    }
+
+
+    .hero h1 span {
+        color: var(--lime);
+    }
+
+
+    .hero-description {
+
+        max-width: 650px;
+
+        margin-top: 20px;
+
+        color: var(--muted);
+
+        font-size: 15px;
+
+        line-height: 1.7;
+    }
+
+
+    /* =====================================================
+       FEATURED BAR
+    ===================================================== */
+
+    .stats {
+
+        max-width: 1380px;
+
+        margin:
+            0 auto 32px;
+
+        padding: 0 5%;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 12px;
+    }
+
+
+    .stat {
+
+        padding: 16px 18px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 14px;
+
+        background:
+            rgba(11, 23, 13, .62);
+
+        backdrop-filter:
+            blur(10px);
+    }
+
+
+    .stat-label {
+
+        color: var(--muted);
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        letter-spacing: 1px;
+
+        text-transform: uppercase;
+    }
+
+
+    .stat-value {
+
+        margin-top: 5px;
+
+        color: var(--text);
+
+        font-size: 21px;
+
+        font-weight: 900;
+    }
+
+
+    .stat-value.green {
+        color: var(--lime);
+    }
+
+
+    /* =====================================================
+       CONTROLS
+    ===================================================== */
+
+    .controls {
+
+        position: sticky;
+
+        top: 72px;
+
+        z-index: 80;
+
+        padding:
+            15px 5%;
+
+        border-top:
+            1px solid
+            rgba(255,255,255,.02);
+
+        border-bottom:
+            1px solid var(--border);
+
+        background:
+            rgba(6, 13, 8, .82);
+
+        backdrop-filter:
+            blur(18px);
+    }
+
+
+    .controls-inner {
+
+        max-width: 1380px;
+
+        margin: auto;
+
+        display: flex;
+
+        gap: 10px;
+
+        align-items: center;
+    }
+
+
+    .search {
+
+        position: relative;
+
+        flex: 1;
+    }
+
+
+    .search input {
+
+        width: 100%;
+
+        height: 44px;
+
+        padding:
+            0 15px 0 42px;
+
+        border:
+            1px solid var(--border);
+
+        outline: none;
+
+        border-radius: 11px;
+
+        background:
+            rgba(11, 23, 13, .9);
+
+        color: var(--text);
+
+        font-size: 13px;
+
+        transition: .2s;
+    }
+
+
+    .search input:focus {
+
+        border-color:
+            rgba(156, 255, 87, .42);
+
+        box-shadow:
+            0 0 0 3px
+            rgba(156, 255, 87, .055);
+    }
+
+
+    .search-icon {
+
+        position: absolute;
+
+        left: 15px;
+
+        top: 50%;
+
+        transform:
+            translateY(-50%);
+
+        color: var(--muted);
+
+        font-size: 15px;
+    }
+
+
+    .filter {
+
+        height: 44px;
+
+        padding:
+            0 14px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 11px;
+
+        background:
+            rgba(11, 23, 13, .9);
+
+        color: var(--muted);
+
+        cursor: pointer;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        transition: .2s;
+    }
+
+
+    .filter:hover,
+    .filter.active {
+
+        color: #081006;
+
+        border-color: var(--lime);
+
+        background: var(--lime);
+    }
+
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    main {
+
+        max-width: 1380px;
+
+        margin: auto;
+
+        padding:
+            35px 5% 80px;
+    }
+
+
+    .section-header {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: end;
+
+        gap: 20px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .section-title {
+
+        font-size: 24px;
+
+        font-weight: 950;
+
+        letter-spacing: -.7px;
+    }
+
+
+    .section-title span {
+        color: var(--lime);
+    }
+
+
+    .section-subtitle {
+
+        margin-top: 5px;
+
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+
+    .results {
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       GRID
+    ===================================================== */
+
+    #catalog {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(220px, 1fr)
+            );
+
+        gap: 18px;
+    }
+
+
+    /* =====================================================
+       CARD
+    ===================================================== */
+
+    .item-card {
+
+        position: relative;
+
+        overflow: hidden;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: var(--radius);
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(17, 32, 19, .95),
+                rgba(9, 18, 11, .96)
+            );
+
+        box-shadow: var(--shadow);
+
+        transition:
+            transform .25s,
+            border-color .25s,
+            box-shadow .25s;
+    }
+
+
+    .item-card:hover {
+
+        transform:
+            translateY(-7px);
+
+        border-color:
+            rgba(156, 255, 87, .35);
+
+        box-shadow:
+            0 28px 70px
+            rgba(0, 0, 0, .55);
+    }
+
+
+    .item-image {
+
+        position: relative;
+
+        aspect-ratio: 1 / 1;
+
+        overflow: hidden;
+
+        background:
+            radial-gradient(
+                circle,
+                #1a3020,
+                #09110b 72%
+            );
+    }
+
+
+    .item-image::after {
+
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        pointer-events: none;
+
+        background:
+            linear-gradient(
+                180deg,
+                transparent 60%,
+                rgba(0,0,0,.38)
+            );
+    }
+
+
+    .item-image img {
+
+        width: 100%;
+        height: 100%;
+
+        display: block;
+
+        object-fit: cover;
+
+        transition:
+            transform .45s;
+    }
+
+
+    .item-card:hover
+    .item-image img {
+
+        transform:
+            scale(1.065);
+    }
+
+
+    /* =====================================================
+       BADGES
+    ===================================================== */
+
+    .badges {
+
+        position: absolute;
+
+        top: 11px;
+        left: 11px;
+
+        z-index: 5;
+
+        display: flex;
+
+        gap: 6px;
+
+        flex-wrap: wrap;
+    }
+
+
+    .badge {
+
+        padding:
+            6px 8px;
+
+        border-radius: 7px;
+
+        background:
+            rgba(4, 10, 5, .83);
+
+        border:
+            1px solid
+            rgba(255,255,255,.07);
+
+        backdrop-filter:
+            blur(8px);
+
+        color: var(--text);
+
+        font-size: 9px;
+
+        font-weight: 950;
+
+        letter-spacing: .6px;
+
+        text-transform: uppercase;
+    }
+
+
+    .badge.free {
+
+        color: #071006;
+
+        border-color: var(--lime);
+
+        background: var(--lime);
+    }
+
+
+    .badge.limited {
+        color: var(--yellow);
+    }
+
+
+    .badge.sale {
+        color: var(--green);
+    }
+
+
+    /* =====================================================
+       PRICE
+    ===================================================== */
+
+    .price {
+
+        position: absolute;
+
+        right: 11px;
+        bottom: 11px;
+
+        z-index: 5;
+
+        padding:
+            7px 9px;
+
+        border-radius: 8px;
+
+        background:
+            rgba(4, 10, 5, .86);
+
+        backdrop-filter:
+            blur(8px);
+
+        color: var(--text);
+
+        font-size: 11px;
+
+        font-weight: 950;
+    }
+
+
+    .price.free {
+        color: var(--lime);
+    }
+
+
+    /* =====================================================
+       CARD CONTENT
+    ===================================================== */
+
+    .card-content {
+
+        padding: 15px;
+    }
+
+
+    .item-name {
+
+        min-height: 40px;
+
+        display: -webkit-box;
+
+        -webkit-box-orient: vertical;
+
+        -webkit-line-clamp: 2;
+
+        overflow: hidden;
+
+        color: var(--text);
+
+        font-size: 14px;
+
+        font-weight: 850;
+
+        line-height: 1.4;
+    }
+
+
+    .item-id {
+
+        margin-top: 7px;
+
+        color: #617460;
+
+        font-size: 10px;
+
+        font-family:
+            Consolas,
+            monospace;
+    }
+
+
+    .card-buttons {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr 42px;
+
+        gap: 7px;
+
+        margin-top: 13px;
+    }
+
+
+    .open-button {
+
+        min-height: 38px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 9px;
+
+        color: #071006;
+
+        background: var(--lime);
+
+        font-size: 11px;
+
+        font-weight: 950;
+
+        transition: .2s;
+    }
+
+
+    .open-button:hover {
+
+        background: #c5ff8c;
+
+        transform:
+            translateY(-1px);
+    }
+
+
+    .details-button {
+
+        min-height: 38px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 9px;
+
+        color: var(--muted);
+
+        background:
+            rgba(255,255,255,.015);
+
+        cursor: pointer;
+
+        transition: .2s;
+    }
+
+
+    .details-button:hover {
+
+        color: var(--lime);
+
+        border-color:
+            rgba(156, 255, 87, .35);
+    }
+
+
+    /* =====================================================
+       EMPTY / LOADING
+    ===================================================== */
+
+    .state {
+
+        min-height: 350px;
+
+        display: grid;
+
+        place-items: center;
+
+        text-align: center;
+
+        grid-column: 1 / -1;
+    }
+
+
+    .state-icon {
+
+        width: 62px;
+        height: 62px;
+
+        display: grid;
+
+        place-items: center;
+
+        margin: 0 auto 15px;
+
+        border-radius: 18px;
+
+        background:
+            rgba(156,255,87,.06);
+
+        border:
+            1px solid
+            rgba(156,255,87,.13);
+
+        color: var(--lime);
+
+        font-size: 24px;
+    }
+
+
+    .state h3 {
+
+        margin-bottom: 7px;
+
+        font-size: 18px;
+    }
+
+
+    .state p {
+
+        max-width: 420px;
+
+        color: var(--muted);
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+
+    .spinner {
+
+        width: 34px;
+        height: 34px;
+
+        margin: 0 auto 18px;
+
+        border:
+            3px solid
+            rgba(156,255,87,.1);
+
+        border-top-color:
+            var(--lime);
+
+        border-radius: 50%;
+
+        animation:
+            spin .8s linear infinite;
+    }
+
+
+    @keyframes spin {
+
+        to {
+            transform:
+                rotate(360deg);
+        }
+    }
+
+
+    /* =====================================================
+       MODAL
+    ===================================================== */
+
+    .modal {
+
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 300;
+
+        display: none;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 20px;
+
+        background:
+            rgba(0,0,0,.78);
+
+        backdrop-filter:
+            blur(12px);
+    }
+
+
+    .modal.active {
+        display: flex;
+    }
+
+
+    .modal-box {
+
+        width:
+            min(720px, 100%);
+
+        max-height: 90vh;
+
+        overflow-y: auto;
+
+        display: grid;
+
+        grid-template-columns:
+            280px 1fr;
+
+        gap: 25px;
+
+        padding: 22px;
+
+        border:
+            1px solid
+            rgba(156,255,87,.18);
+
+        border-radius: 22px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #102014,
+                #081009
+            );
+
+        box-shadow:
+            0 40px 120px
+            rgba(0,0,0,.7);
+    }
+
+
+    .modal-image {
+
+        aspect-ratio: 1 / 1;
+
+        overflow: hidden;
+
+        border-radius: 15px;
+
+        background:
+            #09110b;
+    }
+
+
+    .modal-image img {
+
+        width: 100%;
+        height: 100%;
+
+        object-fit: cover;
+    }
+
+
+    .modal-content {
+
+        min-width: 0;
+    }
+
+
+    .modal-top {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .modal-title {
+
+        font-size: 25px;
+
+        line-height: 1.15;
+    }
+
+
+    .close {
+
+        flex-shrink: 0;
+
+        width: 36px;
+        height: 36px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 9px;
+
+        background: transparent;
+
+        color: var(--muted);
+
+        cursor: pointer;
+
+        font-size: 20px;
+    }
+
+
+    .close:hover {
+
+        color: var(--red);
+
+        border-color:
+            rgba(255,100,114,.4);
+    }
+
+
+    .modal-description {
+
+        margin-bottom: 20px;
+
+        color: var(--muted);
+
+        font-size: 13px;
+
+        line-height: 1.65;
+    }
+
+
+    .details-list {
+
+        display: grid;
+
+        gap: 0;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 12px;
+
+        overflow: hidden;
+    }
+
+
+    .detail {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 11px 13px;
+
+        border-bottom:
+            1px solid var(--border);
+
+        font-size: 11px;
+    }
+
+
+    .detail:last-child {
+        border-bottom: 0;
+    }
+
+
+    .detail-label {
+        color: var(--muted);
+    }
+
+
+    .detail-value {
+
+        max-width: 60%;
+
+        text-align: right;
+
+        word-break: break-word;
+
+        font-weight: 800;
+    }
+
+
+    .modal-action {
+
+        display: block;
+
+        margin-top: 15px;
+
+        padding: 13px;
+
+        border-radius: 10px;
+
+        text-align: center;
+
+        color: #071006;
+
+        background: var(--lime);
+
+        font-size: 12px;
+
+        font-weight: 950;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+
+        padding:
+            35px 5%;
+
+        border-top:
+            1px solid var(--border);
+
+        text-align: center;
+
+        color: #657763;
+
+        font-size: 11px;
+    }
+
+
+    footer strong {
+        color: var(--lime);
+    }
+
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+        header {
+            height: 64px;
+        }
+
+
+        .header-link {
+            display: none;
+        }
+
+
+        .hero {
+
+            padding:
+                55px 5% 35px;
+        }
+
+
+        .hero h1 {
+
+            font-size:
+                clamp(42px, 14vw, 65px);
+
+            letter-spacing: -3px;
+        }
+
+
+        .hero-description {
+            font-size: 13px;
+        }
+
+
+        .stats {
+
+            grid-template-columns:
+                1fr 1fr;
+
+            padding:
+                0 5%;
+
+            margin-bottom: 22px;
+        }
+
+
+        .stats .stat:last-child {
+            grid-column: 1 / -1;
+        }
+
+
+        .controls {
+
+            top: 64px;
+
+            padding:
+                10px 5%;
+        }
+
+
+        .controls-inner {
+
+            flex-wrap: wrap;
+        }
+
+
+        .search {
+
+            flex-basis: 100%;
+        }
+
+
+        .filter {
+
+            flex: 1;
+        }
+
+
+        #catalog {
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 10px;
+        }
+
+
+        main {
+            padding-top: 25px;
+        }
+
+
+        .section-header {
+
+            align-items: start;
+        }
+
+
+        .section-title {
+            font-size: 20px;
+        }
+
+
+        .item-card {
+            border-radius: 13px;
+        }
+
+
+        .card-content {
+            padding: 10px;
+        }
+
+
+        .item-name {
+            min-height: 36px;
+            font-size: 12px;
+        }
+
+
+        .item-id {
+            font-size: 8px;
+        }
+
+
+        .open-button,
+        .details-button {
+
+            min-height: 34px;
+
+            font-size: 9px;
+        }
+
+
+        .card-buttons {
+
+            grid-template-columns:
+                1fr 34px;
+        }
+
+
+        .modal-box {
+
+            grid-template-columns: 1fr;
+
+            max-height: 92vh;
+
+            padding: 15px;
+        }
+
+
+        .modal-image {
+
+            max-width: 250px;
+
+            width: 100%;
+
+            margin: auto;
+        }
+
+    }
+
+
+    @media (max-width: 390px) {
+
+        #catalog {
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 7px;
+        }
+
+
+        .badges {
+            top: 6px;
+            left: 6px;
+        }
+
+
+        .badge {
+
+            padding: 4px 5px;
+
+            font-size: 7px;
+        }
+
+
+        .price {
+
+            right: 6px;
+            bottom: 6px;
+
+            padding: 5px 6px;
+
+            font-size: 9px;
+        }
+
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header>
+
+```
+<a
+    href="/"
+    class="brand"
+>
+
+    <div class="brand-icon">
+        S
+    </div>
+
+    <div class="brand-text">
+
+        <small>
+            Official Catalog
+        </small>
+
+        <strong>
+            SLIME <span>BATTLES</span>
+        </strong>
+
+    </div>
+
+</a>
+
+
+<a
+    href="https://www.roblox.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="header-link"
+>
+    Roblox
+</a>
+```
+
+</header>
+
+<!-- =========================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+```
+<div class="eyebrow">
+
+    <span class="live-dot"></span>
+
+    Catálogo do jogo
+
+</div>
+
+
+<h1>
+
+    Vista seu
+    <span>Slime.</span>
+
+</h1>
+
+
+<p class="hero-description">
+
+    Descubra os itens, acessórios e UGCs
+    disponíveis para a comunidade de
+    <strong>Slime Battles</strong>.
+    Encontre seu próximo visual e abra
+    diretamente no Roblox.
+
+</p>
+```
+
+</section>
+
+<!-- =========================================================
+     STATS
+========================================================= -->
+
+<section class="stats">
+
+```
+<div class="stat">
+
+    <div class="stat-label">
+        Itens no catálogo
+    </div>
+
+    <div
+        id="total-items"
+        class="stat-value green"
+    >
+        —
+    </div>
+
+</div>
+
+
+<div class="stat">
+
+    <div class="stat-label">
+        Gratuitos
+    </div>
+
+    <div
+        id="free-items"
+        class="stat-value"
+    >
+        —
+    </div>
+
+</div>
+
+
+<div class="stat">
+
+    <div class="stat-label">
+        Catálogo
+    </div>
+
+    <div class="stat-value">
+        SLIME BATTLES
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- =========================================================
+     CONTROLS
+========================================================= -->
+
+<section class="controls">
+
+```
+<div class="controls-inner">
+
+    <div class="search">
+
+        <span class="search-icon">
+            ⌕
+        </span>
+
+        <input
+            id="search"
+            type="search"
+            autocomplete="off"
+            placeholder="Pesquisar item..."
+        >
+
+    </div>
+
+
+    <button
+        class="filter active"
+        data-filter="all"
+        type="button"
+    >
+        Todos
+    </button>
+
+
+    <button
+        class="filter"
+        data-filter="free"
+        type="button"
+    >
+        Grátis
+    </button>
+
+
+    <button
+        class="filter"
+        data-filter="limited"
+        type="button"
+    >
+        Limited
+    </button>
+
+</div>
+```
+
+</section>
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main>
+
+```
+<div class="section-header">
+
+    <div>
+
+        <div class="section-title">
+            Catálogo <span>Slime Battles</span>
+        </div>
+
+        <div class="section-subtitle">
+            Itens disponíveis para os jogadores
+        </div>
+
+    </div>
+
+
+    <div
+        id="results"
+        class="results"
+    >
+        Carregando...
+    </div>
+
+</div>
+
+
+<div id="catalog">
+
+    <div class="state">
+
+        <div>
+
+            <div class="spinner"></div>
+
+            <h3>
+                Carregando catálogo
+            </h3>
+
+            <p>
+                Buscando os itens disponíveis
+                para Slime Battles...
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</main>
+
+<!-- =========================================================
+     MODAL
+========================================================= -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+```
+<div class="modal-box">
+
+    <div class="modal-image">
+
+        <img
+            id="modal-image"
+            src=""
+            alt=""
+        >
+
+    </div>
+
+
+    <div class="modal-content">
+
+        <div class="modal-top">
+
+            <h2
+                id="modal-title"
+                class="modal-title"
+            >
+                Item
+            </h2>
+
+
+            <button
+                id="close-modal"
+                class="close"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <p
+            id="modal-description"
+            class="modal-description"
+        >
+        </p>
+
+
+        <div
+            id="modal-details"
+            class="details-list"
+        ></div>
+
+
+        <a
+            id="modal-roblox"
+            class="modal-action"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            VER NO ROBLOX
+        </a>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+```
+<strong>SLIME BATTLES</strong>
+
+&nbsp;•&nbsp;
+
+Catálogo oficial da comunidade
+```
+
+</footer>
+
+<script type="module">
+
+
+/* =========================================================
+   CONFIG
+========================================================= */
+
+const API_URL =
+    "https://mod-ui.vercel.app/list?live=false&type=http";
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let items = [];
+
+let activeFilter = "all";
+
+let searchTerm = "";
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const catalog =
+    document.getElementById(
+        "catalog"
+    );
+
+
+const search =
+    document.getElementById(
+        "search"
+    );
+
+
+const results =
+    document.getElementById(
+        "results"
+    );
+
+
+const totalItems =
+    document.getElementById(
+        "total-items"
+    );
+
+
+const freeItems =
+    document.getElementById(
+        "free-items"
+    );
+
+
+const modal =
+    document.getElementById(
+        "modal"
+    );
+
+
+const modalImage =
+    document.getElementById(
+        "modal-image"
+    );
+
+
+const modalTitle =
+    document.getElementById(
+        "modal-title"
+    );
+
+
+const modalDescription =
+    document.getElementById(
+        "modal-description"
+    );
+
+
+const modalDetails =
+    document.getElementById(
+        "modal-details"
+    );
+
+
+const modalRoblox =
+    document.getElementById(
+        "modal-roblox"
+    );
+
+
+const closeModal =
+    document.getElementById(
+        "close-modal"
+    );
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
+    }
+
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+function getId(item) {
+
+    return (
+        item?.IdUGC ??
+        item?.AssetId ??
+        item?.assetId ??
+        item?.TargetId ??
+        item?.id ??
+        item?.Id ??
+        null
+    );
+
+}
+
+
+function getName(item) {
+
+    return (
+        item?.Nome ??
+        item?.Name ??
+        item?.name ??
+        item?.Roblox?.Nome ??
+        item?.Roblox?.Name ??
+        item?.Roblox?.name ??
+        "Item sem nome"
+    );
+
+}
+
+
+function getImage(item) {
+
+    return (
+        item?.Thumbnail ??
+        item?.thumbnail ??
+        item?.Image ??
+        item?.image ??
+        item?.Roblox?.Thumbnail ??
+        item?.Roblox?.thumbnail ??
+        item?.Roblox?.Image ??
+        null
+    );
+
+}
+
+
+function getPrice(item) {
+
+    const collectible =
+        item?.CollectiblesItemDetails ||
+        item?.Roblox?.CollectiblesItemDetails ||
+        {};
+
+
+    return (
+        item?.Preco ??
+        item?.Price ??
+        item?.PriceInRobux ??
+        item?.price ??
+        collectible?.Price ??
+        collectible?.price ??
+        item?.Roblox?.Price ??
+        item?.Roblox?.PriceInRobux ??
+        item?.Roblox?.price ??
+        null
+    );
+
+}
+
+
+function getDescription(item) {
+
+    return (
+        item?.Description ??
+        item?.description ??
+        item?.Roblox?.Description ??
+        "Item do catálogo de Slime Battles."
+    );
+
+}
+
+
+function getData(item) {
+
+    return (
+        item?.data ??
+        item
+    );
+
+}
+
+
+/* =========================================================
+   NORMALIZE
+========================================================= */
+
+function normalizeItem(item, key = null) {
+
+    if (
+        !item ||
+        typeof item !== "object"
+    ) {
+        return null;
+    }
+
+
+    const id =
+        getId(item) ||
+        key;
+
+
+    if (!id) {
+        return null;
+    }
+
+
+    return {
+
+        original: item,
+
+        id: String(id),
+
+        name: getName(item),
+
+        image: getImage(item),
+
+        price: getPrice(item),
+
+        description:
+            getDescription(item)
+
+    };
+
+}
+
+
+/* =========================================================
+   EXTRACT LIST
+========================================================= */
+
+function extractList(json) {
+
+    if (!json) {
+        return [];
+    }
+
+
+    /*
+     * Aceita vários formatos
+     * para manter compatibilidade
+     * com seu endpoint.
+     */
+
+    const source =
+        json.data ??
+        json.items ??
+        json.array ??
+        json.list ??
+        json;
+
+
+    if (Array.isArray(source)) {
+
+        return source
+            .map(
+                (item, index) =>
+                    normalizeItem(
+                        item,
+                        index
+                    )
+            )
+            .filter(Boolean);
+
+    }
+
+
+    if (
+        source &&
+        typeof source === "object"
+    ) {
+
+        /*
+         * Caso a API devolva:
+         *
+         * {
+         *   "123": {...},
+         *   "456": {...}
+         * }
+         */
+
+        return Object.entries(source)
+            .map(
+                ([key, value]) =>
+                    normalizeItem(
+                        value,
+                        key
+                    )
+            )
+            .filter(Boolean);
+
+    }
+
+
+    return [];
+
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+function imageUrl(item) {
+
+    if (item.image) {
+
+        return item.image;
+
+    }
+
+
+    return (
+        "https://tr.rbxcdn.com/" +
+        item.id +
+        "/420/420/Image/Png"
+    );
+
+}
+
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+function priceInfo(item) {
+
+    const price =
+        Number(item.price);
+
+
+    if (
+        item.price === null ||
+        item.price === undefined ||
+        Number.isNaN(price)
+    ) {
+
+        return {
+            label: "Ver item",
+            free: false
+        };
+
+    }
+
+
+    if (price === 0) {
+
+        return {
+            label: "GRÁTIS",
+            free: true
+        };
+
+    }
+
+
+    return {
+
+        label:
+            `${price.toLocaleString("pt-BR")} R$`,
+
+        free: false
+
+    };
+
+}
+
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+async function loadCatalog() {
+
+    try {
+
+        const response =
+            await fetch(
+                API_URL,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                `HTTP ${response.status}`
+            );
+
+        }
+
+
+        const json =
+            await response.json();
+
+
+        items =
+            extractList(json);
+
+
+        totalItems.textContent =
+            items.length;
+
+
+        freeItems.textContent =
+            items.filter(
+                item =>
+                    Number(item.price) === 0
+            ).length;
+
+
+        render();
+
+    } catch (error) {
+
+        console.error(
+            "[Slime Battles Catalog]",
+            error
+        );
+
+
+        catalog.innerHTML = `
+
+            <div class="state">
+
+                <div>
+
+                    <div class="state-icon">
+                        !
+                    </div>
+
+                    <h3>
+                        Catálogo indisponível
+                    </h3>
+
+                    <p>
+                        Não foi possível carregar
+                        os itens agora. Tente novamente
+                        em alguns instantes.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        results.textContent =
+            "Erro ao carregar";
+
+    }
+
+}
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredItems() {
+
+    const term =
+        searchTerm
+            .toLowerCase()
+            .trim();
+
+
+    return items.filter(item => {
+
+        const matchesSearch =
+            !term ||
+            item.name
+                .toLowerCase()
+                .includes(term) ||
+            item.id
+                .includes(term);
+
+
+        if (!matchesSearch) {
+            return false;
+        }
+
+
+        if (
+            activeFilter === "free"
+        ) {
+
+            return Number(item.price) === 0;
+
+        }
+
+
+        if (
+            activeFilter === "limited"
+        ) {
+
+            const data =
+                getData(
+                    item.original
+                );
+
+
+            return (
+                data.IsLimited === true ||
+                data.IsLimitedUnique === true ||
+                data.Limited === true
+            );
+
+        }
+
+
+        return true;
+
+    });
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render() {
+
+    const filtered =
+        getFilteredItems();
+
+
+    results.textContent =
+        `${filtered.length} itens`;
+
+
+    if (!filtered.length) {
+
+        catalog.innerHTML = `
+
+            <div class="state">
+
+                <div>
+
+                    <div class="state-icon">
+                        ?
+                    </div>
+
+                    <h3>
+                        Nenhum item encontrado
+                    </h3>
+
+                    <p>
+                        Tente pesquisar outro nome
+                        ou remover os filtros.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    catalog.innerHTML = "";
+
+
+    filtered.forEach(
+        item => {
+
+            catalog.appendChild(
+                createCard(item)
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+function createCard(item) {
+
+    const card =
+        document.createElement(
+            "article"
+        );
+
+
+    card.className =
+        "item-card";
+
+
+    const price =
+        priceInfo(item);
+
+
+    const data =
+        getData(
+            item.original
+        );
+
+
+    const isLimited =
+        data.IsLimited === true ||
+        data.IsLimitedUnique === true ||
+        data.Limited === true;
+
+
+    const image =
+        imageUrl(item);
+
+
+    card.innerHTML = `
+
+        <div class="item-image">
+
+            <img
+                src="${escapeHtml(image)}"
+                alt="${escapeHtml(item.name)}"
+                loading="lazy"
+                onerror="
+                    this.style.display='none';
+                "
+            >
+
+
+            <div class="badges">
+
+                ${
+                    price.free
+
+                        ? `
+                            <span class="badge free">
+                                FREE
+                            </span>
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    isLimited
+
+                        ? `
+                            <span class="badge limited">
+                                LIMITED
+                            </span>
+                        `
+
+                        : ""
+                }
+
+            </div>
+
+
+            <div
+                class="price
+                ${price.free ? "free" : ""}"
+            >
+                ${escapeHtml(price.label)}
+            </div>
+
+        </div>
+
+
+        <div class="card-content">
+
+            <div class="item-name">
+                ${escapeHtml(item.name)}
+            </div>
+
+
+            <div class="item-id">
+                #${escapeHtml(item.id)}
+            </div>
+
+
+            <div class="card-buttons">
+
+                <a
+                    class="open-button"
+                    href="${robloxLink(item.id)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    VER NO ROBLOX
+                </a>
+
+
+                <button
+                    class="details-button"
+                    type="button"
+                    aria-label="Detalhes"
+                >
+                    ⋯
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    const details =
+        card.querySelector(
+            ".details-button"
+        );
+
+
+    details.addEventListener(
+        "click",
+        () =>
+            openModal(item)
+    );
+
+
+    return card;
+
+}
+
+
+/* =========================================================
+   ROBLOX
+========================================================= */
+
+function robloxLink(id) {
+
+    return (
+        "https://www.roblox.com/catalog/" +
+        encodeURIComponent(id)
+    );
+
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+function openModal(item) {
+
+    const data =
+        getData(
+            item.original
+        );
+
+
+    modalTitle.textContent =
+        item.name;
+
+
+    modalImage.src =
+        imageUrl(item);
+
+
+    modalImage.alt =
+        item.name;
+
+
+    modalDescription.textContent =
+        item.description;
+
+
+    modalDetails.innerHTML =
+        "";
+
+
+    addDetail(
+        "Asset ID",
+        item.id
+    );
+
+
+    if (
+        item.price !== null &&
+        item.price !== undefined
+    ) {
+
+        addDetail(
+            "Preço",
+            Number(item.price) === 0
+                ? "Grátis"
+                : `${item.price} Robux`
+        );
+
+    }
+
+
+    if (data.Creator) {
+
+        addDetail(
+            "Criador",
+            data.Creator.Name ||
+            data.Creator.Id ||
+            "N/A"
+        );
+
+    }
+
+
+    if (
+        data.ProductType
+    ) {
+
+        addDetail(
+            "Tipo",
+            data.ProductType
+        );
+
+    }
+
+
+    if (
+        data.IsLimited !== undefined
+    ) {
+
+        addDetail(
+            "Limited",
+            data.IsLimited
+                ? "Sim"
+                : "Não"
+        );
+
+    }
+
+
+    if (
+        data.Sales !== undefined
+    ) {
+
+        addDetail(
+            "Vendas",
+            data.Sales
+        );
+
+    }
+
+
+    if (
+        data.Remaining !== undefined
+    ) {
+
+        addDetail(
+            "Restante",
+            data.Remaining
+        );
+
+    }
+
+
+    modalRoblox.href =
+        robloxLink(item.id);
+
+
+    modal.classList.add(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+function addDetail(
+    label,
+    value
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "detail";
+
+
+    row.innerHTML = `
+
+        <span class="detail-label">
+            ${escapeHtml(label)}
+        </span>
+
+        <span class="detail-value">
+            ${escapeHtml(value)}
+        </span>
+
+    `;
+
+
+    modalDetails.appendChild(
+        row
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeDetails() {
+
+    modal.classList.remove(
+        "active"
+    );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+closeModal.addEventListener(
+    "click",
+    closeDetails
+);
+
+
+modal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target === modal
+        ) {
+
+            closeDetails();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            closeDetails();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+search.addEventListener(
+    "input",
+    event => {
+
+        searchTerm =
+            event.target.value;
+
+        render();
+
+    }
+);
+
+
+/* =========================================================
+   FILTER BUTTONS
+========================================================= */
+
+document
+    .querySelectorAll(
+        ".filter"
+    )
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    document
+                        .querySelectorAll(
+                            ".filter"
+                        )
+                        .forEach(
+                            item =>
+                                item.classList
+                                    .remove(
+                                        "active"
+                                    )
+                        );
+
+
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    activeFilter =
+                        button.dataset.filter;
+
+
+                    render();
+
+                }
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadCatalog();
+
+
+</script>
+
+</body>
+
+</html>
