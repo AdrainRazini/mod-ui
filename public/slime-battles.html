@@ -37,18 +37,29 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             background:
-                radial-gradient(circle at 50% -20%, rgba(41, 230, 255, .09), transparent 40%),
+                radial-gradient(
+                    circle at 50% -20%,
+                    rgba(41, 230, 255, .10),
+                    transparent 40%
+                ),
                 var(--bg);
+
             color: var(--text);
             min-height: 100vh;
         }
 
-        /* HEADER */
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
 
         header {
             height: 70px;
+
             border-bottom: 1px solid var(--border);
+
             background: rgba(7, 10, 13, .92);
+
             backdrop-filter: blur(15px);
 
             display: flex;
@@ -56,10 +67,13 @@
             justify-content: space-between;
 
             padding: 0 5%;
+
             position: sticky;
             top: 0;
+
             z-index: 20;
         }
+
 
         .brand {
             display: flex;
@@ -67,9 +81,11 @@
             gap: 12px;
         }
 
+
         .logo {
             width: 38px;
             height: 38px;
+
             border-radius: 11px;
 
             display: flex;
@@ -77,23 +93,32 @@
             justify-content: center;
 
             background: var(--cyan-soft);
-            border: 1px solid rgba(41, 230, 255, .3);
+
+            border: 1px solid
+                rgba(41, 230, 255, .3);
 
             color: var(--cyan);
-            font-size: 18px;
+
+            font-size: 14px;
             font-weight: bold;
         }
 
+
         .brand-text strong {
             display: block;
+
             font-size: 15px;
+
             letter-spacing: .8px;
         }
 
+
         .brand-text span {
             color: var(--muted);
+
             font-size: 11px;
         }
+
 
         .api-status {
             display: flex;
@@ -101,133 +126,205 @@
             gap: 8px;
 
             color: var(--muted);
+
             font-size: 12px;
         }
+
 
         .status-dot {
             width: 7px;
             height: 7px;
+
             border-radius: 50%;
+
             background: var(--green);
-            box-shadow: 0 0 10px rgba(85, 245, 154, .7);
+
+            box-shadow:
+                0 0 10px
+                rgba(85, 245, 154, .7);
         }
 
-        /* MAIN */
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
 
         main {
             width: min(1450px, 90%);
+
             margin: auto;
-            padding: 55px 0 80px;
+
+            padding:
+                55px 0
+                80px;
         }
+
 
         .hero {
             margin-bottom: 35px;
         }
 
+
         .hero-label {
             display: inline-flex;
+
             padding: 7px 11px;
+
             border-radius: 7px;
 
             background: var(--cyan-soft);
-            border: 1px solid rgba(41, 230, 255, .2);
+
+            border: 1px solid
+                rgba(41, 230, 255, .2);
 
             color: var(--cyan);
+
             font-size: 11px;
+
             font-weight: bold;
+
             letter-spacing: 1px;
 
             margin-bottom: 16px;
         }
 
+
         h1 {
-            font-size: clamp(32px, 5vw, 58px);
+            font-size:
+                clamp(32px, 5vw, 58px);
+
             line-height: 1;
+
             letter-spacing: -2px;
+
             margin-bottom: 16px;
         }
 
+
         .hero p {
             max-width: 700px;
+
             color: var(--muted);
+
             line-height: 1.7;
+
             font-size: 14px;
         }
 
-        /* STATS */
+
+        /* =========================================================
+           STATS
+        ========================================================= */
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 12px;
 
             margin-bottom: 25px;
         }
 
+
         .stat {
             background: var(--panel);
+
             border: 1px solid var(--border);
+
             border-radius: var(--radius);
 
             padding: 18px 20px;
         }
 
+
         .stat-label {
             color: var(--muted);
+
             font-size: 11px;
+
             text-transform: uppercase;
+
             letter-spacing: .8px;
         }
 
+
         .stat-value {
             font-size: 24px;
+
             font-weight: bold;
+
             margin-top: 6px;
         }
 
-        /* CONTROLS */
+
+        /* =========================================================
+           CONTROLS
+        ========================================================= */
 
         .controls {
             display: flex;
+
             gap: 10px;
+
             flex-wrap: wrap;
 
             margin-bottom: 30px;
         }
 
+
         .search {
             flex: 1;
-            min-width: 250px;
 
-            position: relative;
+            min-width: 250px;
         }
+
 
         .search input {
             width: 100%;
+
             height: 46px;
 
             padding: 0 16px;
 
             background: var(--panel);
+
             border: 1px solid var(--border);
+
             border-radius: 10px;
 
             color: var(--text);
+
             outline: none;
 
             transition: .2s;
         }
 
-        .search input:focus {
-            border-color: rgba(41, 230, 255, .55);
-            box-shadow: 0 0 0 3px rgba(41, 230, 255, .06);
+
+        .search input::placeholder {
+            color: #5e6b75;
         }
+
+
+        .search input:focus {
+            border-color:
+                rgba(41, 230, 255, .55);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(41, 230, 255, .06);
+        }
+
 
         .filters {
             display: flex;
+
             gap: 7px;
+
             flex-wrap: wrap;
         }
+
 
         .filter {
             height: 46px;
@@ -235,59 +332,89 @@
             padding: 0 14px;
 
             background: var(--panel);
+
             border: 1px solid var(--border);
+
             border-radius: 10px;
 
             color: var(--muted);
+
             cursor: pointer;
 
             transition: .2s;
         }
 
+
         .filter:hover {
             color: var(--text);
+
             border-color: #33434f;
         }
 
+
         .filter.active {
             background: var(--cyan-soft);
-            border-color: rgba(41, 230, 255, .4);
+
+            border-color:
+                rgba(41, 230, 255, .4);
+
             color: var(--cyan);
         }
 
-        /* CATALOG */
+
+        /* =========================================================
+           CATALOG HEADER
+        ========================================================= */
 
         .catalog-header {
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
 
             margin-bottom: 14px;
         }
 
+
         .catalog-header h2 {
             font-size: 16px;
         }
 
+
         .catalog-count {
             color: var(--muted);
+
             font-size: 12px;
         }
+
+
+        /* =========================================================
+           GRID
+        ========================================================= */
 
         .grid {
             display: grid;
 
             grid-template-columns:
-                repeat(auto-fill, minmax(220px, 1fr));
+                repeat(
+                    auto-fill,
+                    minmax(220px, 1fr)
+                );
 
             gap: 14px;
         }
 
-        /* CARD */
+
+        /* =========================================================
+           CARD
+        ========================================================= */
 
         .card {
             background: var(--panel);
+
             border: 1px solid var(--border);
+
             border-radius: var(--radius);
 
             overflow: hidden;
@@ -300,160 +427,240 @@
                 box-shadow .2s;
         }
 
+
         .card:hover {
             transform: translateY(-3px);
-            border-color: rgba(41, 230, 255, .3);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, .3);
+
+            border-color:
+                rgba(41, 230, 255, .3);
+
+            box-shadow:
+                0 12px 35px
+                rgba(0, 0, 0, .3);
         }
+
 
         .thumbnail {
             height: 220px;
 
             background:
-                radial-gradient(circle, rgba(41, 230, 255, .08), transparent 65%),
+                radial-gradient(
+                    circle,
+                    rgba(41, 230, 255, .08),
+                    transparent 65%
+                ),
                 #080c10;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             position: relative;
         }
 
+
         .thumbnail img {
             width: 100%;
+
             height: 100%;
+
             object-fit: contain;
 
             padding: 15px;
 
             opacity: 0;
 
-            transition: opacity .25s;
+            transition:
+                opacity .25s;
         }
+
 
         .thumbnail img.loaded {
             opacity: 1;
         }
 
+
         .loading-thumb {
+            position: absolute;
+
             color: var(--muted);
+
             font-size: 11px;
+
+            z-index: 1;
         }
+
 
         .badges {
             position: absolute;
+
             top: 10px;
             left: 10px;
 
             display: flex;
+
             gap: 5px;
+
             flex-wrap: wrap;
+
+            z-index: 3;
         }
+
 
         .badge {
             padding: 5px 7px;
 
             border-radius: 6px;
 
-            background: rgba(7, 10, 13, .85);
+            background:
+                rgba(7, 10, 13, .88);
+
             border: 1px solid var(--border);
 
             font-size: 9px;
+
             font-weight: bold;
+
             letter-spacing: .5px;
         }
 
+
         .badge.green {
             color: var(--green);
-            border-color: rgba(85, 245, 154, .25);
+
+            border-color:
+                rgba(85, 245, 154, .25);
         }
+
 
         .badge.red {
             color: var(--red);
-            border-color: rgba(255, 93, 108, .25);
+
+            border-color:
+                rgba(255, 93, 108, .25);
         }
+
 
         .badge.yellow {
             color: var(--yellow);
-            border-color: rgba(255, 212, 90, .25);
+
+            border-color:
+                rgba(255, 212, 90, .25);
         }
+
 
         .badge.purple {
             color: var(--purple);
-            border-color: rgba(169, 112, 255, .25);
+
+            border-color:
+                rgba(169, 112, 255, .25);
         }
+
 
         .card-content {
             padding: 15px;
         }
 
+
         .card-name {
             font-weight: bold;
+
             font-size: 14px;
 
             white-space: nowrap;
+
             overflow: hidden;
+
             text-overflow: ellipsis;
 
             margin-bottom: 8px;
         }
 
+
         .level {
             color: var(--muted);
+
             font-size: 11px;
 
             margin-bottom: 13px;
         }
 
+
+        .level strong {
+            color: var(--text);
+        }
+
+
         .prices {
             display: flex;
+
             flex-direction: column;
+
             gap: 5px;
         }
 
+
         .price {
             display: flex;
+
             justify-content: space-between;
 
             font-size: 11px;
         }
 
+
         .price span {
             color: var(--muted);
         }
+
 
         .price strong {
             color: var(--text);
         }
 
+
         .price.robux strong {
             color: var(--yellow);
         }
 
+
         .card-footer {
             margin-top: 14px;
+
             padding-top: 11px;
 
-            border-top: 1px solid var(--border);
+            border-top:
+                1px solid var(--border);
 
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
         }
 
+
         .market-type {
             color: var(--muted);
+
             font-size: 10px;
+
             text-transform: uppercase;
         }
 
+
         .stock {
             font-size: 10px;
+
             color: var(--muted);
         }
 
-        /* EMPTY */
+
+        /* =========================================================
+           EMPTY
+        ========================================================= */
 
         .empty {
             grid-column: 1 / -1;
@@ -463,30 +670,43 @@
             text-align: center;
 
             background: var(--panel);
-            border: 1px dashed var(--border);
+
+            border:
+                1px dashed var(--border);
+
             border-radius: var(--radius);
 
             color: var(--muted);
         }
 
+
         .empty strong {
             display: block;
+
             color: var(--text);
+
             margin-bottom: 7px;
         }
 
-        /* MODAL */
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
 
         .modal {
             position: fixed;
+
             inset: 0;
 
-            background: rgba(0, 0, 0, .75);
+            background:
+                rgba(0, 0, 0, .78);
 
             backdrop-filter: blur(8px);
 
             display: none;
+
             align-items: center;
+
             justify-content: center;
 
             padding: 20px;
@@ -494,96 +714,173 @@
             z-index: 100;
         }
 
+
         .modal.open {
             display: flex;
         }
 
+
         .modal-box {
-            width: min(850px, 100%);
+            width:
+                min(850px, 100%);
+
             max-height: 90vh;
 
             overflow-y: auto;
 
             background: var(--panel);
-            border: 1px solid var(--border);
+
+            border:
+                1px solid var(--border);
+
             border-radius: 18px;
 
-            box-shadow: 0 30px 100px rgba(0, 0, 0, .6);
+            box-shadow:
+                0 30px 100px
+                rgba(0, 0, 0, .6);
+
+            position: relative;
         }
+
 
         .modal-top {
             display: grid;
-            grid-template-columns: 300px 1fr;
+
+            grid-template-columns:
+                300px 1fr;
 
             gap: 25px;
 
             padding: 25px;
         }
 
+
         .modal-image {
             height: 300px;
 
             border-radius: 12px;
 
-            background: #080c10;
-            border: 1px solid var(--border);
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(41, 230, 255, .08),
+                    transparent 70%
+                ),
+                #080c10;
+
+            border:
+                1px solid var(--border);
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
+            position: relative;
         }
+
 
         .modal-image img {
             width: 100%;
+
             height: 100%;
+
             object-fit: contain;
+
             padding: 15px;
+
+            opacity: 0;
+
+            transition:
+                opacity .25s;
         }
+
+
+        .modal-image img.loaded {
+            opacity: 1;
+        }
+
+
+        .modal-image-loading {
+            position: absolute;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
 
         .modal-info h2 {
             font-size: 24px;
+
             margin-bottom: 12px;
         }
 
+
         .modal-description {
             color: var(--muted);
+
             font-size: 12px;
+
             line-height: 1.7;
 
             margin-bottom: 20px;
         }
 
+
         .detail-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
             gap: 8px;
         }
 
+
         .detail {
             background: var(--panel-2);
-            border: 1px solid var(--border);
+
+            border:
+                1px solid var(--border);
+
             border-radius: 9px;
 
             padding: 11px;
+
+            overflow: hidden;
         }
+
 
         .detail small {
             display: block;
+
             color: var(--muted);
+
             font-size: 9px;
 
             margin-bottom: 4px;
         }
 
+
         .detail strong {
             font-size: 12px;
+
+            word-break: break-word;
         }
+
 
         .modal-actions {
             display: flex;
+
             gap: 8px;
-            padding: 0 25px 25px;
+
+            padding:
+                0 25px
+                25px;
         }
+
 
         .button {
             flex: 1;
@@ -593,55 +890,84 @@
             border-radius: 9px;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             text-decoration: none;
 
             font-size: 12px;
+
             font-weight: bold;
 
             transition: .2s;
         }
 
+
         .button.primary {
             background: var(--cyan);
+
             color: #031014;
         }
+
 
         .button.primary:hover {
             filter: brightness(1.1);
         }
 
+
         .button.secondary {
             background: var(--panel-2);
-            border: 1px solid var(--border);
+
+            border:
+                1px solid var(--border);
+
             color: var(--text);
         }
+
 
         .button.secondary:hover {
             border-color: #394b58;
         }
 
+
         .close {
             position: absolute;
-            top: 18px;
-            right: 18px;
+
+            top: 15px;
+            right: 15px;
 
             width: 35px;
             height: 35px;
 
             border-radius: 8px;
 
-            background: rgba(0, 0, 0, .4);
-            border: 1px solid var(--border);
+            background:
+                rgba(0, 0, 0, .55);
+
+            border:
+                1px solid var(--border);
 
             color: var(--text);
 
             cursor: pointer;
+
+            z-index: 5;
         }
 
-        /* RESPONSIVE */
+
+        .close:hover {
+            border-color:
+                rgba(41, 230, 255, .4);
+
+            color: var(--cyan);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
 
         @media(max-width: 700px) {
 
@@ -649,23 +975,29 @@
                 grid-template-columns: 1fr;
             }
 
+
             .modal-top {
                 grid-template-columns: 1fr;
             }
 
+
             .modal-image {
                 height: 240px;
             }
+
 
             .grid {
                 grid-template-columns:
                     repeat(2, minmax(0, 1fr));
             }
 
+
             .thumbnail {
                 height: 170px;
             }
+
         }
+
 
         @media(max-width: 450px) {
 
@@ -673,22 +1005,44 @@
                 width: 94%;
             }
 
+
             .grid {
                 grid-template-columns: 1fr;
             }
+
 
             .thumbnail {
                 height: 230px;
             }
 
+
             .api-status {
                 display: none;
             }
+
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .modal-actions {
+                flex-direction: column;
+            }
+
         }
+
     </style>
+
 </head>
 
+
 <body>
+
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
 
 <header>
 
@@ -699,21 +1053,40 @@
         </div>
 
         <div class="brand-text">
-            <strong>SLIME BATTLES</strong>
-            <span>UGC MARKET</span>
+
+            <strong>
+                SLIME BATTLES
+            </strong>
+
+            <span>
+                UGC MARKET
+            </span>
+
         </div>
 
     </div>
 
+
     <div class="api-status">
+
         <span class="status-dot"></span>
+
         API conectada
+
     </div>
 
 </header>
 
 
+
+<!-- ============================================================
+     MAIN
+============================================================ -->
+
 <main>
+
+
+    <!-- HERO -->
 
     <section class="hero">
 
@@ -721,62 +1094,90 @@
             SLIME BATTLES • UGC
         </div>
 
+
         <h1>
             UGC Market
         </h1>
 
+
         <p>
-            Explore os UGCs disponíveis no Slime Battles.
-            Veja requisitos, preços, estoque, status e informações
-            oficiais de cada item.
+            Explore os UGCs disponíveis no
+            Slime Battles. Veja requisitos,
+            preços, estoque, status e
+            informações de cada item.
         </p>
 
     </section>
 
 
+
+    <!-- STATS -->
+
     <section class="stats">
 
         <div class="stat">
+
             <div class="stat-label">
                 UGCs cadastrados
             </div>
 
-            <div class="stat-value" id="total">
+            <div
+                class="stat-value"
+                id="total"
+            >
                 —
             </div>
+
         </div>
 
+
         <div class="stat">
+
             <div class="stat-label">
                 Disponíveis
             </div>
 
-            <div class="stat-value" id="available">
+            <div
+                class="stat-value"
+                id="available"
+            >
                 —
             </div>
+
         </div>
 
+
         <div class="stat">
+
             <div class="stat-label">
                 Limited
             </div>
 
-            <div class="stat-value" id="limited">
+            <div
+                class="stat-value"
+                id="limited"
+            >
                 —
             </div>
+
         </div>
 
     </section>
 
 
+
+    <!-- CONTROLS -->
+
     <section class="controls">
+
 
         <div class="search">
 
             <input
                 id="search"
                 type="text"
-                placeholder="Pesquisar UGC por nome ou Asset ID..."
+                placeholder="Pesquisar por nome ou Asset ID..."
+                autocomplete="off"
             >
 
         </div>
@@ -791,12 +1192,14 @@
                 Todos
             </button>
 
+
             <button
                 class="filter"
                 data-filter="available"
             >
                 Disponíveis
             </button>
+
 
             <button
                 class="filter"
@@ -805,12 +1208,14 @@
                 Purchase
             </button>
 
+
             <button
                 class="filter"
                 data-filter="limited"
             >
                 Limited
             </button>
+
 
             <button
                 class="filter"
@@ -823,6 +1228,9 @@
 
     </section>
 
+
+
+    <!-- CATALOG -->
 
     <div class="catalog-header">
 
@@ -846,16 +1254,26 @@
     >
 
         <div class="empty">
-            <strong>Carregando UGCs...</strong>
-            Consultando o catálogo do Slime Battles.
+
+            <strong>
+                Carregando UGCs...
+            </strong>
+
+            Consultando o catálogo
+            do Slime Battles.
+
         </div>
 
     </section>
 
+
 </main>
 
 
-<!-- MODAL -->
+
+<!-- ============================================================
+     MODAL
+============================================================ -->
 
 <div
     class="modal"
@@ -864,24 +1282,47 @@
 
     <div class="modal-box">
 
+
+        <button
+            class="close"
+            id="closeModal"
+            type="button"
+        >
+            ×
+        </button>
+
+
         <div class="modal-top">
+
 
             <div class="modal-image">
 
+                <span
+                    class="modal-image-loading"
+                    id="modalImageLoading"
+                >
+                    Carregando imagem...
+                </span>
+
+
                 <img
                     id="modalImage"
-                    src=""
                     alt=""
                 >
 
             </div>
 
 
+
             <div class="modal-info">
 
-                <h2 id="modalName">
+
+                <h2
+                    id="modalName"
+                >
                     —
                 </h2>
+
 
                 <p
                     class="modal-description"
@@ -897,66 +1338,147 @@
                 >
                 </div>
 
+
             </div>
+
 
         </div>
 
 
+
         <div class="modal-actions">
+
 
             <a
                 id="robloxLink"
                 class="button primary"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
             >
                 Ver no Roblox
             </a>
+
 
             <a
                 id="marketLink"
                 class="button secondary"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
             >
                 ADN Market
             </a>
 
+
         </div>
+
 
     </div>
 
 </div>
 
 
+
 <script>
 
-const API_URL =
-    "https://mod-ui.vercel.app/list?type=http";
+/* ============================================================
+   CONFIGURAÇÃO
+============================================================ */
 
-const THUMBNAIL_API =
-    "https://mod-ui.vercel.app/thumbnail/";
+const API_BASE_URL =
+    "https://mod-ui.vercel.app";
+
+
+const API_LIST_URL =
+    `${API_BASE_URL}/list?type=http`;
+
+
+const THUMBNAIL_URL =
+    `${API_BASE_URL}/thumbnail/`;
+
 
 const MARKET_URL =
-    "https://mod-ui.vercel.app/market/";
+    `${API_BASE_URL}/market/`;
+
+
+/* ============================================================
+   ESTADO
+============================================================ */
 
 let items = [];
 
 let currentFilter = "all";
 
 
-/* =========================================================
+/* ============================================================
+   FETCH COM TIMEOUT
+============================================================ */
+
+async function fetchComTimeout(
+    url,
+    options = {},
+    timeout = 8000
+) {
+
+    const controller =
+        new AbortController();
+
+
+    const timeoutId =
+        setTimeout(
+            () => controller.abort(),
+            timeout
+        );
+
+
+    try {
+
+        return await fetch(
+            url,
+            {
+                ...options,
+                signal:
+                    controller.signal
+            }
+        );
+
+    } finally {
+
+        clearTimeout(timeoutId);
+
+    }
+
+}
+
+
+/* ============================================================
    HELPERS
-========================================================= */
+============================================================ */
 
 function escapeHtml(value) {
 
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(
+        value ?? ""
+    )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 
 }
 
@@ -968,10 +1490,17 @@ function formatNumber(value) {
         value === undefined ||
         value === ""
     ) {
+
         return "—";
+
     }
 
-    return Number(value).toLocaleString("pt-BR");
+
+    return Number(
+        value
+    ).toLocaleString(
+        "pt-BR"
+    );
 
 }
 
@@ -982,27 +1511,126 @@ function formatRobux(value) {
         value === null ||
         value === undefined
     ) {
+
         return "—";
+
     }
+
 
     return `${formatNumber(value)} R$`;
 
 }
 
 
-function getRoblox(item) {
+/* ============================================================
+   API — THUMBNAIL
+============================================================ */
 
-    return item.Roblox || {};
+async function buscarThumbnailRoblox(
+    assetId
+) {
+
+    if (!assetId) {
+
+        return null;
+
+    }
+
+
+    try {
+
+        const url =
+            `${THUMBNAIL_URL}${encodeURIComponent(assetId)}`;
+
+
+        console.log(
+            "[Slime Battles] Buscando thumbnail:",
+            url
+        );
+
+
+        const response =
+            await fetchComTimeout(
+                url
+            );
+
+
+        if (!response.ok) {
+
+            console.warn(
+                "[Slime Battles] Erro HTTP thumbnail:",
+                response.status,
+                assetId
+            );
+
+            return null;
+
+        }
+
+
+        const json =
+            await response.json();
+
+
+        console.log(
+            "[Slime Battles] Thumbnail:",
+            assetId,
+            json
+        );
+
+
+        if (
+            json &&
+            json.success === true &&
+            typeof json.imageUrl ===
+                "string" &&
+            json.imageUrl.length > 0
+        ) {
+
+            return json.imageUrl;
+
+        }
+
+
+    } catch (error) {
+
+        if (
+            error?.name !==
+            "AbortError"
+        ) {
+
+            console.warn(
+                "[Slime Battles] Erro ao carregar thumbnail:",
+                assetId,
+                error
+            );
+
+        }
+
+    }
+
+
+    return null;
 
 }
 
 
-function normalizeItem(key, item) {
+/* ============================================================
+   NORMALIZAR ITEM
+============================================================ */
 
-    const roblox = getRoblox(item);
+function normalizarItem(
+    key,
+    item
+) {
 
-    const details =
+    const roblox =
+        item.Roblox || {};
+
+
+    const collectibles =
         roblox.CollectiblesItemDetails || {};
+
 
     return {
 
@@ -1018,7 +1646,8 @@ function normalizeItem(key, item) {
             key,
 
         level:
-            item.RequiredLevel ?? 0,
+            item.RequiredLevel ??
+            0,
 
         marketType:
             item.MarketType ||
@@ -1031,29 +1660,35 @@ function normalizeItem(key, item) {
             item.IsForSaleGame !== false,
 
         cash:
-            item.Price?.Cash ?? 0,
+            item.Price?.Cash ??
+            0,
 
         tokens:
-            item.Price?.Tokens ?? 0,
+            item.Price?.Tokens ??
+            0,
 
         maxStock:
-            item.MaxStock ?? null,
+            item.MaxStock ??
+            null,
 
         robloxPrice:
-            roblox.PriceInRobux ?? null,
+            roblox.PriceInRobux ??
+            null,
 
         robloxForSale:
             roblox.IsForSale === true,
 
         limited:
             roblox.IsLimitedUnique === true ||
-            details.IsLimited === true,
+            collectibles.IsLimited === true,
 
         robloxTotal:
-            details.TotalQuantity ?? null,
+            collectibles.TotalQuantity ??
+            null,
 
         robloxRemaining:
-            roblox.Remaining ?? null,
+            roblox.Remaining ??
+            null,
 
         description:
             roblox.Description ||
@@ -1069,19 +1704,28 @@ function normalizeItem(key, item) {
             null,
 
         productId:
-            roblox.ProductId ?? null,
+            roblox.ProductId ??
+            null,
 
         collectibleProductId:
-            roblox.CollectibleProductId ?? null,
+            roblox.CollectibleProductId ??
+            null,
 
         collectibleItemId:
-            roblox.CollectibleItemId ?? null,
+            roblox.CollectibleItemId ??
+            null,
 
         created:
-            roblox.Created ?? null,
+            roblox.Created ??
+            null,
 
         updated:
-            roblox.Updated ?? null,
+            roblox.Updated ??
+            null,
+
+        sales:
+            roblox.Sales ??
+            null,
 
         original:
             item
@@ -1091,29 +1735,43 @@ function normalizeItem(key, item) {
 }
 
 
-/* =========================================================
-   LOAD API
-========================================================= */
+/* ============================================================
+   CARREGAR CATÁLOGO
+============================================================ */
 
 async function carregarUGCs() {
 
     const grid =
-        document.getElementById("ugcGrid");
+        document.getElementById(
+            "ugcGrid"
+        );
+
 
     try {
 
         grid.innerHTML = `
+
             <div class="empty">
-                <strong>Conectando ao catálogo...</strong>
-                Carregando UGCs do Slime Battles.
+
+                <strong>
+                    Conectando ao catálogo...
+                </strong>
+
+                Carregando UGCs do
+                Slime Battles.
+
             </div>
+
         `;
 
 
         const response =
-            await fetch(API_URL, {
-                cache: "no-store"
-            });
+            await fetchComTimeout(
+                API_LIST_URL,
+                {
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
@@ -1142,11 +1800,19 @@ async function carregarUGCs() {
 
 
         items =
-            Object.entries(json.data)
-                .map(([key, value]) =>
-                    normalizeItem(key, value)
+            Object.entries(
+                json.data
+            )
+                .map(
+                    ([key, value]) =>
+                        normalizarItem(
+                            key,
+                            value
+                        )
                 )
-                .filter(item => item.id);
+                .filter(
+                    item => item.id
+                );
 
 
         atualizarStats();
@@ -1156,228 +1822,90 @@ async function carregarUGCs() {
 
     } catch (error) {
 
-        console.error(error);
-
-        grid.innerHTML = `
-            <div class="empty">
-                <strong>Não foi possível carregar o catálogo.</strong>
-                Verifique a conexão com a API do Slime Battles.
-            </div>
-        `;
-
-        document.getElementById(
-            "catalogCount"
-        ).textContent = "Erro";
-
-    }
-
-}
-
-
-/* ============================================================
-   API — THUMBNAIL
-============================================================ */
-
-async function buscarThumbnailRoblox(assetId) {
-
-    if (!assetId) {
-        return null;
-    }
-
-    try {
-
-        const response =
-            await fetchComTimeout(
-                `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
-            );
-
-        if (!response.ok) {
-            return null;
-        }
-
-        const json =
-            await response.json();
-
-        if (
-            json &&
-            json.success &&
-            json.imageUrl
-        ) {
-
-            return json.imageUrl;
-
-        }
-
-    } catch (error) {
-
-        if (
-            error?.name !== "AbortError"
-        ) {
-
-            console.warn(
-                "[Slime Battles UGC] Erro ao carregar thumbnail:",
-                assetId,
-                error
-            );
-
-        }
-
-    }
-
-    return null;
-}
-
-
-/* ============================================================
-   CARREGAR THUMBNAILS DOS CARDS
-============================================================ */
-
-async function carregarThumbnails() {
-
-    const imagens =
-        document.querySelectorAll(
-            ".thumbnail img"
+        console.error(
+            "[Slime Battles]",
+            error
         );
 
 
-    for (const img of imagens) {
+        grid.innerHTML = `
 
-        const assetId =
-            img.dataset.id;
+            <div class="empty">
 
+                <strong>
+                    Não foi possível carregar o catálogo.
+                </strong>
 
-        if (!assetId) {
-            continue;
-        }
+                Verifique a conexão com
+                a API do Slime Battles.
 
+            </div>
 
-        try {
-
-            const imageUrl =
-                await buscarThumbnailRoblox(
-                    assetId
-                );
+        `;
 
 
-            if (!imageUrl) {
-
-                const loading =
-                    document.getElementById(
-                        `loading-${assetId}`
-                    );
-
-                if (loading) {
-
-                    loading.textContent =
-                        "Imagem indisponível";
-
-                }
-
-                continue;
-
-            }
-
-
-            img.src = imageUrl;
-
-
-            img.onload = () => {
-
-                img.classList.add(
-                    "loaded"
-                );
-
-
-                const loading =
-                    document.getElementById(
-                        `loading-${assetId}`
-                    );
-
-
-                if (loading) {
-
-                    loading.style.display =
-                        "none";
-
-                }
-
-            };
-
-
-            img.onerror = () => {
-
-                const loading =
-                    document.getElementById(
-                        `loading-${assetId}`
-                    );
-
-
-                if (loading) {
-
-                    loading.textContent =
-                        "Erro na imagem";
-
-                }
-
-            };
-
-
-        } catch (error) {
-
-            console.warn(
-                "[Slime Battles UGC] Thumbnail:",
-                assetId,
-                error
-            );
-
-        }
+        document.getElementById(
+            "catalogCount"
+        ).textContent =
+            "Erro";
 
     }
 
 }
 
 
-
-/* =========================================================
-   STATS
-========================================================= */
+/* ============================================================
+   ESTATÍSTICAS
+============================================================ */
 
 function atualizarStats() {
 
     const available =
-        items.filter(item =>
-            item.active &&
-            item.isForSaleGame
+        items.filter(
+            item =>
+                item.active &&
+                item.isForSaleGame
         ).length;
 
 
     const limited =
-        items.filter(item =>
-            item.limited
+        items.filter(
+            item =>
+                item.limited
         ).length;
 
 
-    document.getElementById("total")
-        .textContent = items.length;
+    document.getElementById(
+        "total"
+    ).textContent =
+        items.length;
 
 
-    document.getElementById("available")
-        .textContent = available;
+    document.getElementById(
+        "available"
+    ).textContent =
+        available;
 
 
-    document.getElementById("limited")
-        .textContent = limited;
+    document.getElementById(
+        "limited"
+    ).textContent =
+        limited;
 
 }
 
 
-/* =========================================================
-   FILTER
-========================================================= */
+/* ============================================================
+   FILTROS
+============================================================ */
 
-function aplicarFiltro(item) {
+function aplicarFiltro(
+    item
+) {
 
-    switch (currentFilter) {
+    switch (
+        currentFilter
+    ) {
 
         case "available":
 
@@ -1390,8 +1918,9 @@ function aplicarFiltro(item) {
         case "purchase":
 
             return (
-                item.marketType
-                    .toLowerCase() ===
+                String(
+                    item.marketType
+                ).toLowerCase() ===
                 "purchase"
             );
 
@@ -1408,6 +1937,7 @@ function aplicarFiltro(item) {
                 item.maxStock <= 0
             );
 
+
         default:
 
             return true;
@@ -1417,55 +1947,92 @@ function aplicarFiltro(item) {
 }
 
 
-/* =========================================================
-   RENDER
-========================================================= */
+/* ============================================================
+   RENDERIZAR
+============================================================ */
 
 function renderizar() {
 
     const grid =
-        document.getElementById("ugcGrid");
+        document.getElementById(
+            "ugcGrid"
+        );
+
 
     const search =
-        document.getElementById("search")
+        document.getElementById(
+            "search"
+        )
             .value
             .trim()
             .toLowerCase();
 
 
     const filtered =
-        items.filter(item => {
+        items.filter(
+            item => {
 
-            const matchesSearch =
-                !search ||
-                item.name
-                    .toLowerCase()
-                    .includes(search) ||
-                String(item.id)
-                    .includes(search);
+                const name =
+                    String(
+                        item.name
+                    )
+                        .toLowerCase();
 
 
-            return (
-                matchesSearch &&
-                aplicarFiltro(item)
-            );
+                const id =
+                    String(
+                        item.id
+                    );
 
-        });
+
+                const matchesSearch =
+                    !search ||
+                    name.includes(
+                        search
+                    ) ||
+                    id.includes(
+                        search
+                    );
+
+
+                return (
+                    matchesSearch &&
+                    aplicarFiltro(
+                        item
+                    )
+                );
+
+            }
+        );
 
 
     document.getElementById(
         "catalogCount"
     ).textContent =
-        `${filtered.length} item${filtered.length !== 1 ? "s" : ""}`;
+        `${filtered.length} item${
+            filtered.length !== 1
+                ? "s"
+                : ""
+        }`;
 
 
-    if (!filtered.length) {
+    if (
+        !filtered.length
+    ) {
 
         grid.innerHTML = `
+
             <div class="empty">
-                <strong>Nenhum UGC encontrado.</strong>
-                Tente outro nome, Asset ID ou filtro.
+
+                <strong>
+                    Nenhum UGC encontrado.
+                </strong>
+
+                Tente outro nome,
+                Asset ID ou filtro.
+
             </div>
+
         `;
 
         return;
@@ -1475,7 +2042,9 @@ function renderizar() {
 
     grid.innerHTML =
         filtered
-            .map(criarCard)
+            .map(
+                criarCard
+            )
             .join("");
 
 
@@ -1484,21 +2053,17 @@ function renderizar() {
 }
 
 
-/* =========================================================
-   CARD
-========================================================= */
+/* ============================================================
+   CRIAR CARD
+============================================================ */
 
-function criarCard(item) {
+function criarCard(
+    item
+) {
 
     const available =
         item.active &&
         item.isForSaleGame;
-
-
-    const gameStock =
-        item.maxStock !== null
-            ? `${formatNumber(item.maxStock)} no jogo`
-            : "Estoque variável";
 
 
     let badges = "";
@@ -1507,17 +2072,21 @@ function criarCard(item) {
     if (available) {
 
         badges += `
+
             <span class="badge green">
                 DISPONÍVEL
             </span>
+
         `;
 
     } else {
 
         badges += `
+
             <span class="badge red">
                 INDISPONÍVEL
             </span>
+
         `;
 
     }
@@ -1526,17 +2095,21 @@ function criarCard(item) {
     if (item.limited) {
 
         badges += `
+
             <span class="badge purple">
                 LIMITED
             </span>
+
         `;
 
     } else {
 
         badges += `
+
             <span class="badge">
                 PURCHASE
             </span>
+
         `;
 
     }
@@ -1547,26 +2120,40 @@ function criarCard(item) {
     ) {
 
         badges += `
+
             <span class="badge yellow">
                 FREE ROBLOX
             </span>
+
         `;
 
     }
+
+
+    const gameStock =
+        item.maxStock !== null
+            ? `${formatNumber(
+                item.maxStock
+            )} no jogo`
+            : "Estoque variável";
 
 
     return `
 
         <article
             class="card"
+            data-id="${item.id}"
             onclick="abrirModal(${item.id})"
         >
 
             <div class="thumbnail">
 
                 <div class="badges">
+
                     ${badges}
+
                 </div>
+
 
                 <span
                     class="loading-thumb"
@@ -1575,9 +2162,12 @@ function criarCard(item) {
                     Carregando...
                 </span>
 
+
                 <img
                     data-id="${item.id}"
-                    alt="${escapeHtml(item.name)}"
+                    alt="${escapeHtml(
+                        item.name
+                    )}"
                 >
 
             </div>
@@ -1585,55 +2175,81 @@ function criarCard(item) {
 
             <div class="card-content">
 
+
                 <div
                     class="card-name"
-                    title="${escapeHtml(item.name)}"
+                    title="${escapeHtml(
+                        item.name
+                    )}"
                 >
-                    ${escapeHtml(item.name)}
+
+                    ${escapeHtml(
+                        item.name
+                    )}
+
                 </div>
 
 
                 <div class="level">
+
                     Nível necessário:
+
                     <strong>
-                        ${formatNumber(item.level)}
+                        ${formatNumber(
+                            item.level
+                        )}
                     </strong>
+
                 </div>
 
 
                 <div class="prices">
 
+
                     <div class="price">
+
                         <span>
                             Cash
                         </span>
 
                         <strong>
-                            ${formatNumber(item.cash)}
+                            ${formatNumber(
+                                item.cash
+                            )}
                         </strong>
+
                     </div>
 
 
                     <div class="price">
+
                         <span>
                             Tokens
                         </span>
 
                         <strong>
-                            ${formatNumber(item.tokens)}
+                            ${formatNumber(
+                                item.tokens
+                            )}
                         </strong>
+
                     </div>
 
 
                     <div class="price robux">
+
                         <span>
                             Roblox
                         </span>
 
                         <strong>
-                            ${formatRobux(item.robloxPrice)}
+                            ${formatRobux(
+                                item.robloxPrice
+                            )}
                         </strong>
+
                     </div>
+
 
                 </div>
 
@@ -1641,14 +2257,22 @@ function criarCard(item) {
                 <div class="card-footer">
 
                     <span class="market-type">
-                        ${escapeHtml(item.marketType)}
+
+                        ${escapeHtml(
+                            item.marketType
+                        )}
+
                     </span>
 
+
                     <span class="stock">
+
                         ${gameStock}
+
                     </span>
 
                 </div>
+
 
             </div>
 
@@ -1659,27 +2283,147 @@ function criarCard(item) {
 }
 
 
-/* =========================================================
-   MODAL
-========================================================= */
-async function abrirModal(id) {
+/* ============================================================
+   CARREGAR THUMBNAILS DOS CARDS
+============================================================ */
 
-    const item =
-        items.find(
-            item => Number(item.id) === Number(id)
+async function carregarThumbnails() {
+
+    const imagens =
+        document.querySelectorAll(
+            ".thumbnail img[data-id]"
         );
 
 
-    if (!item) return;
+    for (
+        const img of imagens
+    ) {
+
+        const assetId =
+            img.dataset.id;
+
+
+        if (!assetId) {
+            continue;
+        }
+
+
+        const loading =
+            document.getElementById(
+                `loading-${assetId}`
+            );
+
+
+        const thumbnail =
+            await buscarThumbnailRoblox(
+                assetId
+            );
+
+
+        if (!thumbnail) {
+
+            if (loading) {
+
+                loading.textContent =
+                    "Imagem indisponível";
+
+            }
+
+            continue;
+
+        }
+
+
+        img.onload =
+            function () {
+
+                img.classList.add(
+                    "loaded"
+                );
+
+
+                if (loading) {
+
+                    loading.style.display =
+                        "none";
+
+                }
+
+            };
+
+
+        img.onerror =
+            function () {
+
+                console.warn(
+                    "[Slime Battles] Falha ao exibir:",
+                    thumbnail
+                );
+
+
+                if (loading) {
+
+                    loading.style.display =
+                        "block";
+
+                    loading.textContent =
+                        "Erro na imagem";
+
+                }
+
+            };
+
+
+        img.src =
+            thumbnail;
+
+    }
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+async function abrirModal(
+    id
+) {
+
+    const item =
+        items.find(
+            item =>
+                Number(item.id) ===
+                Number(id)
+        );
+
+
+    if (!item) {
+        return;
+    }
 
 
     const modal =
-        document.getElementById("modal");
+        document.getElementById(
+            "modal"
+        );
 
 
-    /* ============================================================
-       INFORMAÇÕES BÁSICAS
-    ============================================================ */
+    const modalImage =
+        document.getElementById(
+            "modalImage"
+        );
+
+
+    const modalLoading =
+        document.getElementById(
+            "modalImageLoading"
+        );
+
+
+    /* ========================================================
+       INFORMAÇÕES
+    ======================================================== */
 
     document.getElementById(
         "modalName"
@@ -1690,57 +2434,39 @@ async function abrirModal(id) {
     document.getElementById(
         "modalDescription"
     ).textContent =
-        item.description;
+        item.description ||
+        "Este UGC não possui descrição.";
 
 
-    /* ============================================================
-       THUMBNAIL
-    ============================================================ */
+    /* ========================================================
+       RESET IMAGEM
+    ======================================================== */
 
-    const modalImage =
-        document.getElementById("modalImage");
-
-
-    // Limpa a imagem anterior
-    modalImage.src = "";
-    modalImage.style.opacity = "0";
+    modalImage.removeAttribute(
+        "src"
+    );
 
 
-    // Mostra o modal imediatamente
-    modal.classList.add("open");
+    modalImage.classList.remove(
+        "loaded"
+    );
 
 
-    // Busca a imagem pela API
-    const modalThumbnail =
-        await buscarThumbnailRoblox(item.id);
+    modalImage.style.opacity =
+        "0";
 
 
-    if (modalThumbnail) {
-
-        modalImage.onload = () => {
-
-            modalImage.style.opacity = "1";
-
-        };
+    modalLoading.style.display =
+        "block";
 
 
-        modalImage.src =
-            modalThumbnail;
-
-    }
-
-
-    /* ============================================================
+    /* ========================================================
        LINKS
-    ============================================================ */
+    ======================================================== */
 
-    const robloxLink =
-        document.getElementById(
-            "robloxLink"
-        );
-
-
-    robloxLink.href =
+    document.getElementById(
+        "robloxLink"
+    ).href =
         `https://www.roblox.com/catalog/${item.id}`;
 
 
@@ -1750,156 +2476,388 @@ async function abrirModal(id) {
         `${MARKET_URL}${item.id}`;
 
 
-    /* ============================================================
+    /* ========================================================
        ESTOQUE
-    ============================================================ */
+    ======================================================== */
 
     const stock =
         item.maxStock !== null
-            ? formatNumber(item.maxStock)
+            ? formatNumber(
+                item.maxStock
+            )
             : "—";
 
 
     const robloxStock =
         item.robloxTotal !== null
-            ? formatNumber(item.robloxTotal)
+            ? formatNumber(
+                item.robloxTotal
+            )
             : "—";
 
 
     const remaining =
         item.robloxRemaining !== null
-            ? formatNumber(item.robloxRemaining)
+            ? formatNumber(
+                item.robloxRemaining
+            )
             : "—";
 
 
-    /* ============================================================
+    /* ========================================================
        DETALHES
-    ============================================================ */
+    ======================================================== */
 
     document.getElementById(
         "modalDetails"
     ).innerHTML = `
 
         <div class="detail">
-            <small>Asset ID</small>
-            <strong>${item.id}</strong>
-        </div>
 
-        <div class="detail">
-            <small>Nível necessário</small>
+            <small>
+                Asset ID
+            </small>
+
             <strong>
-                ${formatNumber(item.level)}
+                ${item.id}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Tipo de mercado</small>
+
+            <small>
+                Nível necessário
+            </small>
+
             <strong>
-                ${escapeHtml(item.marketType)}
+                ${formatNumber(
+                    item.level
+                )}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Status no jogo</small>
+
+            <small>
+                Tipo de mercado
+            </small>
+
             <strong>
+                ${escapeHtml(
+                    item.marketType
+                )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail">
+
+            <small>
+                Status no jogo
+            </small>
+
+            <strong>
+
                 ${
                     item.active &&
                     item.isForSaleGame
                         ? "Disponível"
                         : "Indisponível"
                 }
+
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Cash</small>
+
+            <small>
+                Cash
+            </small>
+
             <strong>
-                ${formatNumber(item.cash)}
+                ${formatNumber(
+                    item.cash
+                )}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Tokens</small>
+
+            <small>
+                Tokens
+            </small>
+
             <strong>
-                ${formatNumber(item.tokens)}
+                ${formatNumber(
+                    item.tokens
+                )}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Preço Roblox</small>
+
+            <small>
+                Preço Roblox
+            </small>
+
             <strong>
-                ${formatRobux(item.robloxPrice)}
+                ${formatRobux(
+                    item.robloxPrice
+                )}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Limited</small>
+
+            <small>
+                Limited
+            </small>
+
             <strong>
-                ${item.limited ? "Sim" : "Não"}
+                ${item.limited
+                    ? "Sim"
+                    : "Não"}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Estoque do jogo</small>
+
+            <small>
+                Estoque do jogo
+            </small>
+
             <strong>
                 ${stock}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Total Roblox</small>
+
+            <small>
+                Total Roblox
+            </small>
+
             <strong>
                 ${robloxStock}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Restante Roblox</small>
+
+            <small>
+                Restante Roblox
+            </small>
+
             <strong>
                 ${remaining}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Criador</small>
+
+            <small>
+                Vendas Roblox
+            </small>
+
             <strong>
-                ${escapeHtml(item.creator)}
+                ${
+                    item.sales !== null
+                        ? formatNumber(
+                            item.sales
+                        )
+                        : "—"
+                }
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Product ID</small>
+
+            <small>
+                Criador
+            </small>
+
+            <strong>
+                ${escapeHtml(
+                    item.creator
+                )}
+            </strong>
+
+        </div>
+
+
+        <div class="detail">
+
+            <small>
+                Creator ID
+            </small>
+
+            <strong>
+                ${item.creatorId ?? "—"}
+            </strong>
+
+        </div>
+
+
+        <div class="detail">
+
+            <small>
+                Product ID
+            </small>
+
             <strong>
                 ${item.productId ?? "—"}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Collectible Item</small>
+
+            <small>
+                Collectible Item
+            </small>
+
             <strong>
                 ${item.collectibleItemId ?? "—"}
             </strong>
+
         </div>
 
+
         <div class="detail">
-            <small>Collectible Product</small>
+
+            <small>
+                Collectible Product
+            </small>
+
             <strong>
                 ${item.collectibleProductId ?? "—"}
             </strong>
+
         </div>
 
     `;
 
+
+    /* ========================================================
+       ABRIR MODAL
+    ======================================================== */
+
+    modal.classList.add(
+        "open"
+    );
+
+
+    /* ========================================================
+       BUSCAR THUMBNAIL
+    ======================================================== */
+
+    const thumbnail =
+        await buscarThumbnailRoblox(
+            item.id
+        );
+
+
+    if (
+        thumbnail
+    ) {
+
+        modalImage.onload =
+            function () {
+
+                modalImage.classList.add(
+                    "loaded"
+                );
+
+                modalImage.style.opacity =
+                    "1";
+
+                modalLoading.style.display =
+                    "none";
+
+            };
+
+
+        modalImage.onerror =
+            function () {
+
+                modalLoading.textContent =
+                    "Erro ao exibir imagem";
+
+                modalLoading.style.display =
+                    "block";
+
+            };
+
+
+        modalImage.src =
+            thumbnail;
+
+    } else {
+
+        modalLoading.textContent =
+            "Imagem indisponível";
+
+    }
+
 }
+
+
+/* ============================================================
+   FECHAR MODAL
+============================================================ */
 
 function fecharModal() {
 
     document
         .getElementById("modal")
-        .classList.remove("open");
+        .classList.remove(
+            "open"
+        );
 
 }
 
+
+/* ============================================================
+   BOTÃO FECHAR
+============================================================ */
+
+document
+    .getElementById(
+        "closeModal"
+    )
+    .addEventListener(
+        "click",
+        fecharModal
+    );
+
+
+/* ============================================================
+   CLICAR FORA DO MODAL
+============================================================ */
 
 document
     .getElementById("modal")
@@ -1920,11 +2878,18 @@ document
     );
 
 
+/* ============================================================
+   ESC
+============================================================ */
+
 document.addEventListener(
     "keydown",
     event => {
 
-        if (event.key === "Escape") {
+        if (
+            event.key ===
+            "Escape"
+        ) {
 
             fecharModal();
 
@@ -1934,9 +2899,9 @@ document.addEventListener(
 );
 
 
-/* =========================================================
+/* ============================================================
    SEARCH
-========================================================= */
+============================================================ */
 
 document
     .getElementById("search")
@@ -1946,43 +2911,54 @@ document
     );
 
 
-/* =========================================================
+/* ============================================================
    FILTER BUTTONS
-========================================================= */
+============================================================ */
 
 document
-    .querySelectorAll(".filter")
-    .forEach(button => {
+    .querySelectorAll(
+        ".filter"
+    )
+    .forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                document
-                    .querySelectorAll(".filter")
-                    .forEach(btn =>
-                        btn.classList.remove("active")
+                    document
+                        .querySelectorAll(
+                            ".filter"
+                        )
+                        .forEach(
+                            btn =>
+                                btn.classList.remove(
+                                    "active"
+                                )
+                        );
+
+
+                    button.classList.add(
+                        "active"
                     );
 
 
-                button.classList.add("active");
+                    currentFilter =
+                        button.dataset.filter;
 
 
-                currentFilter =
-                    button.dataset.filter;
+                    renderizar();
+
+                }
+            );
+
+        }
+    );
 
 
-                renderizar();
-
-            }
-        );
-
-    });
-
-
-/* =========================================================
-   INIT
-========================================================= */
+/* ============================================================
+   INICIALIZAÇÃO
+============================================================ */
 
 carregarUGCs();
 
