@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
 
@@ -1016,7 +1016,7 @@
 
       <i class="fa-solid fa-arrow-left"></i>
 
-      Voltar
+      Back
 
     </a>
 
@@ -1058,10 +1058,10 @@
 
     <p>
 
-      Endpoint responsável por fornecer a lista de UGCs
-      armazenados no Mod_UI. Os dados podem ser retornados
-      em Lua ou JSON, com opção de atualização através
-      das informações atuais do Roblox.
+      Endpoint responsible for providing the list of UGCs
+      stored in Mod_UI. The data can be returned in Lua
+      or JSON, with an option to update the information
+      using the latest Roblox data.
 
     </p>
 
@@ -1079,7 +1079,7 @@
 
     <p class="card-description">
 
-      Utilize este endpoint para obter a coleção de UGCs.
+      Use this endpoint to retrieve the UGC collection.
 
     </p>
 
@@ -1105,13 +1105,13 @@
   <section class="card">
 
     <h2>
-      Testar API
+      Test API
     </h2>
 
     <p class="card-description">
 
-      Escolha o formato da resposta e se os dados devem
-      ser atualizados através da API de UGCs.
+      Choose the response format and whether the data
+      should be updated using the UGC API.
 
     </p>
 
@@ -1122,7 +1122,7 @@
       <div class="field">
 
         <label for="type">
-          Tipo de resposta
+          Response Type
         </label>
 
         <select id="type">
@@ -1144,7 +1144,7 @@
       <div class="field">
 
         <label for="live">
-          Atualização dos dados
+          Data Source
         </label>
 
         <select id="live">
@@ -1169,7 +1169,7 @@
     <div class="url-box">
 
       <label>
-        URL gerada
+        Generated URL
       </label>
 
       <div
@@ -1189,7 +1189,7 @@
 
         <i class="fa-solid fa-play"></i>
 
-        Executar
+        Execute
 
       </button>
 
@@ -1201,7 +1201,7 @@
 
         <i class="fa-solid fa-copy"></i>
 
-        Copiar URL
+        Copy URL
 
       </button>
 
@@ -1218,20 +1218,20 @@
     <div class="result-header">
 
       <h2>
-        Resultado
+        Result
       </h2>
 
       <span
         class="status"
         id="status"
       >
-        Aguardando requisição...
+        Waiting for request...
       </span>
 
     </div>
 
 
-    <pre id="result">Nenhum resultado ainda.</pre>
+    <pre id="result">No result yet.</pre>
 
   </section>
 
@@ -1242,12 +1242,12 @@
   <section class="card">
 
     <h2>
-      Parâmetros
+      Parameters
     </h2>
 
     <p class="card-description">
 
-      O endpoint possui dois parâmetros opcionais.
+      The endpoint supports two optional parameters.
 
     </p>
 
@@ -1265,8 +1265,8 @@
 
         <p>
 
-          Retorna os UGCs convertidos para uma tabela Lua,
-          pronta para ser utilizada em scripts.
+          Returns the UGCs converted into a Lua table,
+          ready to be used in scripts.
 
         </p>
 
@@ -1284,8 +1284,8 @@
 
         <p>
 
-          Retorna JSON através de HTTP. Ideal para
-          Roblox HttpService ou aplicações externas.
+          Returns JSON through HTTP. Ideal for
+          Roblox HttpService or external applications.
 
         </p>
 
@@ -1303,8 +1303,8 @@
 
         <p>
 
-          Consulta os dados dos UGCs através da API
-          configurada para obter informações atualizadas.
+          Retrieves UGC data through the configured API
+          to obtain the latest available information.
 
         </p>
 
@@ -1435,11 +1435,11 @@
 
 
       status.textContent =
-        "Consultando API...";
+        "Querying API...";
 
 
       result.textContent =
-        "Carregando...";
+        "Loading...";
 
 
       const start =
@@ -1504,7 +1504,7 @@
 
 
         status.textContent =
-          `Sucesso • ${time} ms`;
+          `Success • ${time} ms`;
 
       } catch (error) {
 
@@ -1512,7 +1512,7 @@
 
 
         status.textContent =
-          "Erro na requisição";
+          "Request error";
 
 
         result.textContent =
@@ -1545,14 +1545,14 @@
 
 
         copyBtn.innerHTML =
-          '<i class="fa-solid fa-check"></i> Copiado';
+          '<i class="fa-solid fa-check"></i> Copied';
 
 
         setTimeout(
           () => {
 
             copyBtn.innerHTML =
-              '<i class="fa-solid fa-copy"></i> Copiar URL';
+              '<i class="fa-solid fa-copy"></i> Copy URL';
 
           },
           1500
