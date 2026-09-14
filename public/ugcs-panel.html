@@ -708,8 +708,7 @@
     API ROBLOX
     ============================================================
     */
-
-    async function buscarUGC(IdUGC) {
+async function buscarUGC(IdUGC) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
 
@@ -739,164 +738,179 @@
 }
 
 
+/*
+    ============================================================
+    BUSCAR THUMBNAIL ROBLOX
+    ============================================================
+*/
 
 async function buscarThumbnailRoblox(assetId) {
 
+    if (!assetId) {
+        return null;
+    }
+
     const url =
         `https://thumbnails.roblox.com/v1/assets` +
-        `?assetIds=${assetId}` +
+        `?assetIds=${encodeURIComponent(assetId)}` +
         `&size=420x420` +
         `&format=Png` +
         `&isCircular=false`;
 
-    const response =
-        await fetch(url);
+    const controller = new AbortController();
 
-    if (!response.ok) {
+    const timeout = setTimeout(() => {
+        controller.abort();
+    }, 5000);
 
-        throw new Error(
-            `Erro ao buscar thumbnail: HTTP ${response.status}`
-        );
+    try {
+
+        const response = await fetch(url, {
+            signal: controller.signal
+        });
+
+        if (!response.ok) {
+            throw new Error(
+                `Erro ao buscar thumbnail: HTTP ${response.status}`
+            );
+        }
+
+        const result = await response.json();
+
+        return result.data?.[0]?.imageUrl || null;
+
+    } finally {
+
+        clearTimeout(timeout);
 
     }
-
-    const result =
-        await response.json();
-
-    return result.data?.[0]?.imageUrl || null;
 }
+
 
 /*
     ============================================================
     NORMALIZAR DADOS ROBLOX
     ============================================================
-    */
+*/
 
-    function extrairDadosRoblox(roblox) {
+function extrairDadosRoblox(roblox, Thumbnail = null) {
 
-        const collectible =
-            roblox.CollectiblesItemDetails ||
-            {};
+    const collectible =
+        roblox.CollectiblesItemDetails ||
+        {};
+
+    return {
+
+        Name:
+            roblox.Name ?? null,
+
+        Description:
+            roblox.Description ?? null,
+
+        AssetId:
+            roblox.AssetId ?? null,
+
+        TargetId:
+            roblox.TargetId ?? null,
+
+        ProductId:
+            roblox.ProductId ?? null,
+
+        AssetTypeId:
+            roblox.AssetTypeId ?? null,
+
+        Creator:
+            roblox.Creator ?? null,
+
+        Created:
+            roblox.Created ?? null,
+
+        Updated:
+            roblox.Updated ?? null,
+
+        PriceInRobux:
+            roblox.PriceInRobux ?? null,
+
+        PriceInTickets:
+            roblox.PriceInTickets ?? null,
+
+        Sales:
+            roblox.Sales ?? null,
+
+        IsNew:
+            roblox.IsNew ?? false,
+
+        IsForSale:
+            roblox.IsForSale ?? false,
+
+        IsPublicDomain:
+            roblox.IsPublicDomain ?? false,
+
+        IsLimited:
+            roblox.IsLimited ?? false,
+
+        IsLimitedUnique:
+            roblox.IsLimitedUnique ?? false,
+
+        Remaining:
+            roblox.Remaining ?? null,
+
+        MinimumMembershipLevel:
+            roblox.MinimumMembershipLevel ?? 0,
+
+        ContentRatingTypeId:
+            roblox.ContentRatingTypeId ?? 0,
+
+        SaleAvailabilityLocations:
+            roblox.SaleAvailabilityLocations ?? null,
+
+        SaleLocation:
+            roblox.SaleLocation ?? null,
+
+        CollectibleItemId:
+            roblox.CollectibleItemId ?? null,
+
+        CollectibleProductId:
+            roblox.CollectibleProductId ?? null,
 
 
-        return {
+        /*
+            IMAGEM DO UGC
+        */
 
-            Name:
-                roblox.Name ?? null,
-
-            Description:
-                roblox.Description ?? null,
-
-            AssetId:
-                roblox.AssetId ?? null,
-
-            TargetId:
-                roblox.TargetId ?? null,
-
-            ProductId:
-                roblox.ProductId ?? null,
-
-            AssetTypeId:
-                roblox.AssetTypeId ?? null,
+        Thumbnail:
+            Thumbnail ?? null,
 
 
-            Creator:
-                roblox.Creator ?? null,
+        CollectiblesItemDetails: {
 
+            CollectibleLowestResalePrice:
+                collectible.CollectibleLowestResalePrice ?? null,
 
-            Created:
-                roblox.Created ?? null,
+            CollectibleLowestAvailableResaleProductId:
+                collectible.CollectibleLowestAvailableResaleProductId ?? null,
 
-            Updated:
-                roblox.Updated ?? null,
+            CollectibleLowestAvailableResaleItemInstanceId:
+                collectible.CollectibleLowestAvailableResaleItemInstanceId ?? null,
 
-
-            PriceInRobux:
-                roblox.PriceInRobux ?? null,
-
-
-            PriceInTickets:
-                roblox.PriceInTickets ?? null,
-
-
-            Sales:
-                roblox.Sales ?? null,
-
-
-            IsNew:
-                roblox.IsNew ?? false,
+            CollectibleQuantityLimitPerUser:
+                collectible.CollectibleQuantityLimitPerUser ?? null,
 
             IsForSale:
-                roblox.IsForSale ?? false,
+                collectible.IsForSale ?? false,
 
-            IsPublicDomain:
-                roblox.IsPublicDomain ?? false,
+            TotalQuantity:
+                collectible.TotalQuantity ?? null,
 
             IsLimited:
-                roblox.IsLimited ?? false,
-
-            IsLimitedUnique:
-                roblox.IsLimitedUnique ?? false,
+                collectible.IsLimited ?? false
+        },
 
 
-            Remaining:
-                roblox.Remaining ?? null,
-
-
-            MinimumMembershipLevel:
-                roblox.MinimumMembershipLevel ?? 0,
-
-
-            ContentRatingTypeId:
-                roblox.ContentRatingTypeId ?? 0,
-
-
-            SaleAvailabilityLocations:
-                roblox.SaleAvailabilityLocations ?? null,
-
-
-            SaleLocation:
-                roblox.SaleLocation ?? null,
-
-
-            CollectibleItemId:
-                roblox.CollectibleItemId ?? null,
-
-            CollectibleProductId:
-                roblox.CollectibleProductId ?? null,
-
-
-            CollectiblesItemDetails: {
-
-                CollectibleLowestResalePrice:
-                    collectible.CollectibleLowestResalePrice ?? null,
-
-                CollectibleLowestAvailableResaleProductId:
-                    collectible.CollectibleLowestAvailableResaleProductId ?? null,
-
-                CollectibleLowestAvailableResaleItemInstanceId:
-                    collectible.CollectibleLowestAvailableResaleItemInstanceId ?? null,
-
-                CollectibleQuantityLimitPerUser:
-                    collectible.CollectibleQuantityLimitPerUser ?? null,
-
-                IsForSale:
-                    collectible.IsForSale ?? false,
-
-                TotalQuantity:
-                    collectible.TotalQuantity ?? null,
-
-                IsLimited:
-                    collectible.IsLimited ?? false
-            },
-
-
-            TimedOptions:
-                roblox.TimedOptions ?? null
-        };
-    }
-
-
+        TimedOptions:
+            roblox.TimedOptions ?? null
+    };
+}
     /*
     ============================================================
     VALIDAR LISTA COM ROBLOX
