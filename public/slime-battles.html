@@ -1660,8 +1660,8 @@ async function carregarThumbnails() {
 /* =========================================================
    MODAL
 ========================================================= */
-
-function abrirModal(id) {
+async function abrirModal(id) {
+//function abrirModal(id) {
 
     const item =
         items.find(
@@ -1687,13 +1687,31 @@ function abrirModal(id) {
     ).textContent =
         item.description;
 
+const modalImage =
+    document.getElementById("modalImage");
 
-    document.getElementById(
-        "modalImage"
-    ).src =
-        `${THUMBNAIL_API}${item.id}`;
+modalImage.src = "";
+modalImage.style.opacity = "0";
 
 
+const modalThumbnail = 
+await buscarThumbnailRoblox(item.id);
+
+
+if (modalThumbnail) {
+
+    modalImage.src =
+        modalThumbnail;
+
+    modalImage.onload = () => {
+
+        modalImage.style.opacity = "1";
+
+    };
+
+}
+
+ 
     const robloxLink =
         document.getElementById(
             "robloxLink"
