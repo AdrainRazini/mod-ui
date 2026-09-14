@@ -1,7 +1,7 @@
 // backend/routes/ugcs.js
 
 import { Router } from "express";
-import { db } from "../firebase.js";
+import { db } from "../services/firebase.js";
 
 const router = Router();
 
