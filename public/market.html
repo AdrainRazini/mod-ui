@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,8 +7,8 @@
 
     <title>ADN Market — UGCs</title>
 
-      <link rel="shortcut icon" href="image/Cube.ico" type="image/x-icon">
-      
+    <link rel="shortcut icon" href="image/Cube.ico" type="image/x-icon">
+
     <style>
         :root {
             --bg: #07090d;
@@ -819,7 +818,7 @@
     </a>
 
     <div class="header-status">
-        Mercado público
+        Public Marketplace
     </div>
 
 </header>
@@ -832,10 +831,10 @@
     </h1>
 
     <p>
-        Explore os UGCs cadastrados no ADN Market
-        ou pesquise diretamente um Asset ID do Roblox
-        para consultar os dados em tempo real através
-        da API.
+        Explore the UGCs registered in ADN Market
+        or search directly for a Roblox Asset ID
+        to retrieve real-time data through
+        the API.
     </p>
 
 </section>
@@ -848,7 +847,7 @@
         <input
             id="search-input"
             type="search"
-            placeholder="Nome ou ID do UGC..."
+            placeholder="UGC name or ID..."
             autocomplete="off"
         >
 
@@ -859,7 +858,7 @@
         class="filter-button"
         type="button"
     >
-        Limpar
+        Clear
     </button>
 
 </section>
@@ -875,12 +874,12 @@
                 0
             </span>
 
-            itens
+            items
 
         </div>
 
         <div id="preview-status">
-            Carregando...
+            Loading...
         </div>
 
     </div>
@@ -896,11 +895,11 @@
             <div class="loading-spinner"></div>
 
             <div class="status-title">
-                Carregando mercado
+                Loading marketplace
             </div>
 
             <div class="status-text">
-                Buscando os UGCs cadastrados...
+                Fetching registered UGCs...
             </div>
 
         </div>
@@ -935,7 +934,7 @@
         <div class="modal-header">
 
             <h2 id="modal-title">
-                Detalhes do UGC
+                UGC Details
             </h2>
 
             <button
@@ -989,7 +988,7 @@ import {
 
 
 /* ============================================================
-   CONFIGURAÇÃO
+   CONFIGURATION
 ============================================================ */
 
 const FIRESTORE_COLLECTION =
@@ -1008,7 +1007,7 @@ const API_TIMEOUT =
 
 
 /* ============================================================
-   ESTADO
+   STATE
 ============================================================ */
 
 let currentList = {};
@@ -1023,7 +1022,7 @@ let apiRequestController = null;
 
 
 /* ============================================================
-   ELEMENTOS
+   ELEMENTS
 ============================================================ */
 
 const ugcList =
@@ -1136,8 +1135,8 @@ function formatValue(value) {
     ) {
 
         return value
-            ? "Sim"
-            : "Não";
+            ? "Yes"
+            : "No";
 
     }
 
@@ -1154,7 +1153,7 @@ function formatValue(value) {
 
         } catch {
 
-            return "[Objeto]";
+            return "[Object]";
 
         }
 
@@ -1186,7 +1185,7 @@ function encontrarId(item) {
 
 
 /* ============================================================
-   NOME
+   NAME
 ============================================================ */
 
 function encontrarNome(item) {
@@ -1198,7 +1197,7 @@ function encontrarNome(item) {
         item?.Roblox?.Nome ??
         item?.Roblox?.Name ??
         item?.Roblox?.name ??
-        "UGC sem nome"
+        "Unnamed UGC"
     );
 
 }
@@ -1225,7 +1224,7 @@ function encontrarThumbnail(item) {
 
 
 /* ============================================================
-   PREÇO
+   PRICE
 ============================================================ */
 
 function encontrarPreco(item) {
@@ -1257,7 +1256,7 @@ function encontrarPreco(item) {
 
 
 /* ============================================================
-   FETCH COM TIMEOUT
+   FETCH WITH TIMEOUT
 ============================================================ */
 
 async function fetchComTimeout(
@@ -1302,7 +1301,7 @@ async function fetchComTimeout(
 
 
 /* ============================================================
-   API — BUSCAR UGC
+   API — SEARCH UGC
 ============================================================ */
 
 async function buscarUGC(
@@ -1315,7 +1314,7 @@ async function buscarUGC(
 
 
     /*
-     * Cancela uma consulta anterior.
+     * Cancel a previous request.
      */
 
     if (
@@ -1336,7 +1335,7 @@ async function buscarUGC(
 
 
     console.log(
-        "[ADN Market] Consultando API:",
+        "[ADN Market] Querying API:",
         url
     );
 
@@ -1354,7 +1353,7 @@ async function buscarUGC(
     if (!response.ok) {
 
         throw new Error(
-            `API retornou HTTP ${response.status}`
+            `API returned HTTP ${response.status}`
         );
 
     }
@@ -1365,7 +1364,7 @@ async function buscarUGC(
 
 
     /*
-     * Formato confirmado da API:
+     * Confirmed API format:
      *
      * {
      *     success: true,
@@ -1380,7 +1379,7 @@ async function buscarUGC(
     ) {
 
         throw new Error(
-            "UGC não encontrado pela API."
+            "UGC not found by the API."
         );
 
     }
@@ -1439,7 +1438,7 @@ async function buscarThumbnailRoblox(
         ) {
 
             console.warn(
-                "[ADN Market] Erro ao carregar thumbnail:",
+                "[ADN Market] Error loading thumbnail:",
                 assetId,
                 error
             );
@@ -1455,7 +1454,7 @@ async function buscarThumbnailRoblox(
 
 
 /* ============================================================
-   NORMALIZAR ITEM
+   NORMALIZE ITEM
 ============================================================ */
 
 function normalizarItem(
@@ -1510,7 +1509,7 @@ function normalizarItem(
 
 
 /* ============================================================
-   CONVERTER LISTA FIRESTORE
+   CONVERT FIRESTORE LIST
 ============================================================ */
 
 function converterLista(data) {
@@ -1588,7 +1587,7 @@ async function carregarMercado() {
         ) {
 
             throw new Error(
-                "O documento arrays/ugcs não existe."
+                "The arrays/ugcs document does not exist."
             );
 
         }
@@ -1613,7 +1612,7 @@ async function carregarMercado() {
 
 
         previewStatus.textContent =
-            `${allItems.length} itens cadastrados`;
+            `${allItems.length} registered items`;
 
 
         marketStatus.style.display =
@@ -1628,7 +1627,7 @@ async function carregarMercado() {
     } catch (error) {
 
         console.error(
-            "[ADN Market] Erro Firestore:",
+            "[ADN Market] Firestore error:",
             error
         );
 
@@ -1638,7 +1637,7 @@ async function carregarMercado() {
             <div class="status-content">
 
                 <div class="status-title">
-                    Erro ao carregar mercado
+                    Error loading marketplace
                 </div>
 
                 <div class="status-text">
@@ -1649,12 +1648,12 @@ async function carregarMercado() {
 
                     <br><br>
 
-                    Verifique se
+                    Check whether
                     <strong>
                         arrays/ugcs
                     </strong>
-                    possui leitura pública
-                    nas regras do Firestore.
+                    has public read access
+                    in the Firestore rules.
 
                 </div>
 
@@ -1664,7 +1663,7 @@ async function carregarMercado() {
 
 
         previewStatus.textContent =
-            "Erro";
+            "Error";
 
     }
 
@@ -1698,13 +1697,13 @@ function renderizarItens(
                 <div class="status-content">
 
                     <div class="status-title">
-                        Nenhum UGC encontrado
+                        No UGCs found
                     </div>
 
                     <div class="status-text">
-                        Pesquise pelo nome ou
-                        informe um Asset ID Roblox
-                        para consultar a API.
+                        Search by name or
+                        enter a Roblox Asset ID
+                        to query the API.
                     </div>
 
                 </div>
@@ -1762,13 +1761,13 @@ function criarCard(
 
             ? `
                 <div class="badge api">
-                    API • TEMPO REAL
+                    API • REAL-TIME
                 </div>
             `
 
             : `
                 <div class="badge saved">
-                    CADASTRADO
+                    REGISTERED
                 </div>
             `;
 
@@ -1793,7 +1792,7 @@ function criarCard(
         thumbnailHtml = `
 
             <div class="thumbnail-placeholder">
-                Carregando...
+                Loading...
             </div>
 
         `;
@@ -1807,7 +1806,7 @@ function criarCard(
 
             ? `${escapeHtml(item.preco)} Robux`
 
-            : "Preço não informado";
+            : "Price unavailable";
 
 
     card.innerHTML = `
@@ -1847,7 +1846,7 @@ function criarCard(
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    Ver no Roblox
+                    View on Roblox
                 </a>
 
 
@@ -1855,7 +1854,7 @@ function criarCard(
                     class="details-button"
                     type="button"
                 >
-                    Detalhes
+                    Details
                 </button>
 
             </div>
@@ -1879,8 +1878,8 @@ function criarCard(
 
 
     /*
-     * Se não possui thumbnail,
-     * tenta obter pela API.
+     * If no thumbnail is available,
+     * try to retrieve it through the API.
      */
 
     if (
@@ -1902,7 +1901,7 @@ function criarCard(
 
 
 /* ============================================================
-   THUMBNAIL DO CARD
+   CARD THUMBNAIL
 ============================================================ */
 
 async function carregarThumbnailCard(
@@ -1977,7 +1976,7 @@ async function carregarThumbnailCard(
 
 
 /* ============================================================
-   API — PESQUISA POR ID
+   API — SEARCH BY ID
 ============================================================ */
 
 async function pesquisarPorIdAPI(
@@ -1996,8 +1995,8 @@ async function pesquisarPorIdAPI(
 
 
     /*
-     * Primeiro procura ID EXATO
-     * no Firestore.
+     * First search for the EXACT ID
+     * in Firestore.
      */
 
     const encontrado =
@@ -2016,12 +2015,12 @@ async function pesquisarPorIdAPI(
 
 
     /*
-     * Não existe no Firestore.
-     * Consulta a API em tempo real.
+     * The ID does not exist in Firestore.
+     * Query the API in real time.
      */
 
     previewStatus.textContent =
-        `Consultando API: ${assetId}`;
+        `Querying API: ${assetId}`;
 
 
     const data =
@@ -2036,7 +2035,7 @@ async function pesquisarPorIdAPI(
 
 
     /*
-     * O retorno da API possui:
+     * API response contains:
      *
      * data.AssetId
      * data.Name
@@ -2062,8 +2061,8 @@ async function pesquisarPorIdAPI(
 
 
     /*
-     * Se a API não retornou thumbnail,
-     * busca no endpoint de thumbnail.
+     * If the API did not return a thumbnail,
+     * retrieve it from the thumbnail endpoint.
      */
 
     if (
@@ -2084,7 +2083,7 @@ async function pesquisarPorIdAPI(
 
 
 /* ============================================================
-   MOSTRAR RESULTADO API
+   SHOW API RESULT
 ============================================================ */
 
 function mostrarResultadoAPI(
@@ -2112,13 +2111,13 @@ function mostrarResultadoAPI(
 
 
     previewStatus.textContent =
-        "Resultado encontrado pela API em tempo real";
+        "Result found through the real-time API";
 
 }
 
 
 /* ============================================================
-   MOSTRAR ERRO API
+   SHOW API NOT FOUND
 ============================================================ */
 
 function mostrarNaoEncontrado(
@@ -2132,18 +2131,18 @@ function mostrarNaoEncontrado(
             <div class="status-content">
 
                 <div class="status-title">
-                    UGC não encontrado
+                    UGC not found
                 </div>
 
                 <div class="status-text">
 
-                    O ID
+                    The ID
                     <strong>
                         ${escapeHtml(termo)}
                     </strong>
-                    não está cadastrado
-                    no ADN Market e também
-                    não foi encontrado pela API.
+                    is not registered
+                    in ADN Market and was also
+                    not found by the API.
 
                 </div>
 
@@ -2159,13 +2158,13 @@ function mostrarNaoEncontrado(
 
 
     previewStatus.textContent =
-        "Nenhum resultado";
+        "No results";
 
 }
 
 
 /* ============================================================
-   PESQUISA
+   SEARCH
 ============================================================ */
 
 async function pesquisar() {
@@ -2176,7 +2175,7 @@ async function pesquisar() {
 
 
     /*
-     * Pesquisa vazia.
+     * Empty search.
      */
 
     if (!termo) {
@@ -2191,7 +2190,7 @@ async function pesquisar() {
 
 
         previewStatus.textContent =
-            `${allItems.length} itens cadastrados`;
+            `${allItems.length} registered items`;
 
 
         return;
@@ -2201,7 +2200,7 @@ async function pesquisar() {
 
     /*
      * ========================================================
-     * ID ROBLOX
+     * ROBLOX ID
      * ========================================================
      */
 
@@ -2212,7 +2211,7 @@ async function pesquisar() {
     ) {
 
         /*
-         * ID EXATO no Firestore.
+         * EXACT ID in Firestore.
          */
 
         const exact =
@@ -2235,7 +2234,7 @@ async function pesquisar() {
 
 
             previewStatus.textContent =
-                "UGC encontrado no ADN Market";
+                "UGC found in ADN Market";
 
 
             return;
@@ -2244,9 +2243,9 @@ async function pesquisar() {
 
 
         /*
-         * ID não existe no Firestore.
+         * ID does not exist in Firestore.
          *
-         * Agora API.
+         * Now query the API.
          */
 
         ugcList.innerHTML = `
@@ -2258,16 +2257,16 @@ async function pesquisar() {
                     <div class="loading-spinner"></div>
 
                     <div class="status-title">
-                        Consultando UGC
+                        Querying UGC
                     </div>
 
                     <div class="status-text">
 
-                        Buscando o ID
+                        Searching for ID
                         <strong>
                             ${escapeHtml(termo)}
                         </strong>
-                        diretamente na API...
+                        directly through the API...
 
                     </div>
 
@@ -2283,7 +2282,7 @@ async function pesquisar() {
 
 
         previewStatus.textContent =
-            "API em tempo real";
+            "Real-time API";
 
 
         try {
@@ -2295,9 +2294,9 @@ async function pesquisar() {
 
 
             /*
-             * Evita que uma resposta
-             * antiga apareça depois
-             * de o usuário mudar a busca.
+             * Prevent an old response
+             * from appearing after the user
+             * changes the search.
              */
 
             if (
@@ -2329,9 +2328,9 @@ async function pesquisar() {
         } catch (error) {
 
             /*
-             * AbortError significa que
-             * uma pesquisa nova substituiu
-             * a anterior.
+             * AbortError means that
+             * a new search replaced
+             * the previous one.
              */
 
             if (
@@ -2345,7 +2344,7 @@ async function pesquisar() {
 
 
             console.error(
-                "[ADN Market] Erro API:",
+                "[ADN Market] API error:",
                 error
             );
 
@@ -2357,13 +2356,13 @@ async function pesquisar() {
                     <div class="status-content">
 
                         <div class="status-title">
-                            Erro na consulta
+                            Query error
                         </div>
 
                         <div class="status-text">
 
-                            Não foi possível
-                            consultar a API agora.
+                            Unable to
+                            query the API right now.
 
                             <br><br>
 
@@ -2385,7 +2384,7 @@ async function pesquisar() {
 
 
             previewStatus.textContent =
-                "Erro na API";
+                "API error";
 
         }
 
@@ -2397,7 +2396,7 @@ async function pesquisar() {
 
     /*
      * ========================================================
-     * PESQUISA POR NOME
+     * SEARCH BY NAME
      * ========================================================
      */
 
@@ -2444,7 +2443,7 @@ async function pesquisar() {
 
 
     previewStatus.textContent =
-        `${filtrados.length} resultados`;
+        `${filtrados.length} results`;
 
 }
 
@@ -2463,8 +2462,8 @@ searchInput.addEventListener(
 
 
         /*
-         * Cancela requisição anterior
-         * imediatamente.
+         * Cancel the previous request
+         * immediately.
          */
 
         if (
@@ -2490,7 +2489,7 @@ searchInput.addEventListener(
 
 
 /* ============================================================
-   LIMPAR
+   CLEAR
 ============================================================ */
 
 clearSearch.addEventListener(
@@ -2528,7 +2527,7 @@ clearSearch.addEventListener(
 
 
         previewStatus.textContent =
-            `${allItems.length} itens cadastrados`;
+            `${allItems.length} registered items`;
 
 
         searchInput.focus();
@@ -2538,7 +2537,7 @@ clearSearch.addEventListener(
 
 
 /* ============================================================
-   LINK ROBLOX
+   ROBLOX LINK
 ============================================================ */
 
 function gerarLinkRoblox(
@@ -2559,7 +2558,7 @@ function gerarLinkRoblox(
 
 
 /* ============================================================
-   LINK ADN MARKET
+   ADN MARKET LINK
 ============================================================ */
 
 function gerarLinkMarket(
@@ -2604,23 +2603,23 @@ function abrirDetalhes(
 
 
     /*
-     * Origem
+     * Origin
      */
 
     adicionarDetalhe(
-        "Origem",
+        "Origin",
         item.origem === "api"
-            ? "API em tempo real"
+            ? "Real-time API"
             : "ADN Market / Firestore"
     );
 
 
     /*
-     * Dados básicos
+     * Basic data
      */
 
     adicionarDetalhe(
-        "Nome",
+        "Name",
         item.nome
     );
 
@@ -2637,7 +2636,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Preço",
+            "Price",
             `${item.preco} Robux`
         );
 
@@ -2650,7 +2649,7 @@ function abrirDetalhes(
 
     /*
      * ========================================================
-     * DADOS DIRETOS DA API ROBLOX
+     * DIRECT ROBLOX API DATA
      * ========================================================
      */
 
@@ -2659,7 +2658,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Criador",
+            "Creator",
             dados.Creator.Name ||
             dados.Creator.Id ||
             "N/A"
@@ -2671,7 +2670,7 @@ function abrirDetalhes(
         ) {
 
             adicionarDetalhe(
-                "Tipo do criador",
+                "Creator Type",
                 dados.Creator.CreatorType
             );
 
@@ -2685,7 +2684,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Tipo do produto",
+            "Product Type",
             dados.ProductType
         );
 
@@ -2745,7 +2744,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "À venda",
+            "For Sale",
             dados.IsForSale
         );
 
@@ -2781,7 +2780,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Vendas",
+            "Sales",
             dados.Sales
         );
 
@@ -2793,7 +2792,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Restante",
+            "Remaining",
             dados.Remaining
         );
 
@@ -2805,7 +2804,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Criado",
+            "Created",
             formatarData(
                 dados.Created
             )
@@ -2819,7 +2818,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Atualizado",
+            "Updated",
             formatarData(
                 dados.Updated
             )
@@ -2829,7 +2828,7 @@ function abrirDetalhes(
 
 
     /*
-     * Descrição
+     * Description
      */
 
     if (
@@ -2837,7 +2836,7 @@ function abrirDetalhes(
     ) {
 
         adicionarDetalhe(
-            "Descrição",
+            "Description",
             dados.Description
         );
 
@@ -2860,7 +2859,7 @@ function abrirDetalhes(
                     font-weight: 700;
                 "
             >
-                Abrir item
+                Open item
             </a>
         `,
         true
@@ -2883,7 +2882,7 @@ function abrirDetalhes(
                     font-weight: 700;
                 "
             >
-                Abrir página
+                Open page
             </a>
         `,
         true
@@ -2898,7 +2897,7 @@ function abrirDetalhes(
 
 
 /* ============================================================
-   DATA
+   DATE
 ============================================================ */
 
 function formatarData(
@@ -2925,7 +2924,7 @@ function formatarData(
 
 
         return data.toLocaleString(
-            "pt-BR"
+            "en-US"
         );
 
     } catch {
@@ -2938,7 +2937,7 @@ function formatarData(
 
 
 /* ============================================================
-   ADICIONAR DETALHE
+   ADD DETAIL
 ============================================================ */
 
 function adicionarDetalhe(
@@ -3014,7 +3013,7 @@ function adicionarDetalhe(
 
 
 /* ============================================================
-   FECHAR MODAL
+   CLOSE MODAL
 ============================================================ */
 
 function fecharModal() {
@@ -3065,7 +3064,7 @@ document.addEventListener(
 
 
 /* ============================================================
-   INICIAR
+   START
 ============================================================ */
 
 carregarMercado();
@@ -3074,4 +3073,3 @@ carregarMercado();
 
 </body>
 </html>
-
