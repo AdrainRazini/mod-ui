@@ -2175,6 +2175,23 @@ function criarCard(
             : "Variable stock";
 
 
+    /*
+        Show the frame only for Limited UGCs
+    */
+
+    const thumbnailFrame =
+        item.limited
+            ? `
+                <img
+                    class="thumbnail-frame"
+                    src="./image/UGC/Thumb_Limited_U.png"
+                    alt=""
+                    aria-hidden="true"
+                >
+            `
+            : "";
+
+
     return `
 
         <article
@@ -2207,12 +2224,9 @@ function criarCard(
                     )}"
                 >
 
-    <img
-    class="thumbnail-frame"
-    src="./image/UGC/Thumb_Limited_U.png"
-    alt=""
-    aria-hidden="true"
->
+
+                ${thumbnailFrame}
+
 
             </div>
 
@@ -2325,7 +2339,6 @@ function criarCard(
     `;
 
 }
-
 
 /* ============================================================
    LOAD CARD THUMBNAILS
