@@ -15,6 +15,7 @@ import resolverRoutes from "../backend/routes/resolver.js";
 
 import ugcs from "../backend/routes/ugcs.js";
 import list from "../backend/routes/list.js";
+import thumbnailRoutes from "./routes/thumbnail.js";
 
 // New MarketPlace
 import resolverplace from "../backend/routes/market.js" // :3 
@@ -104,6 +105,7 @@ app.use("/resolver", resolverRoutes);
 app.use("/market",resolverplace) // new v_1
 app.use("/ugcs",ugcs) // new v_1
 app.use("/list",list) // new data v_1
+app.use("/", thumbnailRoutes); 
 
 // app.use("/features", featureRoutes);
 
