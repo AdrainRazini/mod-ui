@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +17,9 @@
             --text: #f2f5f8;
             --muted: #8995a5;
             --primary: #00e5ff;
-            --primary-dark: #009db3;
             --success: #48e28a;
             --danger: #ff5f6d;
+            --warning: #ffc857;
             --shadow: 0 15px 45px rgba(0, 0, 0, .35);
         }
 
@@ -30,12 +31,26 @@
 
         body {
             min-height: 100vh;
+
             background:
-                radial-gradient(circle at top right, rgba(0, 229, 255, .07), transparent 30%),
-                radial-gradient(circle at bottom left, rgba(125, 70, 255, .06), transparent 30%),
+                radial-gradient(
+                    circle at top right,
+                    rgba(0, 229, 255, .07),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at bottom left,
+                    rgba(125, 70, 255, .06),
+                    transparent 30%
+                ),
                 var(--bg);
+
             color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
         }
 
         button,
@@ -48,7 +63,10 @@
             text-decoration: none;
         }
 
-        /* HEADER */
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
 
         header {
             position: sticky;
@@ -58,12 +76,15 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 20px;
 
             min-height: 70px;
+
             padding: 12px 5%;
 
             background: rgba(7, 9, 13, .88);
+
             backdrop-filter: blur(16px);
 
             border-bottom: 1px solid var(--border);
@@ -72,6 +93,7 @@
         .brand {
             display: flex;
             align-items: center;
+
             gap: 12px;
 
             font-size: 20px;
@@ -88,13 +110,15 @@
 
             border-radius: 10px;
 
-            background: linear-gradient(
-                135deg,
-                var(--primary),
-                #716cff
-            );
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #716cff
+                );
 
             color: #001015;
+
             font-weight: 900;
         }
 
@@ -102,21 +126,19 @@
             color: var(--primary);
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .header-status {
             color: var(--muted);
             font-size: 13px;
         }
 
-        /* HERO */
+
+        /* =====================================================
+           HERO
+        ===================================================== */
 
         .hero {
             max-width: 1400px;
+
             margin: 0 auto;
 
             padding: 55px 5% 30px;
@@ -124,7 +146,9 @@
 
         .hero h1 {
             font-size: clamp(30px, 5vw, 54px);
+
             line-height: 1;
+
             margin-bottom: 14px;
         }
 
@@ -133,42 +157,53 @@
         }
 
         .hero p {
-            max-width: 700px;
+            max-width: 750px;
+
             color: var(--muted);
+
             line-height: 1.6;
         }
 
-        /* CONTROLS */
+
+        /* =====================================================
+           SEARCH
+        ===================================================== */
 
         .controls {
             max-width: 1400px;
+
             margin: 0 auto;
 
             padding: 10px 5% 30px;
 
             display: flex;
+
             gap: 12px;
+
             flex-wrap: wrap;
         }
 
         .search-box {
             flex: 1;
+
             min-width: 240px;
-            position: relative;
         }
 
         .search-box input {
             width: 100%;
+
             height: 46px;
 
             padding: 0 16px;
 
             border: 1px solid var(--border);
+
             border-radius: 10px;
 
             outline: none;
 
             background: var(--panel);
+
             color: var(--text);
 
             transition: .2s;
@@ -176,77 +211,109 @@
 
         .search-box input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 229, 255, .08);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 229, 255, .08);
         }
 
         .filter-button {
             height: 46px;
+
             padding: 0 18px;
 
             border: 1px solid var(--border);
+
             border-radius: 10px;
 
             background: var(--panel);
+
             color: var(--text);
 
             cursor: pointer;
+
             transition: .2s;
         }
 
         .filter-button:hover {
             border-color: var(--primary);
+
             color: var(--primary);
         }
 
-        /* MAIN */
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
 
         main {
             max-width: 1400px;
+
             margin: 0 auto;
+
             padding: 0 5% 70px;
         }
 
         .market-info {
             display: flex;
+
             justify-content: space-between;
             align-items: center;
+
             gap: 15px;
 
             margin-bottom: 20px;
 
             color: var(--muted);
+
             font-size: 14px;
         }
 
         #item-count {
             color: var(--primary);
+
             font-weight: 700;
         }
 
-        /* GRID */
+        #preview-status {
+            text-align: right;
+        }
+
+
+        /* =====================================================
+           GRID
+        ===================================================== */
 
         #ugc-list {
             display: grid;
 
             grid-template-columns:
-                repeat(auto-fill, minmax(210px, 1fr));
+                repeat(
+                    auto-fill,
+                    minmax(210px, 1fr)
+                );
 
             gap: 18px;
         }
 
-        /* CARD */
+
+        /* =====================================================
+           CARD
+        ===================================================== */
 
         .ugc-card {
             overflow: hidden;
 
             border: 1px solid var(--border);
+
             border-radius: 14px;
 
-            background: linear-gradient(
-                180deg,
-                var(--panel-2),
-                var(--panel)
-            );
+            background:
+                linear-gradient(
+                    180deg,
+                    var(--panel-2),
+                    var(--panel)
+                );
 
             box-shadow: var(--shadow);
 
@@ -259,11 +326,12 @@
         .ugc-card:hover {
             transform: translateY(-4px);
 
-            border-color: rgba(0, 229, 255, .45);
+            border-color:
+                rgba(0, 229, 255, .45);
 
             box-shadow:
-                0 20px 50px rgba(0, 0, 0, .45),
-                0 0 25px rgba(0, 229, 255, .05);
+                0 20px 50px
+                rgba(0, 0, 0, .45);
         }
 
         .ugc-thumbnail {
@@ -287,7 +355,8 @@
             transition: transform .3s;
         }
 
-        .ugc-card:hover .ugc-thumbnail img {
+        .ugc-card:hover
+        .ugc-thumbnail img {
             transform: scale(1.04);
         }
 
@@ -299,11 +368,49 @@
             place-items: center;
 
             color: #536071;
+
             font-size: 13px;
         }
 
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
+
+        .badge {
+            position: absolute;
+
+            top: 10px;
+            right: 10px;
+
+            padding: 6px 8px;
+
+            border-radius: 7px;
+
+            background:
+                rgba(0, 0, 0, .78);
+
+            backdrop-filter: blur(8px);
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+        }
+
+        .badge.api {
+            color: var(--primary);
+        }
+
+        .badge.saved {
+            color: var(--success);
+        }
+
+
         .price {
             position: absolute;
+
             left: 10px;
             bottom: 10px;
 
@@ -311,14 +418,22 @@
 
             border-radius: 7px;
 
-            background: rgba(0, 0, 0, .75);
+            background:
+                rgba(0, 0, 0, .75);
 
             color: #fff;
+
             font-size: 13px;
+
             font-weight: 700;
 
             backdrop-filter: blur(8px);
         }
+
+
+        /* =====================================================
+           CARD CONTENT
+        ===================================================== */
 
         .card-content {
             padding: 14px;
@@ -332,11 +447,15 @@
             color: var(--text);
 
             font-size: 15px;
+
             font-weight: 700;
+
             line-height: 1.4;
 
             display: -webkit-box;
+
             -webkit-line-clamp: 2;
+
             -webkit-box-orient: vertical;
 
             overflow: hidden;
@@ -350,13 +469,14 @@
             font-size: 11px;
 
             overflow: hidden;
+
             text-overflow: ellipsis;
+
             white-space: nowrap;
         }
 
         .card-actions {
             display: grid;
-            grid-template-columns: 1fr;
 
             gap: 8px;
         }
@@ -365,15 +485,19 @@
             min-height: 38px;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             border-radius: 8px;
 
             background: var(--primary);
+
             color: #001015;
 
             font-size: 13px;
+
             font-weight: 800;
 
             transition: .2s;
@@ -381,6 +505,7 @@
 
         .roblox-button:hover {
             background: #52edff;
+
             transform: translateY(-1px);
         }
 
@@ -388,26 +513,34 @@
             min-height: 38px;
 
             border: 1px solid var(--border);
+
             border-radius: 8px;
 
             background: transparent;
+
             color: var(--muted);
 
             cursor: pointer;
+
             transition: .2s;
         }
 
         .details-button:hover {
             border-color: var(--primary);
+
             color: var(--primary);
         }
 
-        /* STATUS */
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
 
         .status {
             min-height: 260px;
 
             display: grid;
+
             place-items: center;
 
             text-align: center;
@@ -416,7 +549,7 @@
         }
 
         .status-content {
-            max-width: 450px;
+            max-width: 500px;
         }
 
         .status-title {
@@ -425,6 +558,7 @@
             color: var(--text);
 
             font-size: 20px;
+
             font-weight: 800;
         }
 
@@ -439,11 +573,13 @@
             margin: 0 auto 15px;
 
             border: 3px solid var(--border);
+
             border-top-color: var(--primary);
 
             border-radius: 50%;
 
-            animation: spin .8s linear infinite;
+            animation:
+                spin .8s linear infinite;
         }
 
         @keyframes spin {
@@ -452,21 +588,28 @@
             }
         }
 
-        /* MODAL */
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
 
         .modal {
             position: fixed;
+
             inset: 0;
 
             z-index: 100;
 
             display: none;
+
             align-items: center;
+
             justify-content: center;
 
             padding: 20px;
 
-            background: rgba(0, 0, 0, .72);
+            background:
+                rgba(0, 0, 0, .72);
 
             backdrop-filter: blur(8px);
         }
@@ -477,6 +620,7 @@
 
         .modal-box {
             width: min(560px, 100%);
+
             max-height: 90vh;
 
             overflow-y: auto;
@@ -484,17 +628,23 @@
             padding: 22px;
 
             border: 1px solid var(--border);
+
             border-radius: 16px;
 
             background: var(--panel);
 
-            box-shadow: 0 30px 100px rgba(0, 0, 0, .6);
+            box-shadow:
+                0 30px 100px
+                rgba(0, 0, 0, .6);
         }
 
         .modal-header {
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
+
             gap: 15px;
 
             margin-bottom: 18px;
@@ -509,9 +659,11 @@
             height: 34px;
 
             border: 1px solid var(--border);
+
             border-radius: 8px;
 
             background: transparent;
+
             color: var(--muted);
 
             cursor: pointer;
@@ -521,6 +673,7 @@
 
         .close-modal:hover {
             color: var(--danger);
+
             border-color: var(--danger);
         }
 
@@ -540,22 +693,27 @@
         .modal-thumbnail img {
             width: 100%;
             height: 100%;
+
             object-fit: cover;
         }
 
         .details {
             display: grid;
+
             gap: 9px;
         }
 
         .detail-row {
             display: flex;
+
             justify-content: space-between;
+
             gap: 15px;
 
             padding: 10px 0;
 
-            border-bottom: 1px solid var(--border);
+            border-bottom:
+                1px solid var(--border);
 
             font-size: 13px;
         }
@@ -570,10 +728,14 @@
             color: var(--text);
 
             text-align: right;
+
             word-break: break-word;
         }
 
-        /* FOOTER */
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
 
         footer {
             padding: 30px 5%;
@@ -583,6 +745,7 @@
             text-align: center;
 
             color: var(--muted);
+
             font-size: 12px;
         }
 
@@ -590,9 +753,13 @@
             color: var(--primary);
         }
 
-        /* MOBILE */
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
 
         @media (max-width: 600px) {
+
             header {
                 padding: 10px 4%;
             }
@@ -637,6 +804,7 @@
         }
 
         @media (max-width: 380px) {
+
             #ugc-list {
                 grid-template-columns: 1fr;
             }
@@ -644,22 +812,29 @@
     </style>
 </head>
 
+
 <body>
 
+
 <header>
+
     <a href="/" class="brand">
-        <div class="brand-logo">A</div>
+
+        <div class="brand-logo">
+            A
+        </div>
 
         <div>
             ADN <span>MARKET</span>
         </div>
+
     </a>
 
-    <div class="header-right">
-        <div id="header-status" class="header-status">
-            Mercado público
-        </div>
+
+    <div class="header-status">
+        Mercado público
     </div>
+
 </header>
 
 
@@ -670,9 +845,10 @@
     </h1>
 
     <p>
-        Explore os UGCs disponíveis no catálogo. Todos os itens
-        apresentados aqui são carregados diretamente da coleção
-        pública cadastrada no ADN Market.
+        Explore os UGCs cadastrados no ADN Market
+        ou pesquise diretamente um Asset ID do Roblox
+        para consultar os dados em tempo real através
+        da API.
     </p>
 
 </section>
@@ -681,13 +857,16 @@
 <section class="controls">
 
     <div class="search-box">
+
         <input
             id="search-input"
             type="search"
-            placeholder="Pesquisar UGC por nome ou ID..."
+            placeholder="Nome ou ID do UGC..."
             autocomplete="off"
         >
+
     </div>
+
 
     <button
         id="clear-search"
@@ -705,9 +884,15 @@
     <div class="market-info">
 
         <div>
-            <span id="item-count">0</span>
-            UGCs encontrados
+
+            <span id="item-count">
+                0
+            </span>
+
+            itens
+
         </div>
+
 
         <div id="preview-status">
             Carregando...
@@ -716,7 +901,10 @@
     </div>
 
 
-    <div id="market-status" class="status">
+    <div
+        id="market-status"
+        class="status"
+    >
 
         <div class="status-content">
 
@@ -741,11 +929,16 @@
 
 
 <footer>
-    Powered by <strong>ADN Market</strong>
+
+    Powered by
+    <strong>ADN Market</strong>
+
 </footer>
 
 
-<!-- MODAL -->
+<!-- =========================================================
+     MODAL
+========================================================= -->
 
 <div
     id="details-modal"
@@ -794,665 +987,631 @@
 
 <script type="module">
 
-    /*
-     * ============================================================
-     * FIREBASE
-     * ============================================================
-     *
-     * O Auth.js continua sendo utilizado para obter a instância
-     * do Firestore.
-     *
-     * NÃO utilizamos onAuthStateChanged.
-     *
-     * Portanto:
-     *
-     * visitante deslogado -> pode acessar
-     * visitante logado    -> pode acessar
-     * admin               -> pode acessar
-     *
-     * A permissão real é controlada pelas Firestore Rules.
-     */
 
-    import {
-        db
-    } from "./js/Auth.js";
+/* ============================================================
+   FIREBASE
+============================================================ */
+
+import {
+    db
+} from "./js/Auth.js";
 
 
-    import {
-        doc,
-        getDoc
-    } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
+import {
+    doc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/11.5.0/firebase-firestore.js";
 
 
-    /*
-     * ============================================================
-     * CONFIGURAÇÃO
-     * ============================================================
-     */
+/* ============================================================
+   CONFIGURAÇÃO
+============================================================ */
 
-    const FIRESTORE_COLLECTION = "arrays";
-    const FIRESTORE_DOCUMENT = "ugcs";
+const FIRESTORE_COLLECTION =
+    "arrays";
 
-    const API_BASE_URL = "https://mod-ui.vercel.app";
-
-    const API_TIMEOUT = 8000;
+const FIRESTORE_DOCUMENT =
+    "ugcs";
 
 
-    /*
-     * ============================================================
-     * ESTADO
-     * ============================================================
-     */
-
-    let currentList = {};
-
-    let allItems = [];
+const API_BASE_URL =
+    "https://mod-ui.vercel.app";
 
 
-    /*
-     * ============================================================
-     * ELEMENTOS
-     * ============================================================
-     */
-
-    const ugcList =
-        document.getElementById("ugc-list");
-
-    const marketStatus =
-        document.getElementById("market-status");
-
-    const previewStatus =
-        document.getElementById("preview-status");
-
-    const itemCount =
-        document.getElementById("item-count");
-
-    const searchInput =
-        document.getElementById("search-input");
-
-    const clearSearch =
-        document.getElementById("clear-search");
-
-    const modal =
-        document.getElementById("details-modal");
-
-    const modalTitle =
-        document.getElementById("modal-title");
-
-    const modalImage =
-        document.getElementById("modal-image");
-
-    const modalDetails =
-        document.getElementById("modal-details");
-
-    const closeModal =
-        document.getElementById("close-modal");
+const API_TIMEOUT =
+    8000;
 
 
-    /*
-     * ============================================================
-     * HELPERS
-     * ============================================================
-     */
+/* ============================================================
+   ESTADO
+============================================================ */
 
-    function escapeHtml(value) {
+let currentList = {};
 
-        if (value === null || value === undefined) {
-            return "";
-        }
+let allItems = [];
 
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+let apiSearchItem = null;
+
+
+/* ============================================================
+   ELEMENTOS
+============================================================ */
+
+const ugcList =
+    document.getElementById(
+        "ugc-list"
+    );
+
+
+const marketStatus =
+    document.getElementById(
+        "market-status"
+    );
+
+
+const previewStatus =
+    document.getElementById(
+        "preview-status"
+    );
+
+
+const itemCount =
+    document.getElementById(
+        "item-count"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "search-input"
+    );
+
+
+const clearSearch =
+    document.getElementById(
+        "clear-search"
+    );
+
+
+const modal =
+    document.getElementById(
+        "details-modal"
+    );
+
+
+const modalTitle =
+    document.getElementById(
+        "modal-title"
+    );
+
+
+const modalImage =
+    document.getElementById(
+        "modal-image"
+    );
+
+
+const modalDetails =
+    document.getElementById(
+        "modal-details"
+    );
+
+
+const closeModal =
+    document.getElementById(
+        "close-modal"
+    );
+
+
+/* ============================================================
+   ESCAPE HTML
+============================================================ */
+
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "";
     }
 
 
-    function formatValue(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
-        if (value === null || value === undefined) {
-            return "N/A";
-        }
+}
 
-        if (typeof value === "boolean") {
-            return value ? "Sim" : "Não";
-        }
 
-        if (typeof value === "object") {
+/* ============================================================
+   FORMAT
+============================================================ */
 
-            try {
-                return JSON.stringify(value);
-            } catch {
-                return "[Objeto]";
-            }
+function formatValue(value) {
 
-        }
-
-        return String(value);
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return "N/A";
     }
 
 
-    function encontrarId(item) {
-
-        return (
-            item?.IdUGC ??
-            item?.id ??
-            item?.Id ??
-            item?.AssetId ??
-            item?.assetId ??
-            null
-        );
-
+    if (
+        typeof value === "boolean"
+    ) {
+        return value
+            ? "Sim"
+            : "Não";
     }
 
 
-    function encontrarNome(item) {
-
-        return (
-            item?.Nome ??
-            item?.Name ??
-            item?.name ??
-            item?.Roblox?.Nome ??
-            item?.Roblox?.Name ??
-            "UGC sem nome"
-        );
-
-    }
-
-
-    function encontrarThumbnail(item) {
-
-        return (
-            item?.Thumbnail ??
-            item?.thumbnail ??
-            item?.Roblox?.Thumbnail ??
-            item?.Roblox?.thumbnail ??
-            null
-        );
-
-    }
-
-
-    function encontrarPreco(item) {
-
-        const roblox =
-            item?.Roblox || {};
-
-        const collectible =
-            item?.CollectiblesItemDetails ||
-            roblox?.CollectiblesItemDetails ||
-            {};
-
-        return (
-            item?.Preco ??
-            item?.Price ??
-            item?.price ??
-            collectible?.Price ??
-            collectible?.price ??
-            roblox?.Price ??
-            roblox?.price ??
-            null
-        );
-
-    }
-
-
-    /*
-     * ============================================================
-     * TIMEOUT FETCH
-     * ============================================================
-     */
-
-    async function fetchComTimeout(url, options = {}, timeout = API_TIMEOUT) {
-
-        const controller =
-            new AbortController();
-
-        const timer =
-            setTimeout(
-                () => controller.abort(),
-                timeout
-            );
+    if (
+        typeof value === "object"
+    ) {
 
         try {
 
-            const response =
-                await fetch(
-                    url,
-                    {
-                        ...options,
-                        signal: controller.signal
-                    }
-                );
+            return JSON.stringify(
+                value
+            );
 
-            return response;
+        } catch {
 
-        } finally {
-
-            clearTimeout(timer);
+            return "[Objeto]";
 
         }
 
     }
 
 
-    /*
-     * ============================================================
-     * THUMBNAIL ROBLOX
-     * ============================================================
-     */
+    return String(value);
 
-    async function buscarThumbnailRoblox(assetId) {
+}
 
-        if (!assetId) {
-            return null;
-        }
 
-        try {
+/* ============================================================
+   ID
+============================================================ */
 
-            const response =
-                await fetchComTimeout(
-                    `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
-                );
+function encontrarId(item) {
 
-            if (!response.ok) {
-                return null;
-            }
+    return (
+        item?.IdUGC ??
+        item?.id ??
+        item?.Id ??
+        item?.AssetId ??
+        item?.assetId ??
+        null
+    );
 
-            const json =
-                await response.json();
+}
 
-            if (
-                json &&
-                json.success &&
-                json.imageUrl
-            ) {
-                return json.imageUrl;
-            }
 
-        } catch (error) {
+/* ============================================================
+   NOME
+============================================================ */
 
-            console.warn(
-                "Erro ao carregar thumbnail:",
-                assetId,
-                error
+function encontrarNome(item) {
+
+    return (
+        item?.Nome ??
+        item?.Name ??
+        item?.name ??
+        item?.Roblox?.Nome ??
+        item?.Roblox?.Name ??
+        item?.Roblox?.name ??
+        "UGC sem nome"
+    );
+
+}
+
+
+/* ============================================================
+   THUMBNAIL
+============================================================ */
+
+function encontrarThumbnail(item) {
+
+    return (
+        item?.Thumbnail ??
+        item?.thumbnail ??
+        item?.Roblox?.Thumbnail ??
+        item?.Roblox?.thumbnail ??
+        item?.Roblox?.Image ??
+        null
+    );
+
+}
+
+
+/* ============================================================
+   PREÇO
+============================================================ */
+
+function encontrarPreco(item) {
+
+    const roblox =
+        item?.Roblox || {};
+
+
+    const collectible =
+        item?.CollectiblesItemDetails ||
+        roblox?.CollectiblesItemDetails ||
+        {};
+
+
+    return (
+        item?.Preco ??
+        item?.Price ??
+        item?.price ??
+        collectible?.Price ??
+        collectible?.price ??
+        roblox?.Price ??
+        roblox?.price ??
+        null
+    );
+
+}
+
+
+/* ============================================================
+   FETCH COM TIMEOUT
+============================================================ */
+
+async function fetchComTimeout(
+    url,
+    options = {},
+    timeout = API_TIMEOUT
+) {
+
+    const controller =
+        new AbortController();
+
+
+    const timer =
+        setTimeout(
+            () => controller.abort(),
+            timeout
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                url,
+                {
+                    ...options,
+                    signal:
+                        controller.signal
+                }
             );
 
-        }
 
+        return response;
+
+    } finally {
+
+        clearTimeout(timer);
+
+    }
+
+}
+
+
+/* ============================================================
+   API — BUSCAR UGC
+============================================================ */
+
+async function buscarUGC(IdUGC) {
+
+    if (!IdUGC) {
         return null;
+    }
+
+
+    const url =
+        `${API_BASE_URL}/ugcs/${encodeURIComponent(IdUGC)}`;
+
+
+    console.log(
+        "[ADN Market] Consultando API:",
+        url
+    );
+
+
+    const response =
+        await fetchComTimeout(
+            url
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            `API retornou HTTP ${response.status}`
+        );
 
     }
 
 
-    /*
-     * ============================================================
-     * NORMALIZAÇÃO
-     * ============================================================
-     */
+    const json =
+        await response.json();
 
-    function normalizarItem(item, chaveOriginal = null) {
 
-        if (!item || typeof item !== "object") {
+    if (
+        !json ||
+        json.success !== true ||
+        !json.data
+    ) {
+
+        throw new Error(
+            "UGC não encontrado pela API."
+        );
+
+    }
+
+
+    return json.data;
+
+}
+
+
+/* ============================================================
+   API — THUMBNAIL
+============================================================ */
+
+async function buscarThumbnailRoblox(
+    assetId
+) {
+
+    if (!assetId) {
+        return null;
+    }
+
+
+    try {
+
+        const response =
+            await fetchComTimeout(
+                `${API_BASE_URL}/thumbnail/${encodeURIComponent(assetId)}`
+            );
+
+
+        if (!response.ok) {
             return null;
         }
 
-        const id =
-            encontrarId(item) ||
-            chaveOriginal;
 
-        const nome =
-            encontrarNome(item);
+        const json =
+            await response.json();
 
-        const thumbnail =
-            encontrarThumbnail(item);
-
-        const preco =
-            encontrarPreco(item);
-
-        return {
-
-            original: item,
-
-            key: chaveOriginal,
-
-            id: id,
-
-            nome: nome,
-
-            thumbnail: thumbnail,
-
-            preco: preco
-
-        };
-
-    }
-
-
-    /*
-     * ============================================================
-     * CONVERTER FIRESTORE DATA
-     * ============================================================
-     *
-     * Seu documento atual:
-     *
-     * arrays
-     *   └── ugcs
-     *       ├── ownerId
-     *       ├── name
-     *       ├── version
-     *       ├── updatedAt
-     *       └── data
-     *
-     * O campo "data" contém o List dos UGCs.
-     */
-
-    function converterLista(data) {
-
-        if (!data) {
-            return [];
-        }
-
-
-        /*
-         * Caso data seja diretamente um objeto:
-         */
 
         if (
-            typeof data === "object" &&
-            !Array.isArray(data)
+            json &&
+            json.success &&
+            json.imageUrl
         ) {
 
-            return Object.entries(data)
-                .map(([key, value]) =>
-                    normalizarItem(value, key)
-                )
-                .filter(Boolean);
+            return json.imageUrl;
 
         }
 
+    } catch (error) {
 
-        /*
-         * Caso data seja um array:
-         */
-
-        if (Array.isArray(data)) {
-
-            return data
-                .map((item, index) =>
-                    normalizarItem(item, index)
-                )
-                .filter(Boolean);
-
-        }
-
-
-        return [];
+        console.warn(
+            "Erro ao carregar thumbnail:",
+            assetId,
+            error
+        );
 
     }
 
 
-    /*
-     * ============================================================
-     * FIRESTORE
-     * ============================================================
-     */
+    return null;
 
-    async function carregarMercado() {
-
-        try {
-
-            marketStatus.innerHTML = `
-                <div class="status-content">
-
-                    <div class="loading-spinner"></div>
-
-                    <div class="status-title">
-                        Carregando mercado
-                    </div>
-
-                    <div class="status-text">
-                        Buscando os UGCs cadastrados...
-                    </div>
-
-                </div>
-            `;
-
-            const referencia =
-                doc(
-                    db,
-                    FIRESTORE_COLLECTION,
-                    FIRESTORE_DOCUMENT
-                );
+}
 
 
-            const snapshot =
-                await getDoc(referencia);
+/* ============================================================
+   NORMALIZAR ITEM
+============================================================ */
+
+function normalizarItem(
+    item,
+    chaveOriginal = null,
+    origem = "firestore"
+) {
+
+    if (
+        !item ||
+        typeof item !== "object"
+    ) {
+        return null;
+    }
 
 
-            if (!snapshot.exists()) {
-
-                throw new Error(
-                    "O documento arrays/ugcs não existe."
-                );
-
-            }
+    const id =
+        encontrarId(item) ||
+        chaveOriginal;
 
 
-            const documento =
-                snapshot.data();
+    return {
+
+        original: item,
+
+        key: chaveOriginal,
+
+        id: id,
+
+        nome:
+            encontrarNome(item),
+
+        thumbnail:
+            encontrarThumbnail(item),
+
+        preco:
+            encontrarPreco(item),
+
+        origem:
+            origem
+
+    };
+
+}
 
 
-            /*
-             * Compatível com seu formato:
-             *
-             * documento.data
-             */
+/* ============================================================
+   CONVERTER LISTA
+============================================================ */
 
-            currentList =
-                documento.data || {};
+function converterLista(data) {
 
-
-            allItems =
-                converterLista(currentList);
+    if (!data) {
+        return [];
+    }
 
 
-            itemCount.textContent =
-                allItems.length;
+    if (
+        Array.isArray(data)
+    ) {
+
+        return data
+            .map(
+                (item, index) =>
+                    normalizarItem(
+                        item,
+                        index,
+                        "firestore"
+                    )
+            )
+            .filter(Boolean);
+
+    }
 
 
-            previewStatus.textContent =
-                `${allItems.length} itens disponíveis`;
+    if (
+        typeof data === "object"
+    ) {
+
+        return Object.entries(data)
+            .map(
+                ([key, value]) =>
+                    normalizarItem(
+                        value,
+                        key,
+                        "firestore"
+                    )
+            )
+            .filter(Boolean);
+
+    }
 
 
-            marketStatus.style.display =
-                "none";
+    return [];
+
+}
 
 
-            renderizarItens(allItems);
+/* ============================================================
+   FIRESTORE
+============================================================ */
 
+async function carregarMercado() {
 
-        } catch (error) {
+    try {
 
-            console.error(
-                "Erro ao carregar mercado:",
-                error
+        const referencia =
+            doc(
+                db,
+                FIRESTORE_COLLECTION,
+                FIRESTORE_DOCUMENT
             );
 
 
-            marketStatus.innerHTML = `
-                <div class="status-content">
-
-                    <div class="status-title">
-                        Não foi possível carregar o mercado
-                    </div>
-
-                    <div class="status-text">
-                        ${escapeHtml(error.message)}
-                        <br><br>
-                        Verifique se o documento
-                        <strong>arrays/ugcs</strong>
-                        permite leitura pública.
-                    </div>
-
-                </div>
-            `;
+        const snapshot =
+            await getDoc(
+                referencia
+            );
 
 
-            previewStatus.textContent =
-                "Erro ao carregar";
+        if (
+            !snapshot.exists()
+        ) {
+
+            throw new Error(
+                "O documento arrays/ugcs não existe."
+            );
 
         }
 
-    }
+
+        const documento =
+            snapshot.data();
 
 
-    /*
-     * ============================================================
-     * RENDER
-     * ============================================================
-     */
-
-    function renderizarItens(items) {
-
-        ugcList.innerHTML = "";
+        currentList =
+            documento.data || {};
 
 
-        if (!items.length) {
-
-            ugcList.innerHTML = `
-                <div class="status">
-                    <div class="status-content">
-
-                        <div class="status-title">
-                            Nenhum UGC encontrado
-                        </div>
-
-                        <div class="status-text">
-                            Ainda não existem itens disponíveis
-                            neste mercado.
-                        </div>
-
-                    </div>
-                </div>
-            `;
-
-            return;
-
-        }
+        allItems =
+            converterLista(
+                currentList
+            );
 
 
         itemCount.textContent =
-            items.length;
+            allItems.length;
 
 
-        items.forEach(
-            (item, index) => {
+        previewStatus.textContent =
+            `${allItems.length} itens cadastrados`;
 
-                const card =
-                    criarCard(item, index);
 
-                ugcList.appendChild(card);
+        marketStatus.style.display =
+            "none";
 
-            }
+
+        renderizarItens(
+            allItems
         );
 
-    }
+
+    } catch (error) {
+
+        console.error(
+            "Erro Firestore:",
+            error
+        );
 
 
-    /*
-     * ============================================================
-     * CARD
-     * ============================================================
-     */
+        marketStatus.innerHTML = `
 
-    function criarCard(item, index) {
+            <div class="status-content">
 
-        const card =
-            document.createElement("article");
-
-        card.className =
-            "ugc-card";
-
-
-        const thumbnail =
-            item.thumbnail;
-
-
-        let thumbnailHtml;
-
-        if (thumbnail) {
-
-            thumbnailHtml = `
-                <img
-                    src="${escapeHtml(thumbnail)}"
-                    alt="${escapeHtml(item.nome)}"
-                    loading="lazy"
-                    onerror="this.style.display='none';"
-                >
-            `;
-
-        } else {
-
-            thumbnailHtml = `
-                <div class="thumbnail-placeholder">
-                    Carregando...
-                </div>
-            `;
-
-        }
-
-
-        const preco =
-            item.preco !== null &&
-            item.preco !== undefined
-                ? `${escapeHtml(item.preco)} Robux`
-                : "Preço não informado";
-
-
-        card.innerHTML = `
-
-            <div class="ugc-thumbnail">
-
-                ${thumbnailHtml}
-
-                <div class="price">
-                    ${preco}
+                <div class="status-title">
+                    Erro ao carregar mercado
                 </div>
 
-            </div>
+                <div class="status-text">
 
+                    ${escapeHtml(
+                        error.message
+                    )}
 
-            <div class="card-content">
+                    <br><br>
 
-                <div class="ugc-name">
-                    ${escapeHtml(item.nome)}
-                </div>
-
-                <div class="ugc-id">
-                    ID: ${escapeHtml(item.id || "N/A")}
-                </div>
-
-
-                <div class="card-actions">
-
-                    <a
-                        class="roblox-button"
-                        href="${gerarLinkRoblox(item.id)}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Ver no Roblox
-                    </a>
-
-                    <button
-                        class="details-button"
-                        type="button"
-                    >
-                        Detalhes
-                    </button>
+                    Verifique se
+                    <strong>
+                        arrays/ugcs
+                    </strong>
+                    possui leitura pública
+                    nas regras do Firestore.
 
                 </div>
 
@@ -1461,452 +1620,1015 @@
         `;
 
 
-        const detailsButton =
-            card.querySelector(
-                ".details-button"
-            );
+        previewStatus.textContent =
+            "Erro";
+
+    }
+
+}
 
 
-        detailsButton.addEventListener(
-            "click",
-            () => abrirDetalhes(item)
-        );
+/* ============================================================
+   RENDER
+============================================================ */
+
+function renderizarItens(
+    items
+) {
+
+    ugcList.innerHTML =
+        "";
 
 
-        /*
-         * Se não tiver thumbnail no Firestore,
-         * tenta buscar pela API.
-         */
+    /*
+     * Remove o resultado da API
+     * quando estamos renderizando
+     * novamente a lista.
+     */
 
-        if (!thumbnail && item.id) {
-
-            carregarThumbnailCard(
-                item,
-                card
-            );
-
-        }
+    apiSearchItem =
+        null;
 
 
-        return card;
+    itemCount.textContent =
+        items.length;
+
+
+    if (
+        !items.length
+    ) {
+
+        ugcList.innerHTML = `
+
+            <div class="status">
+
+                <div class="status-content">
+
+                    <div class="status-title">
+                        Nenhum UGC encontrado
+                    </div>
+
+                    <div class="status-text">
+                        Pesquise pelo nome ou
+                        informe um Asset ID Roblox
+                        para consultar a API.
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
 
     }
 
 
-    /*
-     * ============================================================
-     * THUMBNAIL DO CARD
-     * ============================================================
-     */
+    items.forEach(
+        (item, index) => {
 
-    async function carregarThumbnailCard(item, card) {
+            ugcList.appendChild(
+                criarCard(
+                    item,
+                    index
+                )
+            );
 
-        const image =
-            await buscarThumbnailRoblox(item.id);
-
-
-        if (!image) {
-            return;
         }
+    );
+
+}
 
 
-        item.thumbnail =
-            image;
+/* ============================================================
+   CARD
+============================================================ */
 
+function criarCard(
+    item,
+    index
+) {
 
-        const container =
-            card.querySelector(
-                ".ugc-thumbnail"
-            );
-
-
-        const price =
-            container.querySelector(
-                ".price"
-            );
-
-
-        const img =
-            document.createElement("img");
-
-
-        img.src =
-            image;
-
-        img.alt =
-            item.nome;
-
-        img.loading =
-            "lazy";
-
-
-        container.insertBefore(
-            img,
-            price
+    const card =
+        document.createElement(
+            "article"
         );
 
 
-        const placeholder =
-            container.querySelector(
-                ".thumbnail-placeholder"
-            );
+    card.className =
+        "ugc-card";
 
 
-        if (placeholder) {
-            placeholder.remove();
-        }
+    const thumbnail =
+        item.thumbnail;
+
+
+    const badge =
+        item.origem === "api"
+
+            ? `
+                <div class="badge api">
+                    API
+                </div>
+            `
+
+            : `
+                <div class="badge saved">
+                    Cadastrado
+                </div>
+            `;
+
+
+    let thumbnailHtml;
+
+
+    if (thumbnail) {
+
+        thumbnailHtml = `
+
+            <img
+                src="${escapeHtml(thumbnail)}"
+                alt="${escapeHtml(item.nome)}"
+                loading="lazy"
+            >
+
+        `;
+
+    } else {
+
+        thumbnailHtml = `
+
+            <div class="thumbnail-placeholder">
+                Carregando...
+            </div>
+
+        `;
 
     }
 
 
+    const preco =
+        item.preco !== null &&
+        item.preco !== undefined
+
+            ? `${escapeHtml(item.preco)} Robux`
+
+            : "Preço não informado";
+
+
+    card.innerHTML = `
+
+        <div class="ugc-thumbnail">
+
+            ${thumbnailHtml}
+
+            ${badge}
+
+            <div class="price">
+                ${preco}
+            </div>
+
+        </div>
+
+
+        <div class="card-content">
+
+            <div class="ugc-name">
+                ${escapeHtml(item.nome)}
+            </div>
+
+
+            <div class="ugc-id">
+                ID: ${escapeHtml(
+                    item.id || "N/A"
+                )}
+            </div>
+
+
+            <div class="card-actions">
+
+                <a
+                    class="roblox-button"
+                    href="${gerarLinkRoblox(item.id)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Ver no Roblox
+                </a>
+
+
+                <button
+                    class="details-button"
+                    type="button"
+                >
+                    Detalhes
+                </button>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    card.querySelector(
+        ".details-button"
+    ).addEventListener(
+        "click",
+        () =>
+            abrirDetalhes(item)
+    );
+
+
     /*
-     * ============================================================
-     * LINK ROBLOX
-     * ============================================================
+     * Se o Firestore não possui
+     * thumbnail, tenta API.
      */
 
-    function gerarLinkRoblox(assetId) {
+    if (
+        !thumbnail &&
+        item.id
+    ) {
 
-        if (!assetId) {
-            return "#";
-        }
-
-        return `https://www.roblox.com/catalog/${encodeURIComponent(assetId)}`;
+        carregarThumbnailCard(
+            item,
+            card
+        );
 
     }
 
 
-    /*
-     * ============================================================
-     * MODAL
-     * ============================================================
-     */
+    return card;
 
-    function abrirDetalhes(item) {
-
-        modalTitle.textContent =
-            item.nome;
+}
 
 
-        modalImage.src =
-            item.thumbnail || "";
+/* ============================================================
+   THUMBNAIL DO CARD
+============================================================ */
 
+async function carregarThumbnailCard(
+    item,
+    card
+) {
 
-        modalImage.alt =
-            item.nome;
-
-
-        const dados =
-            item.original;
-
-
-        modalDetails.innerHTML =
-            "";
-
-
-        /*
-         * Mostra os campos principais
-         */
-
-        adicionarDetalhe(
-            "Nome",
-            item.nome
-        );
-
-
-        adicionarDetalhe(
-            "ID",
+    const image =
+        await buscarThumbnailRoblox(
             item.id
         );
 
 
-        if (
-            item.preco !== null &&
-            item.preco !== undefined
-        ) {
-
-            adicionarDetalhe(
-                "Preço",
-                `${item.preco} Robux`
-            );
-
-        }
-
-
-        /*
-         * Campos extras do objeto
-         */
-
-        if (dados.Roblox) {
-
-            const roblox =
-                dados.Roblox;
-
-
-            if (
-                roblox.CreatorName ||
-                roblox.Creator
-            ) {
-
-                adicionarDetalhe(
-                    "Criador",
-                    roblox.CreatorName ||
-                    roblox.Creator
-                );
-
-            }
-
-
-            if (roblox.AssetType) {
-
-                adicionarDetalhe(
-                    "Tipo",
-                    roblox.AssetType
-                );
-
-            }
-
-
-            if (roblox.Description) {
-
-                adicionarDetalhe(
-                    "Descrição",
-                    roblox.Description
-                );
-
-            }
-
-        }
-
-
-        /*
-         * Botão Roblox
-         */
-
-        const link =
-            gerarLinkRoblox(item.id);
-
-
-        adicionarDetalhe(
-            "Roblox",
-            `<a
-                href="${link}"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="color: var(--primary);"
-            >
-                Abrir item
-            </a>`,
-            true
-        );
-
-
-        modal.classList.add(
-            "active"
-        );
-
+    if (!image) {
+        return;
     }
 
 
-    function adicionarDetalhe(
-        label,
-        value,
-        html = false
+    item.thumbnail =
+        image;
+
+
+    const container =
+        card.querySelector(
+            ".ugc-thumbnail"
+        );
+
+
+    const price =
+        container.querySelector(
+            ".price"
+        );
+
+
+    const img =
+        document.createElement(
+            "img"
+        );
+
+
+    img.src =
+        image;
+
+
+    img.alt =
+        item.nome;
+
+
+    img.loading =
+        "lazy";
+
+
+    container.insertBefore(
+        img,
+        price
+    );
+
+
+    const placeholder =
+        container.querySelector(
+            ".thumbnail-placeholder"
+        );
+
+
+    if (placeholder) {
+        placeholder.remove();
+    }
+
+}
+
+
+/* ============================================================
+   BUSCA API POR ID
+============================================================ */
+
+async function pesquisarPorIdAPI(
+    assetId
+) {
+
+    /*
+     * Evita requisições para valores
+     * que claramente não são IDs.
+     */
+
+    if (
+        !/^\d+$/.test(
+            assetId
+        )
     ) {
 
-        const row =
-            document.createElement("div");
-
-        row.className =
-            "detail-row";
-
-
-        const labelElement =
-            document.createElement("div");
-
-        labelElement.className =
-            "detail-label";
-
-        labelElement.textContent =
-            label;
-
-
-        const valueElement =
-            document.createElement("div");
-
-        valueElement.className =
-            "detail-value";
-
-
-        if (html) {
-
-            valueElement.innerHTML =
-                value;
-
-        } else {
-
-            valueElement.textContent =
-                formatValue(value);
-
-        }
-
-
-        row.appendChild(
-            labelElement
-        );
-
-        row.appendChild(
-            valueElement
-        );
-
-
-        modalDetails.appendChild(
-            row
-        );
+        return null;
 
     }
-
-
-    function fecharModal() {
-
-        modal.classList.remove(
-            "active"
-        );
-
-    }
-
-
-    closeModal.addEventListener(
-        "click",
-        fecharModal
-    );
-
-
-    modal.addEventListener(
-        "click",
-        event => {
-
-            if (
-                event.target === modal
-            ) {
-                fecharModal();
-            }
-
-        }
-    );
-
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape"
-            ) {
-                fecharModal();
-            }
-
-        }
-    );
 
 
     /*
-     * ============================================================
-     * PESQUISA
-     * ============================================================
+     * Primeiro verifica se já
+     * existe no Firestore.
      */
 
-    function pesquisar() {
+    const encontrado =
+        allItems.find(
+            item =>
+                String(item.id) ===
+                String(assetId)
+        );
 
-        const termo =
-            searchInput.value
-                .trim()
-                .toLowerCase();
+
+    if (encontrado) {
+
+        return encontrado;
+
+    }
 
 
-        if (!termo) {
+    /*
+     * Não está cadastrado.
+     *
+     * Agora consulta a API.
+     */
 
-            renderizarItens(
-                allItems
+    previewStatus.textContent =
+        `Consultando API para ${assetId}...`;
+
+
+    try {
+
+        const data =
+            await buscarUGC(
+                assetId
             );
 
+
+        const item =
+            normalizarItem(
+                data,
+                assetId,
+                "api"
+            );
+
+
+        if (!item) {
+            return null;
+        }
+
+
+        /*
+         * Se a API não trouxe thumbnail,
+         * buscamos pelo endpoint de thumbnail.
+         */
+
+        if (
+            !item.thumbnail
+        ) {
+
+            item.thumbnail =
+                await buscarThumbnailRoblox(
+                    assetId
+                );
+
+        }
+
+
+        return item;
+
+
+    } catch (error) {
+
+        console.error(
+            "[ADN Market] API:",
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* ============================================================
+   PESQUISA
+============================================================ */
+
+let searchTimer = null;
+
+
+async function pesquisar() {
+
+    const termo =
+        searchInput.value
+            .trim();
+
+
+    /*
+     * Pesquisa vazia
+     */
+
+    if (!termo) {
+
+        apiSearchItem =
+            null;
+
+
+        renderizarItens(
+            allItems
+        );
+
+
+        previewStatus.textContent =
+            `${allItems.length} itens cadastrados`;
+
+
+        return;
+
+    }
+
+
+    /*
+     * Se for um número,
+     * tratamos como Asset ID.
+     */
+
+    if (
+        /^\d+$/.test(
+            termo
+        )
+    ) {
+
+        /*
+         * Mostra imediatamente
+         * se já estiver cadastrado.
+         */
+
+        const local =
+            allItems.filter(
+                item =>
+                    String(item.id)
+                        .includes(termo)
+            );
+
+
+        if (
+            local.length
+        ) {
+
+            renderizarItens(
+                local
+            );
+
+
+            /*
+             * Se for ID exato,
+             * não precisa chamar API.
+             */
+
+            const exact =
+                allItems.find(
+                    item =>
+                        String(item.id) ===
+                        termo
+                );
+
+
+            if (exact) {
+
+                previewStatus.textContent =
+                    "UGC encontrado no mercado";
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+         * ID não encontrado.
+         *
+         * Chama API em tempo real.
+         */
+
+        apiSearchItem =
+            await pesquisarPorIdAPI(
+                termo
+            );
+
+
+        if (
+            apiSearchItem
+        ) {
+
+            ugcList.innerHTML =
+                "";
+
+
+            ugcList.appendChild(
+                criarCard(
+                    apiSearchItem,
+                    0
+                )
+            );
+
+
+            itemCount.textContent =
+                "1";
+
+
             previewStatus.textContent =
-                `${allItems.length} itens disponíveis`;
+                "Resultado encontrado pela API em tempo real";
+
 
             return;
 
         }
 
 
-        const filtrados =
-            allItems.filter(
-                item => {
+        /*
+         * API também não encontrou.
+         */
 
-                    const nome =
-                        String(
-                            item.nome || ""
-                        ).toLowerCase();
+        ugcList.innerHTML = `
+
+            <div class="status">
+
+                <div class="status-content">
+
+                    <div class="status-title">
+                        UGC não encontrado
+                    </div>
+
+                    <div class="status-text">
+
+                        O ID
+                        <strong>
+                            ${escapeHtml(termo)}
+                        </strong>
+                        não está cadastrado
+                        no ADN Market e também
+                        não foi encontrado pela API.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
 
 
-                    const id =
-                        String(
-                            item.id || ""
-                        ).toLowerCase();
-
-
-                    return (
-                        nome.includes(termo) ||
-                        id.includes(termo)
-                    );
-
-                }
-            );
-
-
-        renderizarItens(
-            filtrados
-        );
+        itemCount.textContent =
+            "0";
 
 
         previewStatus.textContent =
-            `${filtrados.length} resultados`;
+            "Nenhum resultado";
+
+
+        return;
 
     }
 
 
-    searchInput.addEventListener(
-        "input",
-        pesquisar
+    /*
+     * Pesquisa por nome.
+     *
+     * Aqui usamos somente os dados
+     * que já estão no Firestore.
+     */
+
+    const filtrados =
+        allItems.filter(
+            item => {
+
+                const nome =
+                    String(
+                        item.nome || ""
+                    ).toLowerCase();
+
+
+                const id =
+                    String(
+                        item.id || ""
+                    ).toLowerCase();
+
+
+                return (
+                    nome.includes(
+                        termo.toLowerCase()
+                    ) ||
+                    id.includes(
+                        termo.toLowerCase()
+                    )
+                );
+
+            }
+        );
+
+
+    renderizarItens(
+        filtrados
     );
 
 
-    clearSearch.addEventListener(
-        "click",
-        () => {
+    previewStatus.textContent =
+        `${filtrados.length} resultados`;
 
-            searchInput.value =
-                "";
+}
 
-            renderizarItens(
-                allItems
+
+/* ============================================================
+   INPUT
+============================================================ */
+
+searchInput.addEventListener(
+    "input",
+    () => {
+
+        clearTimeout(
+            searchTimer
+        );
+
+
+        /*
+         * Pequeno debounce para não
+         * disparar várias chamadas
+         * à API enquanto o usuário digita.
+         */
+
+        searchTimer =
+            setTimeout(
+                pesquisar,
+                350
             );
 
-            previewStatus.textContent =
-                `${allItems.length} itens disponíveis`;
+    }
+);
 
-            searchInput.focus();
 
-        }
+/* ============================================================
+   LIMPAR
+============================================================ */
+
+clearSearch.addEventListener(
+    "click",
+    () => {
+
+        searchInput.value =
+            "";
+
+
+        apiSearchItem =
+            null;
+
+
+        renderizarItens(
+            allItems
+        );
+
+
+        previewStatus.textContent =
+            `${allItems.length} itens cadastrados`;
+
+
+        searchInput.focus();
+
+    }
+);
+
+
+/* ============================================================
+   LINK ROBLOX
+============================================================ */
+
+function gerarLinkRoblox(
+    assetId
+) {
+
+    if (!assetId) {
+        return "#";
+    }
+
+
+    return (
+        "https://www.roblox.com/catalog/" +
+        encodeURIComponent(assetId)
     );
+
+}
+
+
+/* ============================================================
+   MODAL
+============================================================ */
+
+function abrirDetalhes(
+    item
+) {
+
+    modalTitle.textContent =
+        item.nome;
+
+
+    modalImage.src =
+        item.thumbnail || "";
+
+
+    modalImage.alt =
+        item.nome;
+
+
+    modalDetails.innerHTML =
+        "";
+
+
+    adicionarDetalhe(
+        "Origem",
+        item.origem === "api"
+            ? "API em tempo real"
+            : "ADN Market"
+    );
+
+
+    adicionarDetalhe(
+        "Nome",
+        item.nome
+    );
+
+
+    adicionarDetalhe(
+        "ID",
+        item.id
+    );
+
+
+    if (
+        item.preco !== null &&
+        item.preco !== undefined
+    ) {
+
+        adicionarDetalhe(
+            "Preço",
+            `${item.preco} Robux`
+        );
+
+    }
+
+
+    const dados =
+        item.original;
 
 
     /*
-     * ============================================================
-     * INICIALIZAÇÃO
-     * ============================================================
+     * Roblox
      */
 
-    carregarMercado();
+    if (
+        dados?.Roblox
+    ) {
+
+        const roblox =
+            dados.Roblox;
+
+
+        if (
+            roblox.CreatorName ||
+            roblox.Creator ||
+            roblox.creator
+        ) {
+
+            adicionarDetalhe(
+                "Criador",
+                roblox.CreatorName ||
+                roblox.Creator ||
+                roblox.creator
+            );
+
+        }
+
+
+        if (
+            roblox.AssetType
+        ) {
+
+            adicionarDetalhe(
+                "Tipo",
+                roblox.AssetType
+            );
+
+        }
+
+
+        if (
+            roblox.Description
+        ) {
+
+            adicionarDetalhe(
+                "Descrição",
+                roblox.Description
+            );
+
+        }
+
+    }
+
+
+    adicionarDetalhe(
+        "Roblox",
+        `
+            <a
+                href="${gerarLinkRoblox(item.id)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                style="
+                    color: var(--primary);
+                    font-weight: 700;
+                "
+            >
+                Abrir item
+            </a>
+        `,
+        true
+    );
+
+
+    modal.classList.add(
+        "active"
+    );
+
+}
+
+
+/* ============================================================
+   ADICIONAR DETALHE
+============================================================ */
+
+function adicionarDetalhe(
+    label,
+    value,
+    html = false
+) {
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+
+    row.className =
+        "detail-row";
+
+
+    const labelElement =
+        document.createElement(
+            "div"
+        );
+
+
+    labelElement.className =
+        "detail-label";
+
+
+    labelElement.textContent =
+        label;
+
+
+    const valueElement =
+        document.createElement(
+            "div"
+        );
+
+
+    valueElement.className =
+        "detail-value";
+
+
+    if (html) {
+
+        valueElement.innerHTML =
+            value;
+
+    } else {
+
+        valueElement.textContent =
+            formatValue(value);
+
+    }
+
+
+    row.appendChild(
+        labelElement
+    );
+
+
+    row.appendChild(
+        valueElement
+    );
+
+
+    modalDetails.appendChild(
+        row
+    );
+
+}
+
+
+/* ============================================================
+   FECHAR MODAL
+============================================================ */
+
+function fecharModal() {
+
+    modal.classList.remove(
+        "active"
+    );
+
+}
+
+
+closeModal.addEventListener(
+    "click",
+    fecharModal
+);
+
+
+modal.addEventListener(
+    "click",
+    event => {
+
+        if (
+            event.target === modal
+        ) {
+
+            fecharModal();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            fecharModal();
+
+        }
+
+    }
+);
+
+
+/* ============================================================
+   INICIAR
+============================================================ */
+
+carregarMercado();
 
 </script>
 
