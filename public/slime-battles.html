@@ -1035,6 +1035,24 @@
                 flex-direction: column;
             }
 
+
+            .thumbnail-frame {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    pointer-events: none;
+
+    z-index: 2;
+
+    padding: 0;
+}
+
         }
 
     </style>
@@ -2168,12 +2186,19 @@ function criarCard(
                 </span>
 
 
-                <img
-                    data-id="${item.id}"
-                    alt="${escapeHtml(
-                        item.name
-                    )}"
-                >
+               <img
+    data-id="${item.id}"
+    alt="${escapeHtml(
+        item.name
+    )}"
+>
+
+<img
+    class="thumbnail-frame"
+    src="image/UGC/Thumb_Limited_U.png"
+    alt=""
+    aria-hidden="true"
+>
 
             </div>
 
