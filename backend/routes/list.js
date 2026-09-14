@@ -1,9 +1,16 @@
+
 import { Router } from "express";
 
 const router = Router();
 
+const API_MARKET = "https://mod-ui.vercel.app/market/";
+const API_UGCS = "https://mod-ui.vercel.app/ugcs/";
+
+const DB_ID = "mod-ui";
+
 /**
- * Converte valores do Firestore REST para valores JavaScript normais.
+ * Converte valores do Firestore REST
+ * para valores JavaScript normais.
  */
 function convertFirestoreValue(value) {
     if (!value) return null;
@@ -51,7 +58,7 @@ function convertFirestoreValue(value) {
 }
 
 /**
- * Converte um objeto "fields" do Firestore.
+ * Converte os fields do Firestore.
  */
 function convertFirestoreFields(fields) {
     const result = {};
@@ -61,6 +68,72 @@ function convertFirestoreFields(fields) {
     }
 
     return result;
+}
+
+/**
+ * Atualiza os dados do UGC usando a API.
+ */
+async function updateUGCData(ugc) {
+    if (!ugc || !ugc.IdUGC) {
+        return ugc;
+    }
+
+    const id = ugc.IdUGC;
+
+    try {
+        /*
+         * Primeiro tenta /ugcs/:id
+         */
+        let response = await fetch(`${API_UGCS}${id}`);
+
+        /*
+         * Se falhar, tenta /market/:id
+         */
+        if (!response.ok) {
+            response = await fetch(`${API_MARKET}${id}`);
+        }
+
+        if (!response.ok) {
+            console.warn(
+                `Não foi possível atualizar UGC ${id}`
+            );
+
+            return ugc;
+        }
+
+        const result = await response.json();
+
+        /*
+         * Dependendo da estrutura da sua API,
+         * tenta localizar os dados.
+         */
+        const liveData =
+            result?.data ||
+            result?.Roblox ||
+            result;
+
+        /*
+         * Mantém os dados do Firestore e
+         * substitui/adiciona os dados atuais.
+         */
+        return {
+            ...ugc,
+
+            Roblox: {
+                ...(ugc.Roblox || {}),
+                ...(liveData.Roblox || liveData)
+            }
+        };
+
+    } catch (error) {
+        console.warn(
+            `Erro ao atualizar UGC ${id}:`,
+            error.message
+        );
+
+        // Se a API falhar, mantém o cache do Firestore.
+        return ugc;
+    }
 }
 
 /**
@@ -87,8 +160,12 @@ function toLua(value, indent = 0) {
         return luaString(value);
     }
 
-    if (typeof value === "number" || typeof value === "boolean") {
+    if (typeof value === "number") {
         return String(value);
+    }
+
+    if (typeof value === "boolean") {
+        return value ? "true" : "false";
     }
 
     if (Array.isArray(value)) {
@@ -120,19 +197,50 @@ function toLua(value, indent = 0) {
     return "nil";
 }
 
+
 router.get("/", async (req, res) => {
+
     try {
-        const projectId = "mod-ui";
+
+        /*
+         * ======================================================
+         * MODO DE ATUALIZAÇÃO
+         * ======================================================
+         *
+         * /list?live=true
+         * → consulta API atual
+         *
+         * /list?live=false
+         * → somente Firestore
+         *
+         * Sem parâmetro:
+         * → false
+         */
+
+        const live =
+            String(req.query.live).toLowerCase() === "true";
+
+
+        /*
+         * ======================================================
+         * FIRESTORE
+         * ======================================================
+         */
 
         const url =
-            `https://firestore.googleapis.com/v1/projects/${projectId}` +
+            `https://firestore.googleapis.com/v1/projects/${DB_ID}` +
             `/databases/(default)/documents/arrays/ugcs`;
 
         const response = await fetch(url);
+
         const data = await response.json();
 
         if (!response.ok) {
-            console.error("Firestore REST Error:", data);
+
+            console.error(
+                "Firestore REST Error:",
+                data
+            );
 
             return res.status(response.status).json({
                 success: false,
@@ -141,29 +249,84 @@ router.get("/", async (req, res) => {
             });
         }
 
-        // Converte o documento Firestore para JSON normal
-        const firestoreData = convertFirestoreFields(
-            data.fields || {}
-        );
 
         /*
-         * Seu documento possui:
-         *
-         * fields
-         * └── data
-         *     └── { UGCs }
-         *
-         * Então pegamos somente data.
+         * ======================================================
+         * CONVERTER FIRESTORE
+         * ======================================================
          */
-        const ugcs = firestoreData.data || {};
 
-        // Gera Lua
-        const lua = `local UGCs = ${toLua(ugcs)}\n\nreturn UGCs`;
+        const firestoreData =
+            convertFirestoreFields(
+                data.fields || {}
+            );
 
-        return res.type("text/plain").send(lua);
+        const ugcs =
+            firestoreData.data || {};
+
+
+        /*
+         * ======================================================
+         * ATUALIZAÇÃO EM TEMPO REAL
+         * ======================================================
+         */
+
+        let finalUGCs = ugcs;
+
+        if (live) {
+
+            const entries =
+                Object.entries(ugcs);
+
+            const updatedEntries =
+                await Promise.all(
+                    entries.map(
+                        async ([name, ugc]) => {
+
+                            const updated =
+                                await updateUGCData(ugc);
+
+                            return [
+                                name,
+                                updated
+                            ];
+                        }
+                    )
+                );
+
+            finalUGCs =
+                Object.fromEntries(
+                    updatedEntries
+                );
+        }
+
+
+        /*
+         * ======================================================
+         * LUA
+         * ======================================================
+         */
+
+        const lua =
+            `local UGCs = ${toLua(finalUGCs)}\n\nreturn UGCs`;
+
+
+        /*
+         * ======================================================
+         * RESPOSTA
+         * ======================================================
+         */
+
+        return res
+            .type("text/plain")
+            .send(lua);
 
     } catch (error) {
-        console.error("Erro ao buscar arrays/ugcs:", error);
+
+        console.error(
+            "Erro ao buscar arrays/ugcs:",
+            error
+        );
 
         return res.status(500).json({
             success: false,
@@ -173,7 +336,9 @@ router.get("/", async (req, res) => {
     }
 });
 
+
 export default router;
+
 
 /*
 import { Router } from "express";
