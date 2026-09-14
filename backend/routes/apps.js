@@ -39,7 +39,7 @@ const __dirname =
 const SCRIPT_ROOT =
     path.resolve(
         __dirname,
-        "../../Script"
+        "../../../scripts"
     );
 
 
