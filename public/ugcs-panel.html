@@ -306,7 +306,11 @@
                     Limpar
                 </button>
 
+                <button class="danger" onclick="extrairLuaAtual()" > Extrair Lua Atual </button>
+                
             </div>
+
+            <textarea id="lua-output" placeholder="O Lua gerado aparecerá aqui..." style=" width: 100%; min-height: 500px; margin-top: 15px; resize: vertical; background: #080808; color: #ddd; border: 1px solid #333; border-radius: 8px; padding: 15px; font-family: Consolas, monospace; font-size: 13px; outline: none; " ></textarea>
 
         </div>
 
@@ -2308,6 +2312,516 @@ function extrairDadosRoblox(roblox, Thumbnail = null) {
                 "Nenhuma lista carregada.";
         };
 
+
+/*
+============================================================
+SERIALIZADOR JAVASCRIPT -> LUA
+============================================================
+*/
+
+function escaparStringLua(valor) {
+    return String(valor)
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\r/g, "\\r")
+        .replace(/\n/g, "\\n")
+        .replace(/\t/g, "\\t");
+}
+
+
+function chaveLua(chave) {
+
+    return `["${escaparStringLua(chave)}"]`;
+}
+
+
+function valorParaLua(valor, nivel = 0) {
+
+    const indent =
+        "    ".repeat(nivel);
+
+    const proximoIndent =
+        "    ".repeat(nivel + 1);
+
+
+    /*
+    ========================================================
+    NULL / NIL
+    ========================================================
+    */
+
+    if (
+        valor === null ||
+        valor === undefined
+    ) {
+        return "nil";
+    }
+
+
+    /*
+    ========================================================
+    BOOLEAN
+    ========================================================
+    */
+
+    if (typeof valor === "boolean") {
+
+        return valor
+            ? "true"
+            : "false";
+    }
+
+
+    /*
+    ========================================================
+    NUMBER
+    ========================================================
+    */
+
+    if (typeof valor === "number") {
+
+        if (!Number.isFinite(valor)) {
+            return "nil";
+        }
+
+        return String(valor);
+    }
+
+
+    /*
+    ========================================================
+    STRING
+    ========================================================
+    */
+
+    if (typeof valor === "string") {
+
+        return `"${escaparStringLua(valor)}"`;
+    }
+
+
+    /*
+    ========================================================
+    ARRAY
+    ========================================================
+    */
+
+    if (Array.isArray(valor)) {
+
+        if (valor.length === 0) {
+            return "{}";
+        }
+
+        const linhas = [];
+
+        linhas.push("{");
+
+        valor.forEach(
+            (item, index) => {
+
+                const valorLua =
+                    valorParaLua(
+                        item,
+                        nivel + 1
+                    );
+
+                linhas.push(
+                    `${proximoIndent}${valorLua}` +
+                    `${index < valor.length - 1 ? "," : ""}`
+                );
+            }
+        );
+
+        linhas.push(
+            `${indent}}`
+        );
+
+        return linhas.join("\n");
+    }
+
+
+    /*
+    ========================================================
+    OBJECT / TABLE
+    ========================================================
+    */
+
+    if (typeof valor === "object") {
+
+        const entradas =
+            Object.entries(valor);
+
+        if (entradas.length === 0) {
+            return "{}";
+        }
+
+        const linhas = [];
+
+        linhas.push("{");
+
+        entradas.forEach(
+            ([chave, conteudo], index) => {
+
+                const valorLua =
+                    valorParaLua(
+                        conteudo,
+                        nivel + 1
+                    );
+
+                linhas.push(
+                    `${proximoIndent}${chaveLua(chave)} = ${valorLua}` +
+                    `${index < entradas.length - 1 ? "," : ""}`
+                );
+            }
+        );
+
+        linhas.push(
+            `${indent}}`
+        );
+
+        return linhas.join("\n");
+    }
+
+
+    /*
+    ========================================================
+    TIPO DESCONHECIDO
+    ========================================================
+    */
+
+    return "nil";
+}
+
+
+/*
+============================================================
+GERAR LUA
+============================================================
+*/
+
+function gerarLuaAtual(List = currentList) {
+
+    if (
+        !List ||
+        typeof List !== "object"
+    ) {
+        throw new Error(
+            "Nenhuma lista carregada para exportar."
+        );
+    }
+
+
+    const linhas = [];
+
+    linhas.push(
+        "--[["
+    );
+
+    linhas.push(
+        "    UGCS_DATA"
+    );
+
+    linhas.push(
+        "    Gerado automaticamente pelo painel."
+    );
+
+    linhas.push(
+        `    Data: ${new Date().toLocaleString("pt-BR")}`
+    );
+
+    linhas.push(
+        "--]]"
+    );
+
+    linhas.push("");
+
+    linhas.push(
+        "local List ="
+    );
+
+    linhas.push(
+        valorParaLua(List)
+    );
+
+    linhas.push("");
+
+    linhas.push(
+        "return List"
+    );
+
+
+    return linhas.join("\n");
+}
+
+
+/*
+============================================================
+COPIAR TEXTO
+============================================================
+
+1. Tenta Clipboard API
+2. Se não existir/falhar:
+   usa document.execCommand("copy")
+3. Se também falhar:
+   deixa o texto selecionado para cópia manual
+============================================================
+*/
+
+async function copiarTexto(texto) {
+
+    /*
+    ========================================================
+    CLIPBOARD API MODERNA
+    ========================================================
+    */
+
+    if (
+        navigator.clipboard &&
+        typeof navigator.clipboard.writeText === "function"
+    ) {
+
+        try {
+
+            await navigator.clipboard.writeText(
+                texto
+            );
+
+            console.log(
+                "Texto copiado usando Clipboard API."
+            );
+
+            return true;
+
+        } catch (error) {
+
+            console.warn(
+                "Clipboard API falhou. Tentando fallback...",
+                error
+            );
+        }
+    }
+
+
+    /*
+    ========================================================
+    FALLBACK
+    ========================================================
+    */
+
+    const textarea =
+        document.createElement("textarea");
+
+    textarea.value = texto;
+
+    /*
+        O textarea fica fora da área visual.
+    */
+
+    textarea.style.position = "fixed";
+    textarea.style.top = "0";
+    textarea.style.left = "-999999px";
+    textarea.style.width = "1px";
+    textarea.style.height = "1px";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+
+    textarea.setAttribute(
+        "readonly",
+        ""
+    );
+
+    document.body.appendChild(
+        textarea
+    );
+
+
+    /*
+    ========================================================
+    SELEÇÃO
+    ========================================================
+    */
+
+    textarea.focus();
+
+    textarea.select();
+
+    textarea.setSelectionRange(
+        0,
+        textarea.value.length
+    );
+
+
+    /*
+    ========================================================
+    EXEC COMMAND
+    ========================================================
+    */
+
+    let sucesso = false;
+
+    try {
+
+        sucesso =
+            document.execCommand(
+                "copy"
+            );
+
+    } catch (error) {
+
+        console.warn(
+            "document.execCommand('copy') falhou:",
+            error
+        );
+
+        sucesso = false;
+    }
+
+
+    /*
+    ========================================================
+    REMOVER FALLBACK
+    ========================================================
+    */
+
+    document.body.removeChild(
+        textarea
+    );
+
+
+    return sucesso;
+}
+
+
+/*
+============================================================
+EXPORTAR LUA ATUAL
+============================================================
+*/
+
+window.extrairLuaAtual =
+    async function () {
+
+        try {
+
+            /*
+            ====================================================
+            GERAR LUA
+            ====================================================
+            */
+
+            const lua =
+                gerarLuaAtual(
+                    currentList
+                );
+
+
+            console.log(
+                "Lua atual:",
+                lua
+            );
+
+
+            /*
+            ====================================================
+            MOSTRAR NO TEXTAREA DE SAÍDA
+            ====================================================
+            */
+
+            const output =
+                document.getElementById(
+                    "lua-output"
+                );
+
+            if (output) {
+
+                output.value =
+                    lua;
+            }
+
+
+            /*
+            ====================================================
+            TENTAR COPIAR
+            ====================================================
+            */
+
+            const copiado =
+                await copiarTexto(
+                    lua
+                );
+
+
+            /*
+            ====================================================
+            SUCESSO
+            ====================================================
+            */
+
+            if (copiado) {
+
+                console.log(
+                    "Lua copiado com sucesso."
+                );
+
+                alert(
+                    "Lua copiado com sucesso!"
+                );
+
+                return lua;
+            }
+
+
+            /*
+            ====================================================
+            FALHA TOTAL
+            ====================================================
+            */
+
+            /*
+                Se existir textarea de saída,
+                selecionamos o conteúdo para facilitar
+                a cópia manual.
+            */
+
+            if (output) {
+
+                output.focus();
+
+                output.select();
+
+                output.setSelectionRange(
+                    0,
+                    output.value.length
+                );
+
+            }
+
+
+            alert(
+                "Não foi possível copiar automaticamente.\n\n" +
+                "O Lua foi gerado no campo de saída e está selecionado. " +
+                "Pressione Ctrl+C para copiar."
+            );
+
+
+            return lua;
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao extrair Lua:",
+                error
+            );
+
+            alert(
+                "Erro ao extrair Lua:\n\n" +
+                error.message
+            );
+
+            return null;
+        }
+    };
 
     /*
     ============================================================
