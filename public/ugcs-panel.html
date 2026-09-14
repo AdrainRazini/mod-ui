@@ -138,6 +138,25 @@
             margin-bottom: 12px;
         }
 
+.ugc-image {
+    width: 100%;
+    height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0b0b0b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.ugc-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
         .row {
             display: flex;
             justify-content: space-between;
@@ -695,6 +714,27 @@
 }
 
 
+    async function buscarThumbnailRoblox(assetId) {
+
+    const url =
+        `https://thumbnails.roblox.com/v1/assets` +
+        `?assetIds=${assetId}` +
+        `&size=420x420` +
+        `&format=Png` +
+        `&isCircular=false`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(
+            `Erro ao buscar thumbnail: HTTP ${response.status}`
+        );
+    }
+
+    const result = await response.json();
+
+    return result.data?.[0]?.imageUrl || null;
+}
     /*
     ============================================================
     NORMALIZAR DADOS ROBLOX
@@ -1506,10 +1546,23 @@
 
 
             card.innerHTML = `
+    ${
+        roblox?.Thumbnail
+            ? `
+                <div class="ugc-image">
+                    <img
+                        src="${escapeHtml(roblox.Thumbnail)}"
+                        alt="${escapeHtml(roblox.Name || nome)}"
+                        loading="lazy"
+                    >
+                </div>
+            `
+            : ""
+    }
 
-                <h3>
-                    ${escapeHtml(nome)}
-                </h3>
+    <h3>
+        ${escapeHtml(nome)}
+    </h3>
 
                 <div class="row">
                     <span class="label">
