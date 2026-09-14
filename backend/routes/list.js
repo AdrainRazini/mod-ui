@@ -1,18 +1,25 @@
-// backend/routes/ugcs.js
 
 import { Router } from "express";
+
+import {
+    doc,
+    getDoc
+} from "firebase/firestore";
+
 import { db } from "../services/firebase.js";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        const snapshot = await db
-            .collection("arrays")
-            .doc("ugcs")
-            .get();
+        // Acessa diretamente:
+        // arrays/ugcs
 
-        if (!snapshot.exists) {
+        const ref = doc(db, "arrays", "ugcs");
+
+        const snapshot = await getDoc(ref);
+
+        if (!snapshot.exists()) {
             return res.status(404).json({
                 success: false,
                 message: "Array de UGCs não encontrado"
@@ -36,3 +43,4 @@ router.get("/", async (req, res) => {
 });
 
 export default router;
+
