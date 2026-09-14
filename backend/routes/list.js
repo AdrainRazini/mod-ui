@@ -1,27 +1,16 @@
-import dotenv from "dotenv";
-dotenv.config();
-
 import { Router } from "express";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        const projectId = process.env.FIREBASE_PROJECT_ID;
-
-        if (!projectId) {
-            return res.status(500).json({
-                success: false,
-                message: "FIREBASE_PROJECT_ID não configurado"
-            });
-        }
+        const projectId = "mod-ui";
 
         const url =
             `https://firestore.googleapis.com/v1/projects/${projectId}` +
             `/databases/(default)/documents/arrays/ugcs`;
 
         const response = await fetch(url);
-
         const data = await response.json();
 
         if (!response.ok) {
