@@ -1001,6 +1001,75 @@
         }
 
 
+
+
+/* =========================================================
+   ROBLOX STOCK SLIDER
+========================================================= */
+
+.stock-progress {
+    margin-top: 15px;
+    padding: 14px;
+
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.stock-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+
+.stock-progress-title {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.stock-progress-value {
+    color: var(--cyan);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.stock-progress-track {
+    width: 100%;
+    height: 9px;
+
+    background: #26313b;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.stock-progress-fill {
+    height: 100%;
+    width: 0%;
+
+    background: var(--green);
+    border-radius: inherit;
+
+    transition: width .5s ease;
+}
+
+.stock-progress-fill.soldout {
+    background: var(--red);
+}
+
+.stock-progress-footer {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 8px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+
         /* =========================================================
            RESPONSIVE
         ========================================================= */
@@ -2439,6 +2508,81 @@ async function carregarThumbnails() {
 }
 
 
+
+
+/* =========================================================
+   ROBLOX STOCK SLIDER
+========================================================= */
+
+function criarStockSlider(remaining, total) {
+
+    if (
+        remaining === null ||
+        total === null ||
+        total <= 0
+    ) {
+        return "";
+    }
+
+    const safeTotal = Math.max(0, total);
+    const safeRemaining = Math.min(
+        safeTotal,
+        Math.max(0, remaining)
+    );
+
+    const percentage = Math.round(
+        (safeRemaining / safeTotal) * 100
+    );
+
+    const soldPercentage = 100 - percentage;
+
+    const soldOut = safeRemaining <= 0;
+
+    return `
+
+        <div class="stock-progress">
+
+            <div class="stock-progress-header">
+
+                <span class="stock-progress-title">
+                    Roblox Stock
+                </span>
+
+                <span class="stock-progress-value">
+                    ${soldOut ? "SOLD OUT" : percentage + "% AVAILABLE"}
+                </span>
+
+            </div>
+
+            <div class="stock-progress-track">
+
+                <div
+                    class="stock-progress-fill ${soldOut ? "soldout" : ""}"
+                    style="width: ${percentage}%"
+                ></div>
+
+            </div>
+
+            <div class="stock-progress-footer">
+
+                <span>
+                    ${formatNumber(safeRemaining)} Remaining
+                </span>
+
+                <span>
+                    ${formatNumber(safeTotal)} Total
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
+
+
 /* ============================================================
    MODAL
 ============================================================ */
@@ -2476,6 +2620,8 @@ async function abrirModal(
         document.getElementById(
             "modalImageLoading"
         );
+
+
 
 
     /* ========================================================
@@ -2822,6 +2968,11 @@ async function abrirModal(
 
         </div>
 
+        
+<div
+    id="modalStockSlider"
+    style="padding: 0 25px 25px;"
+></div>
     `;
 
 
@@ -2878,6 +3029,7 @@ async function abrirModal(
 
         modalImage.src =
             thumbnail;
+            
 
     } else {
 
