@@ -2488,6 +2488,81 @@ function renderizar() {
 }
 
 
+
+/* =========================================================
+   ROBLOX STOCK SLIDER
+========================================================= */
+
+function criarStockSlider(remaining, total, compact = false) {
+
+    if (
+        remaining === null ||
+        remaining === undefined ||
+        total === null ||
+        total === undefined ||
+        !Number.isFinite(Number(remaining)) ||
+        !Number.isFinite(Number(total)) ||
+        Number(total) <= 0
+    ) {
+        return "";
+    }
+
+    const safeTotal = Math.max(0, Number(total));
+
+    const safeRemaining = Math.min(
+        safeTotal,
+        Math.max(0, Number(remaining))
+    );
+
+    const percentage = Math.round(
+        (safeRemaining / safeTotal) * 100
+    );
+
+    const soldOut = safeRemaining <= 0;
+
+    return `
+
+        <div class="stock-progress ${compact ? "compact" : ""}">
+
+            <div class="stock-progress-header">
+
+                <span class="stock-progress-title">
+                    Roblox Stock
+                </span>
+
+                <span class="stock-progress-value ${soldOut ? "soldout-text" : ""}">
+                    ${soldOut ? "SOLD OUT" : percentage + "% AVAILABLE"}
+                </span>
+
+            </div>
+
+            <div class="stock-progress-track">
+
+                <div
+                    class="stock-progress-fill ${soldOut ? "soldout" : ""}"
+                    style="width: ${percentage}%"
+                ></div>
+
+            </div>
+
+            <div class="stock-progress-footer">
+
+                <span>
+                    ${formatNumber(safeRemaining)} Remaining
+                </span>
+
+                <span>
+                    ${formatNumber(safeTotal)} Total
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+}
+
+
 /* ============================================================
    CREATE CARD
 ============================================================ */
@@ -2589,6 +2664,15 @@ function criarCard(
             `
             : "";
 
+            /* ========================================================
+   ROBLOX STOCK
+======================================================== */
+
+const robloxStockSlider = criarStockSlider(
+    item.robloxRemaining,
+    item.robloxTotal,
+    true
+);
 
     return `
 
@@ -2727,8 +2811,24 @@ function criarCard(
 
                     </span>
 
-                </div>
+                    
 
+                </div>
+                
+${robloxStockSlider}
+
+
+<div class="card-footer">
+
+    <span class="market-type">
+        ${escapeHtml(item.marketType)}
+    </span>
+
+    <span class="stock">
+        ${gameStock}
+    </span>
+
+</div>
 
             </div>
 
@@ -2835,81 +2935,6 @@ async function carregarThumbnails() {
     }
 
 }
-
-
-
-
-/* =========================================================
-   ROBLOX STOCK SLIDER
-========================================================= */
-
-function criarStockSlider(remaining, total) {
-
-    if (
-        remaining === null ||
-        total === null ||
-        total <= 0
-    ) {
-        return "";
-    }
-
-    const safeTotal = Math.max(0, total);
-    const safeRemaining = Math.min(
-        safeTotal,
-        Math.max(0, remaining)
-    );
-
-    const percentage = Math.round(
-        (safeRemaining / safeTotal) * 100
-    );
-
-    const soldPercentage = 100 - percentage;
-
-    const soldOut = safeRemaining <= 0;
-
-    return `
-
-        <div class="stock-progress">
-
-            <div class="stock-progress-header">
-
-                <span class="stock-progress-title">
-                    Roblox Stock
-                </span>
-
-                <span class="stock-progress-value">
-                    ${soldOut ? "SOLD OUT" : percentage + "% AVAILABLE"}
-                </span>
-
-            </div>
-
-            <div class="stock-progress-track">
-
-                <div
-                    class="stock-progress-fill ${soldOut ? "soldout" : ""}"
-                    style="width: ${percentage}%"
-                ></div>
-
-            </div>
-
-            <div class="stock-progress-footer">
-
-                <span>
-                    ${formatNumber(safeRemaining)} Remaining
-                </span>
-
-                <span>
-                    ${formatNumber(safeTotal)} Total
-                </span>
-
-            </div>
-
-        </div>
-
-    `;
-}
-
-
 
 
 /* ============================================================
