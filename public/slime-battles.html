@@ -789,6 +789,331 @@
         }
 
 
+
+/* =========================================================
+   MODAL - ADN MARKET
+========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, .78);
+    backdrop-filter: blur(8px);
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    z-index: 100;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.modal-box {
+    width: min(850px, 100%);
+    max-height: 90vh;
+    overflow-y: auto;
+
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    box-shadow: 0 30px 100px rgba(0, 0, 0, .6);
+
+    position: relative;
+}
+
+/* MAIN CONTENT */
+
+.modal-top {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 25px;
+
+    padding: 25px;
+}
+
+.modal-image {
+    height: 300px;
+
+    border-radius: 12px;
+    background: #080c10;
+    border: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+    padding: 15px;
+
+    opacity: 0;
+    transition: opacity .25s;
+}
+
+.modal-image img.loaded {
+    opacity: 1;
+}
+
+.modal-image-loading {
+    position: absolute;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* INFORMATION */
+
+.modal-info {
+    min-width: 0;
+}
+
+.modal-info h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+    padding-right: 35px;
+}
+
+.modal-description {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.detail {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 11px;
+    overflow: hidden;
+}
+
+.detail small {
+    display: block;
+    color: var(--muted);
+    font-size: 9px;
+    margin-bottom: 4px;
+}
+
+.detail strong {
+    font-size: 12px;
+    word-break: break-word;
+}
+
+/* =========================================================
+   ROBLOX STOCK SLIDER
+========================================================= */
+
+.modal-stock-container {
+    width: 100%;
+    padding: 0 25px 22px;
+}
+
+.stock-progress {
+    width: 100%;
+    margin: 0;
+
+    padding: 15px;
+
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.stock-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.stock-progress-title {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.stock-progress-value {
+    color: var(--cyan);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.stock-progress-track {
+    width: 100%;
+    height: 9px;
+
+    background: #26313b;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.stock-progress-fill {
+    height: 100%;
+    width: 0%;
+
+    background: linear-gradient(
+        90deg,
+        var(--cyan),
+        var(--green)
+    );
+
+    border-radius: inherit;
+    transition: width .5s ease;
+}
+
+.stock-progress-fill.soldout {
+    background: var(--red);
+}
+
+.stock-progress-footer {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 9px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+/* =========================================================
+   MODAL ACTIONS
+========================================================= */
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 25px 25px;
+}
+
+.button {
+    flex: 1;
+    height: 44px;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+.button.primary {
+    background: var(--cyan);
+    color: #031014;
+}
+
+.button.primary:hover {
+    filter: brightness(1.1);
+}
+
+.button.secondary {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.button.secondary:hover {
+    border-color: #394b58;
+}
+
+/* CLOSE */
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    width: 35px;
+    height: 35px;
+
+    border-radius: 8px;
+    background: rgba(0, 0, 0, .55);
+    border: 1px solid var(--border);
+
+    color: var(--text);
+    cursor: pointer;
+
+    z-index: 5;
+    font-size: 20px;
+}
+
+.close:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .modal-top {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-image {
+        height: 240px;
+    }
+
+}
+
+@media (max-width: 450px) {
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-box {
+        max-height: 94vh;
+    }
+
+    .modal-top {
+        padding: 18px;
+        gap: 18px;
+    }
+
+    .modal-stock-container {
+        padding: 0 18px 18px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        padding: 0 18px 18px;
+    }
+
+}
+
+
         .modal-image {
             height: 300px;
 
