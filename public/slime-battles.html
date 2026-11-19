@@ -1416,6 +1416,11 @@
                     alt=""
                 >
 
+                <div
+    id="modalStockSlider"
+    style="padding: 0 25px 25px;"
+></div>
+
             </div>
 
 
@@ -2710,6 +2715,18 @@ async function abrirModal(
             )
             : "—";
 
+            /* ========================================================
+   ROBLOX STOCK SLIDER
+======================================================== */
+
+const modalStockSlider =
+    document.getElementById("modalStockSlider");
+
+modalStockSlider.innerHTML =
+    criarStockSlider(
+        item.robloxRemaining,
+        item.robloxTotal
+    );
 
     /* ========================================================
        DETAILS
@@ -2727,18 +2744,6 @@ async function abrirModal(
 
             <strong>
                 ${item.id}
-            </strong>
-
-        </div>
-
-        <div class="detail">
-
-            <small>
-                Remaining:
-            </small>
-
-            <strong>
-                ${item.remaining}
             </strong>
 
         </div>
