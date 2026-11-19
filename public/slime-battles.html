@@ -1655,6 +1655,12 @@
                 Sold Out
             </button>
 
+            <select id="sortRemaining" class="filter">
+            <option value="default">Default Order</option>
+            <option value="remaining-asc">Remaining: Low → High</option>
+            <option value="remaining-desc">Remaining: High → Low</option>
+            </select>
+
         </div>
 
     </section>
@@ -1842,6 +1848,7 @@ const MARKET_URL =
 let items = [];
 
 let currentFilter = "all";
+let currentSort = "default";
 
 
 /* ============================================================
@@ -2440,6 +2447,44 @@ function renderizar() {
             }
         );
 
+//--------------------------------------------------
+// SORT BY ROBLOX REMAINING
+//--------------------------------------------------
+
+if (currentSort !== "default") {
+
+    filtered.sort((a, b) => {
+
+        const remainingA = Number(a.robloxRemaining);
+        const remainingB = Number(b.robloxRemaining);
+
+        const validA =
+            a.robloxRemaining !== null &&
+            a.robloxRemaining !== undefined &&
+            Number.isFinite(remainingA);
+
+        const validB =
+            b.robloxRemaining !== null &&
+            b.robloxRemaining !== undefined &&
+            Number.isFinite(remainingB);
+
+        // Items without Remaining go to the end
+        if (!validA && !validB) return 0;
+        if (!validA) return 1;
+        if (!validB) return -1;
+
+        if (currentSort === "remaining-asc") {
+            return remainingA - remainingB;
+        }
+
+        if (currentSort === "remaining-desc") {
+            return remainingB - remainingA;
+        }
+
+        return 0;
+    });
+
+}
 
     document.getElementById(
         "catalogCount"
@@ -3531,6 +3576,19 @@ document
         }
     );
 
+/* ============================================================
+   SORT — ROBLOX REMAINING
+============================================================ */
+
+document
+    .getElementById("sortRemaining")
+    .addEventListener("change", event => {
+
+        currentSort = event.target.value;
+
+        renderizar();
+
+    });
 
 /* ============================================================
    INITIALIZATION
